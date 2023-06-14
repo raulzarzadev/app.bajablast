@@ -1,15 +1,26 @@
-import { expect, test } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import Navigation from '@/components/Navigation'
 
-test('home', () => {
-  const { debug } = render(<Navigation />)
-  debug()
+describe('Navigation component', () => {
+  beforeEach(() => {
+    render(<Navigation />)
+  })
 
-  // expect(nav.findByRole('user-menu')).toBeDefined()
-  // expect(
-  //   main.getByRole('heading', { level: 1, name: 'Bienvenidos a Baja Blast' })
-  // ).toBeDefined()
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
 
-  // expect(main.getByText('Registrate')).toBeDefined()
+  test('renders the logo', () => {
+    const logoElement = screen.getByRole('logo')
+    expect(logoElement).toBeDefined()
+  })
+
+  test('opens the user menu when the avatar is clicked', async () => {
+    const avatar = screen.findByLabelText('open-user-menu')
+    expect(avatar).toBeDefined()
+    fireEvent.click(await avatar)
+    const userMenu = await screen.findByLabelText('user-menu')
+    expect(userMenu).toBeDefined()
+  })
 })
