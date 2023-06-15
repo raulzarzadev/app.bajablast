@@ -13,7 +13,7 @@ import { useForm, FormProvider, useFormContext } from 'react-hook-form'
 import { MuiTelInput } from 'mui-tel-input'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
-import { CheckBox } from '@mui/icons-material'
+import SignatureCanvas from 'react-signature-canvas'
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const ClientForm = () => {
@@ -107,6 +107,34 @@ const ClientForm = () => {
               Lee cuidadosamente los terminos y condiciones, si estas de acuerdo
               firma y acepta abajo
             </Typography>
+            <Typography
+              component={'p'}
+              variant="body2"
+              className="whitespace-pre-line"
+            >
+              {`
+              1.- Al acceder al parque acepto los riesgos inneretes que conlleva
+              el realizar las actividades 
+              2.- Acepto hacer caso a todos los
+              instructores
+              etc...
+              `}
+            </Typography>
+            <Box className="border shadow-inner p-1">
+              <SignatureCanvas
+                penColor="green"
+                canvasProps={{
+                  width: 500,
+                  height: 200,
+                  className: 'sigCanvas'
+                }}
+              />
+            </Box>
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              label="Acepto los terminos y condiciones descritos arriba"
+            />
           </Box>
         </Modal>
 
