@@ -17,6 +17,7 @@ import AdbIcon from '@mui/icons-material/Adb'
 import Link from 'next/link'
 import { UserContext } from '@/context/user'
 import { client, collaborator, coordinator } from '@/CONST/fake-users'
+import { Skeleton } from '@mui/material'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -29,6 +30,8 @@ const settings = [
 ]
 
 function Navigation() {
+  const [anchorElSignIn, setAnchorElSignIn] =
+    React.useState<null | HTMLElement>(null)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -40,6 +43,9 @@ function Navigation() {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
+  const handleOpenSignIn = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElSignIn(event.currentTarget)
+  }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
@@ -49,7 +55,17 @@ function Navigation() {
     setAnchorElUser(null)
   }
 
-  const userContext = React.useContext(UserContext)
+  const handleCloseSignIn = () => {
+    setAnchorElSignIn(null)
+  }
+
+  const { user, setUser } = React.useContext(UserContext)
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setUser(null)
+    }, 2000)
+  }, [])
 
   return (
     <AppBar position="static" role="navigation">
@@ -144,80 +160,127 @@ function Navigation() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton
-                aria-label="open-user-menu"
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-              >
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              aria-label="user-menu"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  role="listitem"
-                  key={setting.label}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Link href={setting.href}>
-                    <Typography textAlign="center">{setting.label}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-              <MenuItem>
-                <Button
-                  onClick={(e) => {
-                    userContext?.setUser(client)
+            {user === undefined && <Skeleton variant="circular" />}
+            {user === null && (
+              <>
+                <Tooltip title="Open Sign In">
+                  <IconButton
+                    aria-label="sign-in-button"
+                    onClick={handleOpenSignIn}
+                    className="text-white"
+                  >
+                    Ingresar
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="sign-in"
+                  aria-label="sign-in-menu"
+                  anchorEl={anchorElSignIn}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
                   }}
-                >
-                  Cliente
-                </Button>
-              </MenuItem>
-              <MenuItem>
-                <Button
-                  onClick={(e) => {
-                    userContext?.setUser(collaborator)
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
                   }}
+                  open={Boolean(anchorElSignIn)}
+                  onClose={handleCloseSignIn}
                 >
-                  Colaborador
-                </Button>
-              </MenuItem>
-              <MenuItem>
-                <Button
-                  onClick={(e) => {
-                    userContext?.setUser(coordinator)
+                  <MenuItem>
+                    <Button
+                      onClick={(e) => {
+                        handleCloseUserMenu()
+                        setUser(client)
+                      }}
+                    >
+                      Cliente
+                    </Button>
+                  </MenuItem>
+                  <MenuItem>
+                    <Button
+                      onClick={(e) => {
+                        handleCloseUserMenu()
+                        setUser(collaborator)
+                      }}
+                    >
+                      Colaborador
+                    </Button>
+                  </MenuItem>
+                  <MenuItem>
+                    <Button
+                      onClick={(e) => {
+                        handleCloseUserMenu()
+                        setUser(coordinator)
+                      }}
+                    >
+                      Coordinador
+                    </Button>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+
+            {user && (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton
+                    aria-label="open-user-menu"
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0 }}
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  aria-label="user-menu"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
                   }}
-                >
-                  Coordinador
-                </Button>
-              </MenuItem>
-              <MenuItem>
-                <Button
-                  onClick={(e) => {
-                    userContext?.setUser(null)
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
                   }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
                 >
-                  log out
-                </Button>
-              </MenuItem>
-            </Menu>
+                  {settings.map((setting) => (
+                    <MenuItem
+                      role="listitem"
+                      key={setting.label}
+                      onClick={handleCloseUserMenu}
+                    >
+                      <Link href={setting.href}>
+                        <Typography textAlign="center">
+                          {setting.label}
+                        </Typography>
+                      </Link>
+                    </MenuItem>
+                  ))}
+
+                  <MenuItem>
+                    <Button
+                      onClick={(e) => {
+                        setUser(null)
+                        handleCloseSignIn()
+                      }}
+                    >
+                      log out
+                    </Button>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
