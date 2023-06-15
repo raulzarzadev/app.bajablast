@@ -18,7 +18,7 @@ const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const ClientForm = () => {
   const methods = useForm()
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = (data: unknown) => console.log(data)
   const medicModal = useModal()
   return (
     <FormProvider {...methods}>
