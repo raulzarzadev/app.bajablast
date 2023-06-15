@@ -20,6 +20,7 @@ const ClientForm = () => {
   const methods = useForm()
   const onSubmit = (data: unknown) => console.log(data)
   const medicModal = useModal()
+  const termsAndCondsModal = useModal()
   return (
     <FormProvider {...methods}>
       <form
@@ -96,12 +97,12 @@ const ClientForm = () => {
         <Button
           onClick={(e) => {
             e.preventDefault()
-            medicModal.handleOpen()
+            termsAndCondsModal.handleOpen()
           }}
         >
           Terminos y condiciones
         </Button>
-        <Modal {...medicModal} title="Formulario Medico">
+        <Modal {...termsAndCondsModal} title="Terminos y condiciones">
           <Box className="flex flex-col gap-4">
             <Typography component={'p'} variant="body2">
               Lee cuidadosamente los terminos y condiciones, si estas de acuerdo

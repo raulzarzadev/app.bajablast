@@ -10,7 +10,7 @@ const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
-  width: 400,
+  //width: 400,
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -36,8 +36,8 @@ const Modal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style} className="">
-        <div className="border-white flex w-full justify-between">
+      <Box sx={style} className="w-full max-w-md ">
+        <div className="border-white flex w-full justify-between ">
           <span>{title && <Typography>{title}</Typography>}</span>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -45,7 +45,7 @@ const Modal = ({
         </div>
         <Box
           component={'main'}
-          className="relative w-full h-full min-w-full aspect-square"
+          className="relative w-full h-full min-w-full min-h-[300px]"
         >
           {children}
         </Box>
