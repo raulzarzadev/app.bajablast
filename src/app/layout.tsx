@@ -2,6 +2,7 @@ import Navigation from '@/components/Navigation'
 import './globals.css'
 
 import { Inter } from 'next/font/google'
+import { UserContextProvider } from '@/context/user'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navigation />
-        {children}
+        <UserContextProvider>
+          <Navigation />
+          {children}
+        </UserContextProvider>
       </body>
     </html>
   )

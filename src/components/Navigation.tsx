@@ -15,6 +15,8 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import Link from 'next/link'
+import { UserContext } from '@/context/user'
+import { client, collaborator, coordinator } from '@/CONST/fake-users'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -46,6 +48,8 @@ function Navigation() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+
+  const userContext = React.useContext(UserContext)
 
   return (
     <AppBar position="static" role="navigation">
@@ -177,6 +181,42 @@ function Navigation() {
                   </Link>
                 </MenuItem>
               ))}
+              <MenuItem>
+                <Button
+                  onClick={(e) => {
+                    userContext?.setUser(client)
+                  }}
+                >
+                  Cliente
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button
+                  onClick={(e) => {
+                    userContext?.setUser(collaborator)
+                  }}
+                >
+                  Colaborador
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button
+                  onClick={(e) => {
+                    userContext?.setUser(coordinator)
+                  }}
+                >
+                  Coordinador
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button
+                  onClick={(e) => {
+                    userContext?.setUser(null)
+                  }}
+                >
+                  log out
+                </Button>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
