@@ -23,4 +23,11 @@ describe('Navigation component', () => {
     const userMenu = await screen.findByLabelText('user-menu')
     expect(userMenu).toBeDefined()
   })
+
+  // TODO: test navigation
+
+  // test('if not user should show Sign In', () => {
+  //   const signIn = screen.getByText('Sign In')
+  //   expect(signIn).toBeDefined()
+  // })
 })
