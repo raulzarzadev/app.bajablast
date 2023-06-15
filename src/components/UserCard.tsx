@@ -13,6 +13,8 @@ const UserCard = () => {
   const modal = useModal()
   const { user } = useContext(UserContext)
 
+  if (!user) return <div>No user </div>
+
   return (
     <Box aria-label="user-card" className="flex items-center">
       <div>
