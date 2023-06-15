@@ -3,6 +3,7 @@ import './globals.css'
 
 import { Inter } from 'next/font/google'
 import { UserContextProvider } from '@/context/user'
+import { PickerDateContextProvider } from '@/context/picker-date'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <UserContextProvider>
-          <Navigation />
-          {children}
-        </UserContextProvider>
+        <PickerDateContextProvider>
+          <UserContextProvider>
+            <Navigation />
+            {children}
+          </UserContextProvider>
+        </PickerDateContextProvider>
       </body>
     </html>
   )
