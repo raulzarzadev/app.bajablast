@@ -4,11 +4,14 @@ import Link from 'next/link'
 
 const Cashbox = () => {
   return (
-    <Box component={'section'}>
+    <Box
+      component={'section'}
+      className="flex flex-col justify-center items-center pt-12"
+    >
       <Typography component={'h4'} variant="h4">
         Caja
       </Typography>
-      <Box>
+      <Box className="my-4">
         <Button LinkComponent={Link} href={'/bb/cashbox/clients'}>
           Usuarios
         </Button>

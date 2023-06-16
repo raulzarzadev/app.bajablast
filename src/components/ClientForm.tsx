@@ -20,6 +20,7 @@ import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
 import { useRef } from 'react'
+import ModalSave from './ModalSave'
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const ClientForm = () => {
@@ -32,7 +33,7 @@ const ClientForm = () => {
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
-  console.log(formValues)
+  // console.log(formValues)
   return (
     <FormProvider {...methods}>
       <form
@@ -143,7 +144,7 @@ const ClientForm = () => {
               termsAndCondsModal.handleOpen()
             }}
           >
-            Acceptar terminos
+            Terminos aceptados
           </Button>
         ) : (
           <Button
@@ -224,7 +225,18 @@ const ClientForm = () => {
           </Box>
         </Modal>
 
-        <Button type="submit">Guardar</Button>
+        <ModalSave
+          handleConfirm={() => {
+            console.log('save')
+          }}
+          
+        >
+          {Object.keys(formValues).map((key) => (
+            <p key={key}>
+              {key}: {typeof formValues[key] === 'string' && formValues[key]}
+            </p>
+          ))}
+        </ModalSave>
       </form>
     </FormProvider>
   )
