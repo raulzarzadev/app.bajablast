@@ -8,8 +8,33 @@ import { PickerDateContextProvider } from '@/context/picker-date'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'BajaBlast app',
-  description: 'BajaBlast platform. Make easy admin your park'
+  title: 'BajaBlastApp',
+  description: 'BajaBlast platform. Make easy admin your park',
+  applicationName: 'BajaBlast',
+
+  keywords: [
+    'La Paz',
+    'Baja California Sur',
+    'BCS',
+    'Balandra',
+    'Cabos',
+    'Cabo San Lucas',
+    'Todos Santos, La Paz',
+    'Familia'
+  ],
+  authors: [{ name: 'Raúl Zarza', url: 'https://raulzarza.com' }],
+  // colorScheme: 'dark',
+  creator: 'RZ',
+  // publisher: 'Sebastian Markbåge',
+  // formatDetection: {
+  //   email: false,
+  //   address: false,
+  //   telephone: false
+  // }
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/icons/apple-touch-icon.png'
+  }
 }
 
 export default function RootLayout({

@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { UserContext } from '@/context/user'
 import { client, collaborator, coordinator } from '@/CONST/fake-users'
 import { Skeleton } from '@mui/material'
+import Image from 'next/image'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -72,7 +73,14 @@ function Navigation() {
     <AppBar position="static" role="navigation">
       <Container maxWidth="xl">
         <Toolbar disableGutters role="logo">
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+            <Image
+              src={'/logos/bb-blue.png'}
+              width={50}
+              height={50}
+              alt="logo"
+            />
+          </Box>
           <Typography
             variant="h6"
             noWrap
@@ -88,7 +96,7 @@ function Navigation() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            BBApp
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -129,12 +137,19 @@ function Navigation() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
+            <Image
+              src={'/logos/bb-blue.png'}
+              width={50}
+              height={50}
+              alt="logo"
+            />
+          </Box>
           <Typography
             variant="h5"
             noWrap
             component={Link}
-            href="/"
+            href=""
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -146,7 +161,7 @@ function Navigation() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            BBApp
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
