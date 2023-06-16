@@ -5,22 +5,20 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
-  TextareaAutosize,
   Typography
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import {
-  useForm,
-  FormProvider,
-  useFormContext,
-  Controller
-} from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import { MuiTelInput } from 'mui-tel-input'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
 import { useRef } from 'react'
 import ModalSave from './ModalSave'
+import ControllerDate from './ControllerDate'
+import ControllerPhone from './ControllerPhone'
+import ControllerText from './ControllerText'
+import ControllerAutocomplete from './ControllerAutocomplete'
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const ClientForm = () => {
@@ -40,26 +38,10 @@ const ClientForm = () => {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col gap-4 mx-auto max-w-md"
       >
-        <TextField {...methods.register('name')} label="Nombre"></TextField>
-        <TextField {...methods.register('email')} label="Correo"></TextField>
-        <MuiTelInput
-          value={methods.watch('phone')}
-          onChange={(value) => {
-            methods.setValue('phone', value)
-          }}
-          label="Teléfono"
-          preferredCountries={['MX', 'US', 'CA']}
-          defaultCountry="MX"
-        />
-        <DatePicker
-          format="DD/MM/YYYY"
-          label="Fecha de nac"
-          onChange={(props) => {
-            console.log(props)
-
-            //methods.setValue('birthday', )
-          }}
-        />
+        <ControllerText name="name" label="Nombre" />
+        <ControllerText name="email" label="Correo" />
+        <ControllerPhone name="phone" label="telefono" />
+        <ControllerDate name={'birthday'} label="Fecha de nacimiento" />
 
         {/** **************************************** Medic information */}
 
@@ -92,6 +74,11 @@ const ClientForm = () => {
             <Typography component={'p'} variant="body2">
               * Rellena cuidadosamente esta información.{' '}
             </Typography>
+            <ControllerAutocomplete
+              options={bloodTypes}
+              name="bloodType"
+              label="Tipo de sangre"
+            />
             <Autocomplete
               onChange={(value, v) => {
                 methods.setValue('bloodType', v)

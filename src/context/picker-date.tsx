@@ -2,9 +2,9 @@
 
 import { ReactNode, createContext } from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
-export const UserContext = createContext(AdapterDayjs)
+export const UserContext = createContext(AdapterDateFns)
 
 export function PickerDateContextProvider({
   children
@@ -12,7 +12,7 @@ export function PickerDateContextProvider({
   children: ReactNode
 }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       {children}
     </LocalizationProvider>
   )
