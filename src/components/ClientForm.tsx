@@ -9,18 +9,30 @@ import {
   Typography
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import { useForm, FormProvider, useFormContext } from 'react-hook-form'
+import {
+  useForm,
+  FormProvider,
+  useFormContext,
+  Controller
+} from 'react-hook-form'
 import { MuiTelInput } from 'mui-tel-input'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
+import { useRef } from 'react'
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const ClientForm = () => {
   const methods = useForm()
+  const signatureRef = useRef<any>(null)
   const onSubmit = (data: unknown) => console.log(data)
   const medicModal = useModal()
   const termsAndCondsModal = useModal()
+  const formValues = methods.watch()
+  const handleClearSignature = () => {
+    signatureRef?.current?.clear?.()
+  }
+  console.log(formValues)
   return (
     <FormProvider {...methods}>
       <form
@@ -50,22 +62,39 @@ const ClientForm = () => {
         />
 
         {/** **************************************** Medic information */}
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            medicModal.handleOpen()
-          }}
-        >
-          Formulario medico
-        </Button>
+
+        {!formValues.medicalInfoUpdated ? (
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              medicModal.handleOpen()
+            }}
+            variant="outlined"
+            color="error"
+          >
+            Actualiza Formulario medico
+          </Button>
+        ) : (
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              medicModal.handleOpen()
+            }}
+            variant="outlined"
+            color="success"
+          >
+            Formulario medico actualizado
+          </Button>
+        )}
+
         <Modal {...medicModal} title="Formulario Medico">
           <div className="flex flex-col gap-4">
             <Typography component={'p'} variant="body2">
               * Rellena cuidadosamente esta información.{' '}
             </Typography>
             <Autocomplete
-              onChange={(e) => {
-                methods.setValue('blood', e)
+              onChange={(value) => {
+                methods.setValue('bloodType', value)
               }}
               renderInput={(params) => (
                 <TextField {...params} label="Tipo de sangre" />
@@ -85,23 +114,49 @@ const ClientForm = () => {
               maxRows={8}
               fullWidth
               label="Alergias, enfermedades, padecimientos "
+              {...methods.register('medicalInfo')}
             />
             <FormControlLabel
+              {...methods.register('medicalInfoUpdated')}
               required
               control={<Checkbox />}
               label="Esta información esta actualizada"
             />
+            <Button
+              variant="outlined"
+              onClick={(e) => {
+                e.preventDefault()
+                medicModal.onClose()
+              }}
+            >
+              Cerrar
+            </Button>
           </div>
         </Modal>
         {/** **************************************** Terms and conditions */}
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            termsAndCondsModal.handleOpen()
-          }}
-        >
-          Terminos y condiciones
-        </Button>
+        {formValues.acceptTerms ? (
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={(e) => {
+              e.preventDefault()
+              termsAndCondsModal.handleOpen()
+            }}
+          >
+            Acceptar terminos
+          </Button>
+        ) : (
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              termsAndCondsModal.handleOpen()
+            }}
+            variant="outlined"
+            color="error"
+          >
+            Terminos y condiciones aceptados
+          </Button>
+        )}
         <Modal {...termsAndCondsModal} title="Terminos y condiciones">
           <Box className="flex flex-col gap-4">
             <Typography component={'p'} variant="body2">
@@ -121,9 +176,27 @@ const ClientForm = () => {
               etc...
               `}
             </Typography>
+            <Box className="flex w-full justify-between -mb-4">
+              <Typography className="">Firma:</Typography>
+              <Button
+                size="small"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleClearSignature()
+                }}
+                color="success"
+              >
+                Limpiar
+              </Button>
+            </Box>
             <Box className="border shadow-inner p-1">
               <SignatureCanvas
                 penColor="green"
+                onEnd={(e) => {
+                  const value = signatureRef?.current?.toData?.()
+                  methods.setValue('signature', value)
+                }}
+                ref={signatureRef}
                 canvasProps={{
                   width: 500,
                   height: 200,
@@ -131,11 +204,23 @@ const ClientForm = () => {
                 }}
               />
             </Box>
+
             <FormControlLabel
-              required
+              {...methods.register('acceptTerms')}
               control={<Checkbox />}
+              required
               label="Acepto los terminos y condiciones descritos arriba"
             />
+
+            <Button
+              variant="outlined"
+              onClick={(e) => {
+                e.preventDefault()
+                termsAndCondsModal.onClose()
+              }}
+            >
+              Cerrar
+            </Button>
           </Box>
         </Modal>
 

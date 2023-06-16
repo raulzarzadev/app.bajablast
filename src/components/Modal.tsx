@@ -14,8 +14,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
   border: '2px solid #000',
-  boxShadow: 24,
-  p: 2
+  boxShadow: 24
 }
 
 const Modal = ({
@@ -36,16 +35,22 @@ const Modal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style} className="w-full max-w-md ">
-        <div className="border-white flex w-full justify-between ">
+      <Box
+        sx={style}
+        className="w-full max-w-md max-h-screen overflow-y-auto relative "
+      >
+        <Box
+          component={'header'}
+          className=" flex w-full justify-between items-center sticky top-0 z-50 bg-white p-1 pb-0 shadow-md  "
+        >
           <span>{title && <Typography>{title}</Typography>}</span>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
-        </div>
+        </Box>
         <Box
           component={'main'}
-          className="relative w-full h-full min-w-full min-h-[300px]"
+          className="relative w-full h-full min-w-full min-h-[300px] p-3 "
         >
           {children}
         </Box>
