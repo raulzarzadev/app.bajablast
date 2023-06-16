@@ -5,8 +5,8 @@ export const client: UserType = {
   email: 'mail@example.com',
   birthday: new Date(1990, 7, 12),
   rol: 'CLIENT',
-  mobile: '525543375016',
-  emergencyMobil: '525543374016'
+  phone: '525543375016',
+  emergencyPhone: '525543374016'
 }
 
 export const collaborator: UserType = {
@@ -14,8 +14,8 @@ export const collaborator: UserType = {
   email: 'mail@example.com',
   birthday: new Date(1999, 3, 28),
   rol: 'COLLABORATOR',
-  mobile: '525543375016',
-  emergencyMobil: '525543374016'
+  phone: '525543375016',
+  emergencyPhone: '525543374016'
 }
 
 export const coordinator: UserType = {
@@ -23,6 +23,6 @@ export const coordinator: UserType = {
   email: 'mail@example.com',
   birthday: new Date(2002, 1, 4),
   rol: 'COORDINATOR',
-  mobile: '525543375016',
-  emergencyMobil: '525543374016'
+  phone: '525543375016',
+  emergencyPhone: '525543374016'
 }

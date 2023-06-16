@@ -24,8 +24,8 @@ const UserCard = () => {
         <p aria-label="user-name">{user?.name}</p>
         <p aria-label="user-age">{dateMx(user?.birthday)}</p>
         <p aria-label="user-email">{user?.email}</p>
-        <p aria-label="user-mobil">{user?.mobile}</p>
-        <p aria-label="user-mobil-emergency">{user?.mobile}</p>
+        <p aria-label="user-mobil">{user?.phone}</p>
+        <p aria-label="user-mobil-emergency">{user?.emergencyPhone}</p>
       </div>
       <Tooltip title="Open settings">
         <IconButton

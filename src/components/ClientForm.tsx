@@ -33,7 +33,7 @@ const ClientForm = () => {
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
-  // console.log(formValues)
+  console.log(formValues)
   return (
     <FormProvider {...methods}>
       <form
@@ -43,10 +43,9 @@ const ClientForm = () => {
         <TextField {...methods.register('name')} label="Nombre"></TextField>
         <TextField {...methods.register('email')} label="Correo"></TextField>
         <MuiTelInput
-          value={methods.watch('mobil')}
+          value={methods.watch('phone')}
           onChange={(value) => {
-            methods.setValue('mobil', value)
-            console.log(value)
+            methods.setValue('phone', value)
           }}
           label="Teléfono"
           preferredCountries={['MX', 'US', 'CA']}
@@ -94,8 +93,8 @@ const ClientForm = () => {
               * Rellena cuidadosamente esta información.{' '}
             </Typography>
             <Autocomplete
-              onChange={(value) => {
-                methods.setValue('bloodType', value)
+              onChange={(value, v) => {
+                methods.setValue('bloodType', v)
               }}
               renderInput={(params) => (
                 <TextField {...params} label="Tipo de sangre" />
@@ -229,7 +228,6 @@ const ClientForm = () => {
           handleConfirm={() => {
             console.log('save')
           }}
-          
         >
           {Object.keys(formValues).map((key) => (
             <p key={key}>
