@@ -7,31 +7,40 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
 import { useForm, FormProvider } from 'react-hook-form'
-import { MuiTelInput } from 'mui-tel-input'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
 import { useRef } from 'react'
-import ModalSave from './ModalSave'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
 import ControllerAutocomplete from './ControllerAutocomplete'
-const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+import bloodTypes from '@/CONST/blodTypes'
+import Link from 'next/link'
 
-const ClientForm = () => {
-  const methods = useForm()
-  const signatureRef = useRef<any>(null)
+const ClientForm = ({ client }: { client: unknown }) => {
+  console.log(client)
+  const methods = useForm({
+    defaultValues: client || {
+      birthday: new Date(),
+      medicalInfoUpdated: false,
+      acceptTerms: false,
+      signature: [],
+      medicalInfo: ''
+    }
+  })
+  const formValues = methods.watch()
+
   const onSubmit = (data: unknown) => console.log(data)
+
   const medicModal = useModal()
   const termsAndCondsModal = useModal()
-  const formValues = methods.watch()
+
+  const signatureRef = useRef<any>(null)
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
-  console.log(formValues)
   return (
     <FormProvider {...methods}>
       <form
@@ -79,22 +88,7 @@ const ClientForm = () => {
               name="bloodType"
               label="Tipo de sangre"
             />
-            <Autocomplete
-              onChange={(value, v) => {
-                methods.setValue('bloodType', v)
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Tipo de sangre" />
-              )}
-              options={bloodTypes}
-              renderOption={(props, option) => {
-                return (
-                  <li {...props} key={option}>
-                    {option}
-                  </li>
-                )
-              }}
-            />
+
             <TextField
               multiline
               minRows={4}
@@ -181,6 +175,7 @@ const ClientForm = () => {
                 penColor="green"
                 onEnd={(e) => {
                   const value = signatureRef?.current?.toData?.()
+
                   methods.setValue('signature', value)
                 }}
                 ref={signatureRef}
@@ -210,18 +205,12 @@ const ClientForm = () => {
             </Button>
           </Box>
         </Modal>
-
-        <ModalSave
-          handleConfirm={() => {
-            console.log('save')
-          }}
+        <Button
+          LinkComponent={Link}
+          href={`?formValues=${JSON.stringify(formValues)}`}
         >
-          {Object.keys(formValues).map((key) => (
-            <p key={key}>
-              {key}: {typeof formValues[key] === 'string' && formValues[key]}
-            </p>
-          ))}
-        </ModalSave>
+          Siguiente
+        </Button>
       </form>
     </FormProvider>
   )

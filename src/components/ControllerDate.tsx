@@ -6,7 +6,12 @@ const ControllerDate = ({ name, label }: { name: string; label: string }) => {
     <Controller
       name={name}
       render={({ field, fieldState: { error } }) => (
-        <DatePicker format="dd/MMM/yy" {...field} label={label} />
+        <DatePicker
+          format="dd / MM / yy"
+          {...field}
+          value={new Date(field.value)}
+          label={label}
+        />
       )}
     />
   )
