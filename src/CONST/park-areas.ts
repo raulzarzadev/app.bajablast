@@ -1,4 +1,3 @@
-import { ParkActivities } from '@/types/activities'
 import { UserType } from '@/types/user'
 
 type ParkAreas = {

@@ -79,6 +79,7 @@ function Navigation() {
               width={50}
               height={50}
               alt="logo"
+              style={{ width: 50, height: 50 }}
             />
           </Box>
           <Typography
@@ -143,6 +144,7 @@ function Navigation() {
               width={50}
               height={50}
               alt="logo"
+              style={{ width: 50, height: 50 }}
             />
           </Box>
           <Typography

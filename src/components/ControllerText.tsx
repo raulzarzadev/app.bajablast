@@ -1,11 +1,15 @@
-import { TextField } from '@mui/material'
+import { TextField, TextFieldProps } from '@mui/material'
 import { Controller } from 'react-hook-form'
 
-const ControllerText = ({ name, label }: { name: string; label: string }) => {
+const ControllerText = ({
+  name,
+  label,
+  ...rest
+}: TextFieldProps & { name: string }) => {
   return (
     <Controller
       name={name}
-      render={({ field }) => <TextField {...field} label={label} />}
+      render={({ field }) => <TextField {...field} label={label} {...rest} />}
     />
   )
 }

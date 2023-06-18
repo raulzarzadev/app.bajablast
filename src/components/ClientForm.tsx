@@ -1,46 +1,47 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-  Typography
-} from '@mui/material'
-import { useForm, FormProvider } from 'react-hook-form'
+import { Box, Button, Typography } from '@mui/material'
+import { useForm, FormProvider, Controller } from 'react-hook-form'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
-import { useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
-import ControllerAutocomplete from './ControllerAutocomplete'
-import bloodTypes from '@/CONST/blodTypes'
-import Link from 'next/link'
+import ControllerCheckbox from './ControllerCheckbox'
+import Image from 'next/image'
+import { NewClientContext } from './StepperNewClient'
+import ModalMedicInfo from './ModalMedicInfo'
 
-const ClientForm = ({ client }: { client: unknown }) => {
-  console.log(client)
+const ClientForm = () => {
+  const { client } = useContext(NewClientContext)
+  console.log({ client })
   const methods = useForm({
     defaultValues: client || {
+      bloodType: 'A+',
       birthday: new Date(),
-      medicalInfoUpdated: false,
-      acceptTerms: false,
       signature: [],
-      medicalInfo: ''
+      medicalInfo: '',
+      name: '',
+      phone: '',
+      email: '',
+      medicalInfoUpdated: false,
+      acceptTerms: false
     }
   })
   const formValues = methods.watch()
-
-  const onSubmit = (data: unknown) => console.log(data)
-
-  const medicModal = useModal()
   const termsAndCondsModal = useModal()
-
-  const signatureRef = useRef<any>(null)
+  const signatureRef = useRef<any>()
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
+
+  const [imageSignature, setImageSignature] = useState<string | null>(null)
+  const clientContext = useContext(NewClientContext)
+  const onSubmit = (data: object) => {
+    const clientData = { ...data, signature: imageSignature }
+    clientContext?.setClient?.(clientData)
+  }
+
   return (
     <FormProvider {...methods}>
       <form
@@ -53,67 +54,7 @@ const ClientForm = ({ client }: { client: unknown }) => {
         <ControllerDate name={'birthday'} label="Fecha de nacimiento" />
 
         {/** **************************************** Medic information */}
-
-        {!formValues.medicalInfoUpdated ? (
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              medicModal.handleOpen()
-            }}
-            variant="outlined"
-            color="error"
-          >
-            Actualiza Formulario medico
-          </Button>
-        ) : (
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              medicModal.handleOpen()
-            }}
-            variant="outlined"
-            color="success"
-          >
-            Formulario medico actualizado
-          </Button>
-        )}
-
-        <Modal {...medicModal} title="Formulario Medico">
-          <div className="flex flex-col gap-4">
-            <Typography component={'p'} variant="body2">
-              * Rellena cuidadosamente esta información.{' '}
-            </Typography>
-            <ControllerAutocomplete
-              options={bloodTypes}
-              name="bloodType"
-              label="Tipo de sangre"
-            />
-
-            <TextField
-              multiline
-              minRows={4}
-              maxRows={8}
-              fullWidth
-              label="Alergias, enfermedades, padecimientos "
-              {...methods.register('medicalInfo')}
-            />
-            <FormControlLabel
-              {...methods.register('medicalInfoUpdated')}
-              required
-              control={<Checkbox />}
-              label="Esta información esta actualizada"
-            />
-            <Button
-              variant="outlined"
-              onClick={(e) => {
-                e.preventDefault()
-                medicModal.onClose()
-              }}
-            >
-              Cerrar
-            </Button>
-          </div>
-        </Modal>
+        <ModalMedicInfo />
         {/** **************************************** Terms and conditions */}
         {formValues.acceptTerms ? (
           <Button
@@ -135,7 +76,7 @@ const ClientForm = ({ client }: { client: unknown }) => {
             variant="outlined"
             color="error"
           >
-            Terminos y condiciones aceptados
+            Aceptar terminos
           </Button>
         )}
         <Modal {...termsAndCondsModal} title="Terminos y condiciones">
@@ -164,6 +105,8 @@ const ClientForm = ({ client }: { client: unknown }) => {
                 onClick={(e) => {
                   e.preventDefault()
                   handleClearSignature()
+                  setImageSignature(null)
+                  methods.setValue('acceptTerms', false)
                 }}
                 color="success"
               >
@@ -172,13 +115,14 @@ const ClientForm = ({ client }: { client: unknown }) => {
             </Box>
             <Box className="border shadow-inner p-1">
               <SignatureCanvas
-                penColor="green"
                 onEnd={(e) => {
-                  const value = signatureRef?.current?.toData?.()
-
-                  methods.setValue('signature', value)
+                  const image = signatureRef.current
+                    .getTrimmedCanvas()
+                    .toDataURL('image/png')
+                  setImageSignature(image)
                 }}
-                ref={signatureRef}
+                penColor="green"
+                ref={(ref) => (signatureRef.current = ref)}
                 canvasProps={{
                   width: 500,
                   height: 200,
@@ -186,11 +130,19 @@ const ClientForm = ({ client }: { client: unknown }) => {
                 }}
               />
             </Box>
+            {imageSignature && (
+              <Image
+                src={imageSignature}
+                width={80}
+                height={80}
+                alt="signature"
+                className="w-[80px] h-[80px]"
+              />
+            )}
 
-            <FormControlLabel
-              {...methods.register('acceptTerms')}
-              control={<Checkbox />}
-              required
+            <ControllerCheckbox
+              disabled={!imageSignature}
+              name={'acceptTerms'}
               label="Acepto los terminos y condiciones descritos arriba"
             />
 
@@ -206,10 +158,11 @@ const ClientForm = ({ client }: { client: unknown }) => {
           </Box>
         </Modal>
         <Button
-          LinkComponent={Link}
-          href={`?formValues=${JSON.stringify(formValues)}`}
+          disabled={!formValues.acceptTerms && formValues.medicalInfoUpdated}
+          // LinkComponent={Link}
+          type="submit"
         >
-          Siguiente
+          Guardar
         </Button>
       </form>
     </FormProvider>

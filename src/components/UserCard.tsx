@@ -6,7 +6,6 @@ import Modal from './Modal'
 import Image from 'next/image'
 import { useContext } from 'react'
 import { UserContext } from '@/context/user'
-import { client } from '@/CONST/fake-users'
 import { dateMx } from '@/utils/utils-date'
 
 const UserCard = () => {
@@ -36,7 +35,7 @@ const UserCard = () => {
           <Avatar
             alt="Remy Sharp"
             src={'/logo/bb-blue.png'}
-            className="w-28 h-28"
+            className="w-28 aspect-square"
           />
         </IconButton>
       </Tooltip>

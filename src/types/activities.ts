@@ -9,7 +9,7 @@ export type Weekdays =
 export type Schedule = {
   [key in Weekdays]: `${number}:${number}-${number}:${number}` | '24' | null
 }
-export type ParkActivities = {
+export type ParkActivity = {
   name: string
   description: string
   activityId: string

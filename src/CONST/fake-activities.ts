@@ -1,6 +1,6 @@
-import { ParkActivities } from '@/types/activities'
+import { ParkActivity } from '@/types/activities'
 
-export const activities: ParkActivities[] = [
+export const activities: ParkActivity[] = [
   {
     name: 'Challenge + tirolesa',
     description: 'Challenge + tirolesa',
