@@ -1,29 +1,29 @@
-import { Box, Button, IconButton } from '@mui/material'
+import { Box, Button, IconButton, TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import ControllerText from './ControllerText'
 import ModalMedicInfo from './ModalMedicInfo'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import CloseIcon from '@mui/icons-material/Close'
-import { NewClientContext } from './StepperNewClient'
+import { NewClientContext } from '@/context/new-client'
 
 const AddFriendsForm = () => {
   const { setFriends, friends } = useContext(NewClientContext)
+
   const methods = useForm({
     defaultValues: {
       friends
     }
   })
+  // console.log(methods)
+
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: 'friends' // unique name for your Field Array,
   })
   useEffect(() => {
     setFriends?.(fields)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [methods.watch('friends')])
-
-  console.log({ friends, fields })
-
+    console.log(fields)
+  }, [fields, setFriends])
   return (
     <div>
       <FormProvider {...methods}>
@@ -60,16 +60,17 @@ const AddFriendsForm = () => {
             ))}
           </tbody>
         </table>
-        <div className="text-center my-8">
-          <Button
-            variant="outlined"
-            className=""
-            onClick={() => append({ name: '', age: 0, medicalInfo: '' })}
-          >
-            Agregar acompañante
-          </Button>
-        </div>
       </FormProvider>
+
+      <div className="text-center my-8">
+        <Button
+          variant="outlined"
+          className=""
+          onClick={() => append({ name: 'n', age: 0, medicalInfo: '' })}
+        >
+          Agregar acompañante
+        </Button>
+      </div>
     </div>
   )
 }

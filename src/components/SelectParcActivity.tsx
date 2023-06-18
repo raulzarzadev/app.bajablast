@@ -1,8 +1,8 @@
 import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Typography } from '@mui/material'
 import { useContext } from 'react'
-import { NewClientContext } from './StepperNewClient'
 import { ParkActivity } from '@/types/activities'
+import { NewClientContext } from '@/context/new-client'
 
 const SelectParkActivity = () => {
   const { client, friends, setClient, setFriends } =

@@ -76,7 +76,7 @@ export default function Stepper({
         ))}
       </MUIStepper>
 
-      {steps[activeStep].component}
+      {steps[activeStep]?.component}
 
       <div>
         {allStepsCompleted() ? (
@@ -91,9 +91,6 @@ export default function Stepper({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-              Step {activeStep + 1}
-            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
                 color="inherit"
@@ -101,17 +98,17 @@ export default function Stepper({
                 onClick={handleBack}
                 sx={{ mr: 1 }}
               >
-                Back
+                Atras
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
               <Button
-                disabled={disableNext}
+                disabled={activeStep === steps.length - 1}
                 onClick={handleNext}
                 sx={{ mr: 1 }}
               >
-                Next
+                Siguiente
               </Button>
-              {activeStep !== steps.length &&
+              {/* {activeStep !== steps.length &&
                 (completed[activeStep] ? (
                   <Typography
                     variant="caption"
@@ -125,7 +122,7 @@ export default function Stepper({
                       ? 'Finish'
                       : 'Complete Step'}
                   </Button>
-                ))}
+                ))} */}
             </Box>
           </React.Fragment>
         )}

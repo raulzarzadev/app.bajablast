@@ -9,8 +9,8 @@ import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
 import ControllerCheckbox from './ControllerCheckbox'
 import Image from 'next/image'
-import { NewClientContext } from './StepperNewClient'
 import ModalMedicInfo from './ModalMedicInfo'
+import { NewClientContext } from '@/context/new-client'
 
 const ClientForm = () => {
   const { client } = useContext(NewClientContext)
@@ -120,6 +120,7 @@ const ClientForm = () => {
                     .getTrimmedCanvas()
                     .toDataURL('image/png')
                   setImageSignature(image)
+                  methods.setValue('acceptTerms', true)
                 }}
                 penColor="green"
                 ref={(ref) => (signatureRef.current = ref)}

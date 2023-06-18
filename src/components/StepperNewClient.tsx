@@ -1,35 +1,14 @@
-//const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad']
-
-import { ReactNode, createContext, useState } from 'react'
 import Stepper from './Stepper'
 import ClientForm from './ClientForm'
 import AddFriendsForm from './AddFriendsForm'
 import SelectParkActivity from './SelectParcActivity'
-
-export const NewClientContext = createContext<{
-  client?: object
-  setClient?: (newClient: object) => void
-  activities?: object
-  setActivities?: (newActivities: object) => void
-  friends?: Array<object>
-  setFriends?: (fiends: any) => void
-}>({})
+import { NewClientContext, NewClientProvider } from '@/context/new-client'
+import { useContext } from 'react'
+import FinishNewClient from './FinishNewClient'
 
 export default function StepperNewClient() {
-  const [client, setClient] = useState({})
-  const [activities, setActivities] = useState({})
-  const [friends, setFriends] = useState([])
   return (
-    <NewClientContext.Provider
-      value={{
-        client,
-        setClient,
-        activities,
-        setActivities,
-        friends,
-        setFriends
-      }}
-    >
+    <NewClientProvider>
       <Stepper
         steps={[
           {
@@ -46,11 +25,10 @@ export default function StepperNewClient() {
           },
           {
             label: 'Guardar',
-            component: <>Guardar</>
+            component: <FinishNewClient />
           }
         ]}
-        disableNext={Object.keys(client).length === 0}
       />
-    </NewClientContext.Provider>
+    </NewClientProvider>
   )
 }
