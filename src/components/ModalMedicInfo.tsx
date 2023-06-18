@@ -5,12 +5,22 @@ import ControllerAutocomplete from './ControllerAutocomplete'
 import ControllerCheckbox from './ControllerCheckbox'
 import ControllerText from './ControllerText'
 import { useFormContext } from 'react-hook-form'
-import bloodTypes from '@/CONST/blodTypes'
+import bloodTypes from '@/CONST/bloodTypes'
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart'
+import { useEffect } from 'react'
 const ModalMedicInfo = ({ name = '' }) => {
   const medicModal = useModal()
   const methods = useFormContext()
+
   const medicalInfoUpdated = methods.watch(`${name}medicalInfoUpdated`)
+
+  const { dirtyFields } = methods.formState
+  useEffect(() => {
+    if (dirtyFields?.medicalInfo) {
+      methods.setValue(`${name}medicalInfoUpdated`, true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dirtyFields])
   return (
     <>
       <Box className="flex w-full justify-center">
@@ -39,7 +49,7 @@ const ModalMedicInfo = ({ name = '' }) => {
         )}
       </Box>
 
-      <Modal {...medicModal} title="Formulario Medico">
+      <Modal {...medicModal} title="Información Medica">
         <div className="flex flex-col gap-4">
           <Typography component={'p'} variant="body2">
             * Rellena cuidadosamente esta información.{' '}

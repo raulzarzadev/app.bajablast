@@ -11,27 +11,24 @@ const ControllerAutocomplete = ({
   options: string[]
 }) => {
   const methods = useFormContext()
+  const value = methods.watch(name)
+  const onChange = (newValue: (typeof options)[0]) => {
+    methods.setValue(name, newValue)
+  }
   return (
-    <Controller
-      name={name}
-      render={({ field }) => {
+    <Autocomplete
+      renderInput={(params) => <TextField {...params} label={label} />}
+      options={options}
+      value={value || options[0]}
+      onChange={(_, value) => {
+        onChange(value)
+      }}
+      getOptionLabel={(option) => `${option}`}
+      renderOption={(props, option) => {
         return (
-          <Autocomplete
-            renderInput={(params) => <TextField {...params} label={label} />}
-            options={options}
-            {...field}
-            value={methods.watch(name)}
-            onChange={(_, value) => {
-              field.onChange(value)
-            }}
-            renderOption={(props, option) => {
-              return (
-                <li {...props} key={option}>
-                  {option}
-                </li>
-              )
-            }}
-          />
+          <li {...props} key={option}>
+            {option}
+          </li>
         )
       }}
     />

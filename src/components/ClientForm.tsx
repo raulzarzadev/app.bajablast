@@ -10,23 +10,27 @@ import ControllerText from './ControllerText'
 import ControllerCheckbox from './ControllerCheckbox'
 import Image from 'next/image'
 import ModalMedicInfo from './ModalMedicInfo'
-import { NewClientContext } from '@/context/new-client'
+import { NewClient, NewClientContext } from '@/context/new-client'
+import bloodTypes from '@/CONST/bloodTypes'
 
 const ClientForm = () => {
   const { client } = useContext(NewClientContext)
   console.log({ client })
+  const defaultClient: NewClient = {
+    bloodType: 'N/A',
+    birthday: new Date(),
+    signature: '',
+    medicalInfo: '',
+    name: '',
+    phone: '',
+    email: '',
+    medicalInfoUpdated: false,
+    termsAccepted: false,
+    rol: 'CLIENT',
+    emergencyPhone: ''
+  }
   const methods = useForm({
-    defaultValues: client || {
-      bloodType: 'A+',
-      birthday: new Date(),
-      signature: [],
-      medicalInfo: '',
-      name: '',
-      phone: '',
-      email: '',
-      medicalInfoUpdated: false,
-      acceptTerms: false
-    }
+    defaultValues: client || defaultClient
   })
   const formValues = methods.watch()
   const termsAndCondsModal = useModal()

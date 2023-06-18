@@ -1,25 +1,34 @@
+import { UserType } from '@/types/user'
 import { ReactNode, createContext, useState } from 'react'
 
+export type Activity = {
+  price: number
+  name: string
+}
+
+export interface Friend extends Partial<UserType> {}
+export interface NewClient extends UserType {
+  termsAccepted?: boolean
+  medicalInfoUpdated?: boolean
+  activity?: Activity
+  signature?: string
+}
+
 export const NewClientContext = createContext<{
-  client?: object
+  client?: NewClient
   setClient?: (newClient: object) => void
-  activities?: object
-  setActivities?: (newActivities: object) => void
-  friends?: Array<object>
+  friends?: Friend[]
   setFriends?: (fiends: any) => void
 }>({})
 
 export function NewClientProvider({ children }: { children: ReactNode }) {
   const [client, setClient] = useState({})
-  const [activities, setActivities] = useState({})
   const [friends, setFriends] = useState([])
   return (
     <NewClientContext.Provider
       value={{
         client,
         setClient,
-        activities,
-        setActivities,
         friends,
         setFriends
       }}

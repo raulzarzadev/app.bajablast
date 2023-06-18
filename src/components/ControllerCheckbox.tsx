@@ -3,21 +3,21 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 const ControllerCheckbox = ({ name = '', label = '', disabled = false }) => {
   const methods = useFormContext()
+  const onChange = (value: boolean) => {
+    methods.setValue(name, value)
+  }
+  const checked = methods.watch(name) || false
   return (
-    <Controller
-      name={name}
-      render={({ field }) => (
-        <FormControlLabel
-          control={
-            <Checkbox
-              {...field}
-              disabled={disabled}
-              checked={methods.watch(name)}
-            />
-          }
-          label={label}
+    <FormControlLabel
+      control={
+        <Checkbox
+          {...methods.register(name)}
+          disabled={disabled}
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
         />
-      )}
+      }
+      label={label}
     />
   )
 }
