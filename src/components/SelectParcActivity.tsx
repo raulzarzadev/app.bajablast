@@ -3,11 +3,14 @@ import { Box, Button, Typography } from '@mui/material'
 import { useContext } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { NewClientContext } from '@/context/new-client'
+import { useFormContext } from 'react-hook-form'
 
 const SelectParkActivity = () => {
   const { client, friends, setClient, setFriends } =
     useContext(NewClientContext)
   console.log({ friends })
+  const methods = useFormContext()
+
   return (
     <Box>
       <table>
@@ -22,7 +25,7 @@ const SelectParkActivity = () => {
                   setClient?.({
                     ...client,
                     activity: {
-                      activityId: activity.activityId,
+                      name: activity.name,
                       price: activity.price
                     }
                   })
@@ -32,17 +35,17 @@ const SelectParkActivity = () => {
           </tr>
 
           {friends?.map((friend, i) => (
-            <tr key={friend.id}>
+            <tr key={friend?.id}>
               <td>{friend?.name || ''}</td>
               <td className="flex overflow-x-auto ">
                 <SelectActivity
-                  selected={friend?.activity?.activityId}
+                  selected={friend?.activity?.name}
                   activities={activities}
                   onSelectedActivity={(activity) => {
                     friends.splice(i, 1, {
                       ...friend,
                       activity: {
-                        activityId: activity.activityId,
+                        name: activity.name,
                         price: activity.price
                       }
                     })
@@ -71,7 +74,7 @@ const SelectActivity = ({
     {activities.map((activity) => (
       <Button
         className=" w-22 aspect-video text-center flex flex-col items-center justify-center m-1"
-        key={activity.activityId}
+        key={activity.name}
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
@@ -80,9 +83,7 @@ const SelectActivity = ({
       >
         <div
           className={`border-2 ${
-            selected === activity.activityId
-              ? 'border-black'
-              : 'border-transparent'
+            selected === activity.name ? 'border-black' : 'border-transparent'
           }`}
         >
           <Typography variant="caption" component={'p'}>

@@ -20,10 +20,10 @@ const AddFriendsForm = () => {
     control: methods.control,
     name: 'friends' // unique name for your Field Array,
   })
+  const newFriends = methods.watch('friends')
   useEffect(() => {
-    setFriends?.(fields)
-    console.log(fields)
-  }, [fields, setFriends])
+    setFriends?.(newFriends)
+  }, [newFriends, setFriends])
   return (
     <div>
       <FormProvider {...methods}>

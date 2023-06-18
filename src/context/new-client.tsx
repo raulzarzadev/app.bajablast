@@ -6,7 +6,10 @@ export type Activity = {
   name: string
 }
 
-export interface Friend extends Partial<UserType> {}
+export interface Friend extends Partial<UserType> {
+  activity?: Activity
+  id?: string
+}
 export interface NewClient extends UserType {
   termsAccepted?: boolean
   medicalInfoUpdated?: boolean
@@ -15,7 +18,7 @@ export interface NewClient extends UserType {
 }
 
 export const NewClientContext = createContext<{
-  client?: NewClient
+  client?: Partial<NewClient>
   setClient?: (newClient: object) => void
   friends?: Friend[]
   setFriends?: (fiends: any) => void
