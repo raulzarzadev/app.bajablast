@@ -1,20 +1,24 @@
 import { Box, Button, Typography } from '@mui/material'
-import { useForm, FormProvider, Controller } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
 import ControllerCheckbox from './ControllerCheckbox'
 import Image from 'next/image'
 import ModalMedicInfo from './ModalMedicInfo'
-import { NewClient, NewClientContext } from '@/context/new-client'
-import bloodTypes from '@/CONST/bloodTypes'
+import { NewClient } from '@/types/user'
 
-const ClientForm = () => {
-  const { client, setClient } = useContext(NewClientContext)
+const ClientForm = ({
+  client,
+  handleSubmit
+}: {
+  client?: NewClient
+  handleSubmit?: (data: NewClient) => void
+}) => {
   const defaultClient: NewClient = {
     bloodType: 'N/A',
     birthday: new Date(),
@@ -38,19 +42,19 @@ const ClientForm = () => {
     signatureRef?.current?.clear?.()
   }
   const [imageSignature, setImageSignature] = useState<string | null>(null)
-  // const onSubmit = (data: object) => {
-  //   const clientData = { ...data, signature: imageSignature }
-  //   clientContext?.setClient?.(clientData)
-  // }
-  console.log(formValues)
-  useEffect(() => {
-    const data = methods.getValues()
-    setClient?.({ ...data, signature: imageSignature })
-  }, [])
+
+  const onSubmit = (data: NewClient) => {
+    const clientData = {
+      ...data,
+      signature: imageSignature
+    }
+    handleSubmit?.(clientData)
+  }
+
   return (
     <FormProvider {...methods}>
       <form
-        // onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col gap-4 mx-auto max-w-md"
       >
         <ControllerText name="name" label="Nombre" />
@@ -163,13 +167,25 @@ const ClientForm = () => {
             </Button>
           </Box>
         </Modal>
-        {/* <Button
-          disabled={!formValues.termsAccepted && formValues.medicalInfoUpdated}
-          // LinkComponent={Link}
-          type="submit"
-        >
-          Guardar
-        </Button> */}
+        <div className="flex justify-evenly w-full">
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              methods.reset(defaultClient)
+            }}
+          >
+            Limpiar
+          </Button>
+          <Button
+            disabled={
+              !formValues.termsAccepted && formValues.medicalInfoUpdated
+            }
+            // LinkComponent={Link}
+            type="submit"
+          >
+            Guardar
+          </Button>
+        </div>
       </form>
     </FormProvider>
   )

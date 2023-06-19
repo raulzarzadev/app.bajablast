@@ -3,53 +3,44 @@ import { Box, Button, Typography } from '@mui/material'
 import { useContext } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { NewClientContext } from '@/context/new-client'
+import { Friend, NewClient } from '@/types/user'
 
-const SelectParkActivity = () => {
-  const { client, friends, setClient, setFriends } =
-    useContext(NewClientContext)
-  console.log({ client })
+const SelectParkActivity = ({
+  clients,
+  setClients,
+  handleClear,
+  handleFinish
+}: {
+  clients?: NewClient[]
+  setClients?: (clients: (NewClient | Friend)[]) => void
+  handleClear?: () => void
+  handleFinish?: () => void
+}) => {
+  const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
+    return clients?.every((client) => !!client.activity?.name)
+  }
+  console.log(clients)
   return (
     <Box>
       <table>
         <tbody>
-          <tr>
-            <td>{client?.name || ''}</td>
-            <td className="flex overflow-x-auto ">
-              <SelectActivity
-                selected={client?.activity?.name}
-                activities={activities}
-                onSelectedActivity={(activity) => {
-                  const clientUpdated = {
-                    ...client,
-                    activity: {
-                      name: activity.name,
-                      price: activity.price
-                    }
-                  }
-
-                  setClient?.({ ...clientUpdated })
-                }}
-              />
-            </td>
-          </tr>
-
-          {friends?.map((friend, i) => (
-            <tr key={(friend?.name || '') + i}>
-              <td>{friend?.name || ''}</td>
+          {clients?.map((client, i) => (
+            <tr key={(client?.name || '') + i}>
+              <td>{client?.name || ''}</td>
               <td className="flex overflow-x-auto ">
                 <SelectActivity
-                  selected={friend?.activity?.name}
+                  selected={client?.activity?.name}
                   activities={activities}
                   onSelectedActivity={(activity) => {
-                    const aux = [...friends]
+                    const aux = [...clients]
                     aux.splice(i, 1, {
-                      ...friend,
+                      ...client,
                       activity: {
                         name: activity.name,
                         price: activity.price
                       }
                     })
-                    setFriends?.(aux)
+                    setClients?.(aux)
                   }}
                 />
               </td>
@@ -57,6 +48,32 @@ const SelectParkActivity = () => {
           ))}
         </tbody>
       </table>
+      <div className="w-full flex justify-evenly">
+        <Button
+          onClick={() => {
+            handleClear?.()
+            const clearClientsActivity = (clients: NewClient[]) => {
+              return clients.map((client) => {
+                delete client.activity
+                return { ...client }
+              })
+            }
+            const cleanClients = clearClientsActivity(clients)
+            console.log({ cleanClients })
+            setClients?.(cleanClients)
+          }}
+        >
+          Limpiar
+        </Button>
+        <Button
+          disabled={!allClientsHaveActivity(clients)}
+          onClick={() => {
+            handleFinish?.()
+          }}
+        >
+          Listo
+        </Button>
+      </div>
     </Box>
   )
 }

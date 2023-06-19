@@ -4,12 +4,18 @@ import ControllerText from './ControllerText'
 import ModalMedicInfo from './ModalMedicInfo'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import CloseIcon from '@mui/icons-material/Close'
-import { NewClientContext } from '@/context/new-client'
 import ControllerDate from './ControllerDate'
+import { Friend } from '@/types/user'
 
-const AddFriendsForm = () => {
-  const { setFriends, friends } = useContext(NewClientContext)
-
+const AddFriendsForm = ({
+  friends,
+  handleFinish,
+  handleClear
+}: {
+  friends?: Friend[]
+  handleFinish?: (friends: Friend[]) => void
+  handleClear?: () => void
+}) => {
   const methods = useForm({
     defaultValues: {
       friends
@@ -17,14 +23,17 @@ const AddFriendsForm = () => {
   })
   // console.log(methods)
 
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields = [],
+    append,
+    remove
+  } = useFieldArray({
     control: methods.control,
     name: 'friends' // unique name for your Field Array,
   })
+
   const newFriends = methods.watch('friends')
-  useEffect(() => {
-    setFriends?.(newFriends)
-  }, [newFriends, setFriends])
+
   return (
     <div>
       <FormProvider {...methods}>
@@ -80,6 +89,29 @@ const AddFriendsForm = () => {
           Agregar acompañante
         </Button>
       </div>
+      <div className="flex w-full justify-between">
+        <Button
+          onClick={() => {
+            handleClear?.()
+          }}
+        >
+          Borrar
+        </Button>
+        <Button
+          onClick={() => {
+            handleFinish?.(newFriends)
+          }}
+        >
+          Listo
+        </Button>
+      </div>
+      {/* {handleFinish && (
+        <div className="text-center my-8">
+          <Button variant="outlined" className="" onClick={handleFinish}>
+            Siguiente
+          </Button>
+        </div>
+      )} */}
     </div>
   )
 }

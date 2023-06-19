@@ -16,3 +16,8 @@ export type ParkActivity = {
   schedule: Schedule[]
   price: number
 }
+
+export type ClientActivity = {
+  price: number
+  name: string
+}
