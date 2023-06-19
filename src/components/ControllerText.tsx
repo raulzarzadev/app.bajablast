@@ -9,15 +9,8 @@ const ControllerText = ({
 }: TextFieldProps & { name: string }) => {
   const methods = useFormContext()
   const value = methods.watch(name)
-  const onChange = (newValue: string) => methods.setValue(name, newValue)
   return (
-    <TextField
-      value={value}
-      onChange={(e) => {
-        onChange(e.target.value)
-      }}
-      label={label}
-    />
+    <TextField {...methods.register(name)} value={value || ''} label={label} />
   )
   // return (
   //   <Controller

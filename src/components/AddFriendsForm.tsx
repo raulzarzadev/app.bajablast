@@ -69,7 +69,12 @@ const AddFriendsForm = () => {
           variant="outlined"
           className=""
           onClick={() =>
-            append({ name: 'n', birthday: new Date(), medicalInfo: '' })
+            append({
+              name: '',
+              birthday: new Date(),
+              medicalInfo: '',
+              bloodType: 'N/A'
+            })
           }
         >
           Agregar acompañante

@@ -34,7 +34,7 @@ const SelectParkActivity = () => {
           </tr>
 
           {friends?.map((friend, i) => (
-            <tr key={friend?.id}>
+            <tr key={(friend?.name || '') + i}>
               <td>{friend?.name || ''}</td>
               <td className="flex overflow-x-auto ">
                 <SelectActivity

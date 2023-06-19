@@ -24,8 +24,8 @@ const FinishNewClient = () => {
             <td>{client?.activity?.name}</td>
             <td>{client?.activity?.price}</td>
           </tr>
-          {friends?.map((friend) => (
-            <tr key={friend.id}>
+          {friends?.map((friend, i) => (
+            <tr key={(friend?.name || '') + i}>
               <td>{friend?.name}</td>
               <td>{friend?.activity?.name}</td>
               <td>{friend?.activity?.price}</td>

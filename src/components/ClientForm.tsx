@@ -3,7 +3,7 @@ import { useForm, FormProvider, Controller } from 'react-hook-form'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
-import { useContext, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
@@ -14,8 +14,7 @@ import { NewClient, NewClientContext } from '@/context/new-client'
 import bloodTypes from '@/CONST/bloodTypes'
 
 const ClientForm = () => {
-  const { client } = useContext(NewClientContext)
-  console.log({ client })
+  const { client, setClient } = useContext(NewClientContext)
   const defaultClient: NewClient = {
     bloodType: 'N/A',
     birthday: new Date(),
@@ -38,18 +37,20 @@ const ClientForm = () => {
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
-
   const [imageSignature, setImageSignature] = useState<string | null>(null)
-  const clientContext = useContext(NewClientContext)
-  const onSubmit = (data: object) => {
-    const clientData = { ...data, signature: imageSignature }
-    clientContext?.setClient?.(clientData)
-  }
-
+  // const onSubmit = (data: object) => {
+  //   const clientData = { ...data, signature: imageSignature }
+  //   clientContext?.setClient?.(clientData)
+  // }
+  console.log(formValues)
+  useEffect(() => {
+    const data = methods.getValues()
+    setClient?.({ ...data, signature: imageSignature })
+  }, [])
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
+        // onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col gap-4 mx-auto max-w-md"
       >
         <ControllerText name="name" label="Nombre" />
@@ -162,13 +163,13 @@ const ClientForm = () => {
             </Button>
           </Box>
         </Modal>
-        <Button
+        {/* <Button
           disabled={!formValues.termsAccepted && formValues.medicalInfoUpdated}
           // LinkComponent={Link}
           type="submit"
         >
           Guardar
-        </Button>
+        </Button> */}
       </form>
     </FormProvider>
   )
