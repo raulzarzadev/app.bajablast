@@ -1,5 +1,5 @@
 'use client'
-import { NewClient } from '@/types/user'
+import { NewClient, PaymentMethod } from '@/types/user'
 import {
   Box,
   Button,
@@ -26,7 +26,7 @@ const Clients = () => {
     setClients(JSON.parse(db || '[]'))
   }, [db])
   console.log({ clients })
-  const handleRemove = (index) => {
+  const handleRemove = (index: number) => {
     const oldDb = JSON.parse(db || '[]')
     const newClients = [...oldDb.slice(0, index)]
     localStorage.setItem('tmp-bb-db', JSON.stringify(newClients))
@@ -93,12 +93,15 @@ const ClientsRow = ({
   client: NewClient
   handleRemove: () => void
 }) => {
-  const total =
-    client?.friends?.reduce((acc, friend) => {
-      return acc + (friend?.activity?.price || 0)
-    }, 0) + (client?.activity?.price || 0)
   const modal = useModal()
   const modalEdit = useModal()
+
+  //* calculate the total of the client counting friends and himself
+  const total =
+    (client?.friends?.reduce((acc, friend) => {
+      return acc + (friend?.activity?.price || 0)
+    }, 0) || 0) + (client?.activity?.price || 0)
+
   const handleEdit = () => {
     modalEdit.handleOpen()
   }
@@ -106,7 +109,7 @@ const ClientsRow = ({
   const handlePay = (payment: NewClient['payment']) => {
     const db = JSON.parse(localStorage.getItem('tmp-bb-db') || '[]')
     //* remove old client
-    const cleanDB = db.filter(({ id }) => id !== client?.id)
+    const cleanDB = db.filter(({ id }: any) => id !== client?.id)
     //* add new client with payment info
     const newDB = [
       ...cleanDB,
@@ -118,16 +121,13 @@ const ClientsRow = ({
     localStorage.setItem('tmp-bb-db', JSON.stringify(newDB))
 
     return new Promise<void>((resolve, reject) => {
-      console.log('Pagando')
       setTimeout(() => {
         resolve()
-        console.log('Pagando')
       }, 2000)
     })
   }
 
-  const [paymentMethod, setPaymentMethod] =
-    useState<NewClient['payment']>('cash')
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
 
   return (
     <tr>
@@ -188,7 +188,7 @@ const ClientsRow = ({
                     <RadioGroup
                       value={paymentMethod}
                       onChange={(e) => {
-                        setPaymentMethod(e.target.value)
+                        setPaymentMethod(e.target.value as PaymentMethod)
                       }}
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
