@@ -5,6 +5,7 @@ import ModalMedicInfo from './ModalMedicInfo'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import CloseIcon from '@mui/icons-material/Close'
 import { NewClientContext } from '@/context/new-client'
+import ControllerDate from './ControllerDate'
 
 const AddFriendsForm = () => {
   const { setFriends, friends } = useContext(NewClientContext)
@@ -47,13 +48,14 @@ const AddFriendsForm = () => {
                   />
                 </Box>
                 <Box component={'td'}>
-                  <ControllerText
-                    name={`friends.${index}.age`}
+                  <ControllerDate
+                    name={`friends.${index}.birthday`}
                     label="Edad"
-                    type="number"
+                    //type="number"
                   />
                 </Box>
                 <Box component={'td'}>
+                  {/** The name have last dot to access the nested object  */}
                   <ModalMedicInfo name={`friends.${index}.`} />
                 </Box>
               </Box>
@@ -66,7 +68,9 @@ const AddFriendsForm = () => {
         <Button
           variant="outlined"
           className=""
-          onClick={() => append({ name: 'n', age: 0, medicalInfo: '' })}
+          onClick={() =>
+            append({ name: 'n', birthday: new Date(), medicalInfo: '' })
+          }
         >
           Agregar acompañante
         </Button>

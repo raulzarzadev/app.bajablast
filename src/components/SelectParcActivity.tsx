@@ -3,14 +3,11 @@ import { Box, Button, Typography } from '@mui/material'
 import { useContext } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { NewClientContext } from '@/context/new-client'
-import { useFormContext } from 'react-hook-form'
 
 const SelectParkActivity = () => {
   const { client, friends, setClient, setFriends } =
     useContext(NewClientContext)
-  console.log({ friends })
-  const methods = useFormContext()
-
+  console.log({ client })
   return (
     <Box>
       <table>
@@ -19,16 +16,18 @@ const SelectParkActivity = () => {
             <td>{client?.name || ''}</td>
             <td className="flex overflow-x-auto ">
               <SelectActivity
+                selected={client?.activity?.name}
                 activities={activities}
                 onSelectedActivity={(activity) => {
-                  console.log({ client, activity })
-                  setClient?.({
+                  const clientUpdated = {
                     ...client,
                     activity: {
                       name: activity.name,
                       price: activity.price
                     }
-                  })
+                  }
+
+                  setClient?.({ ...clientUpdated })
                 }}
               />
             </td>
@@ -42,14 +41,15 @@ const SelectParkActivity = () => {
                   selected={friend?.activity?.name}
                   activities={activities}
                   onSelectedActivity={(activity) => {
-                    friends.splice(i, 1, {
+                    const aux = [...friends]
+                    aux.splice(i, 1, {
                       ...friend,
                       activity: {
                         name: activity.name,
                         price: activity.price
                       }
                     })
-                    setFriends?.(friends)
+                    setFriends?.(aux)
                   }}
                 />
               </td>
@@ -82,8 +82,8 @@ const SelectActivity = ({
         }}
       >
         <div
-          className={`border-2 ${
-            selected === activity.name ? 'border-black' : 'border-transparent'
+          className={`rounded-md shadow-md ${
+            selected === activity.name && 'bg-blue-300 text-white'
           }`}
         >
           <Typography variant="caption" component={'p'}>
