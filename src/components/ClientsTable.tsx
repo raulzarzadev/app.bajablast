@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   Typography
@@ -31,8 +32,12 @@ const ClientsTable = ({
   handleRemove
 }: {
   clients: NewClient[]
-  handleRemove: (clientId: NewClient['id']) => void
+  handleRemove?: (clientId: NewClient['id']) => void
 }) => {
+  const totalPayments = clients.reduce((acc, client) => {
+    return acc + (client?.payment?.amount || 0)
+  }, 0)
+
   return (
     <TableContainer component={Paper}>
       <Table
@@ -42,24 +47,29 @@ const ClientsTable = ({
       >
         <TableHead>
           <TableRow>
-            <TableCell>Elim</TableCell>
+            {handleRemove && <TableCell>Elim</TableCell>}
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
-            <TableCell align="center">ops</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {clients.map((client) => (
             <ClientsRow
               client={client}
-              handleRemove={() => {
-                handleRemove(client.id)
-              }}
+              handleRemove={handleRemove}
               key={client.id}
             />
           ))}
         </TableBody>
+        <TableFooter>
+          <TableCell colSpan={2} align="right">
+            Total:
+          </TableCell>
+          <TableCell align="right">
+            <CurrencySpan quantity={totalPayments} />
+          </TableCell>
+        </TableFooter>
       </Table>
     </TableContainer>
   )
@@ -70,11 +80,12 @@ const ClientsRow = ({
   handleRemove
 }: {
   client: NewClient
-  handleRemove: () => void
+  handleRemove?: (clientId: NewClient['id']) => void
 }) => {
+  //FIXME:  this modal is not working but the rest of the modals work fine
   const modal = useModal()
-  const modalEdit = useModal()
 
+  const modalEdit = useModal()
   //* calculate the total of the client counting friends and himself
   const total =
     (client?.friends?.reduce((acc, friend) => {
@@ -109,31 +120,32 @@ const ClientsRow = ({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
 
   return (
-    <TableRow>
-      <TableCell>
-        <IconButton
-          disabled={!!client.payment}
-          onClick={(e) => {
-            handleRemove()
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </TableCell>
+    <TableRow
+      onClick={(e) => {
+        modal.handleOpen()
+      }}
+    >
+      {handleRemove && (
+        <TableCell>
+          <IconButton
+            disabled={!!client.payment}
+            onClick={(e) => {
+              handleRemove?.(client?.id)
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </TableCell>
+      )}
       <TableCell>{client.name}</TableCell>
-      <TableCell>{(client?.friends?.length || 0) + 1}</TableCell>
-      <TableCell align="right">
+      <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
+      <TableCell colSpan={1} align="right">
         <CurrencySpan quantity={total} />
-      </TableCell>
-      <TableCell>
-        <Button
-          onClick={(e) => {
-            modal.handleOpen()
-          }}
+        <Modal
+          {...modal}
+          open={modal.open}
+          title={`Detalle de cliente ${client.name}`}
         >
-          Ver
-        </Button>
-        <Modal {...modal} title={`Detalle de cliente ${client.name}`}>
           <Box>
             <Typography>
               {client.name} - {client.activity?.name} -
@@ -219,9 +231,9 @@ const ClientsRow = ({
             >
             Pagar
           </Button> */}
-          <Modal {...modalEdit} title={`Editar cliente ${client.name}`}>
-            <StepperNewClientContext client={client} />
-          </Modal>
+        </Modal>
+        <Modal {...modalEdit} title={`Editar cliente ${client.name}`}>
+          <StepperNewClientContext client={client} />
         </Modal>
       </TableCell>
     </TableRow>

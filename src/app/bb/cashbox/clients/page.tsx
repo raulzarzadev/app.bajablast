@@ -39,12 +39,20 @@ const Clients = () => {
       <Typography component={'h6'} variant="h6" className="w-full text-left">
         En espera
       </Typography>
-      <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
+      {awaitingClients.length === 0 ? (
+        <Typography variant="h6">Aún no hay clientes en espera</Typography>
+      ) : (
+        <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
+      )}
 
       <Typography component={'h6'} variant="h6" className="w-full text-left">
         Pagos
       </Typography>
-      <ClientsTable clients={paidClients} handleRemove={handleRemove} />
+      {paidClients.length === 0 ? (
+        <Typography variant="h6">Aún no hay pagos realizados</Typography>
+      ) : (
+        <ClientsTable clients={paidClients} />
+      )}
     </Box>
   )
 }
