@@ -17,7 +17,7 @@ const SelectParkActivity = ({
   handleFinish?: () => void
 }) => {
   const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
-    return clients?.every((client) => !!client.activity?.name)
+    return clients?.every((client) => !!client?.activity?.name)
   }
   console.log(clients)
   return (
