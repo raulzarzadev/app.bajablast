@@ -66,6 +66,8 @@ export const ManageStepper = ({ steps }: { steps: any[] }) => {
   }
 
   const handleBack = () => {
+    //TODO
+    //@ts-ignore
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 

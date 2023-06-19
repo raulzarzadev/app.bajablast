@@ -60,7 +60,7 @@ const SelectParkActivity = ({
                 return { ...client }
               })
             }
-            const cleanClients = clearClientsActivity(clients)
+            const cleanClients = clearClientsActivity(clients || [])
             console.log({ cleanClients })
             setClients?.(cleanClients)
           }}

@@ -5,7 +5,7 @@ import SelectParkActivity from './SelectParcActivity'
 import { createContext, useContext, useState } from 'react'
 import FinishNewClient from './FinishNewClient'
 import { NewClientContext, NewClientProvider } from '@/context/new-client'
-import { NewClient } from '@/types/user'
+import { Friend, NewClient } from '@/types/user'
 
 export type StepperContextType = {
   step: number
@@ -52,10 +52,10 @@ function StepperNewClient() {
               <SelectParkActivity
                 clients={[
                   newClientContext.client as NewClient,
-                  ...(newClientContext.friends || [])
+                  ...(newClientContext.friends as NewClient[])
                 ]}
                 setClients={(clients) => {
-                  newClientContext?.setClient?.(clients[0])
+                  newClientContext?.setClient?.(clients?.[0] as NewClient)
                   newClientContext.setFriends?.(clients.slice(1))
                 }}
                 handleFinish={() => {

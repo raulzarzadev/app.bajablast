@@ -99,7 +99,7 @@ const AddFriendsForm = ({
         </Button>
         <Button
           onClick={() => {
-            handleFinish?.(newFriends)
+            handleFinish?.(newFriends || [])
           }}
         >
           Listo
