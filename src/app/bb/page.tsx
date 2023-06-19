@@ -16,7 +16,7 @@ const BB = () => {
 
       <UserCard />
 
-      <ParkActivities />
+      {/* <ParkActivities /> */}
 
       {['COLLABORATOR', 'COORDINATOR'].includes(user?.rol || '') && (
         <ParkAreas />

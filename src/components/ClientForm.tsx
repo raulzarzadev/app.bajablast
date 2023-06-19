@@ -60,7 +60,7 @@ const ClientForm = () => {
         {/** **************************************** Medic information */}
         <ModalMedicInfo />
         {/** **************************************** Terms and conditions */}
-        {formValues.acceptTerms ? (
+        {formValues.termsAccepted ? (
           <Button
             variant="outlined"
             color="success"
@@ -110,7 +110,7 @@ const ClientForm = () => {
                   e.preventDefault()
                   handleClearSignature()
                   setImageSignature(null)
-                  methods.setValue('acceptTerms', false)
+                  methods.setValue('termsAccepted', false)
                 }}
                 color="success"
               >
@@ -124,7 +124,7 @@ const ClientForm = () => {
                     .getTrimmedCanvas()
                     .toDataURL('image/png')
                   setImageSignature(image)
-                  methods.setValue('acceptTerms', true)
+                  methods.setValue('termsAccepted', true)
                 }}
                 penColor="green"
                 ref={(ref) => (signatureRef.current = ref)}
@@ -147,7 +147,7 @@ const ClientForm = () => {
 
             <ControllerCheckbox
               disabled={!imageSignature}
-              name={'acceptTerms'}
+              name={'termsAccepted'}
               label="Acepto los terminos y condiciones descritos arriba"
             />
 
@@ -163,7 +163,7 @@ const ClientForm = () => {
           </Box>
         </Modal>
         <Button
-          disabled={!formValues.acceptTerms && formValues.medicalInfoUpdated}
+          disabled={!formValues.termsAccepted && formValues.medicalInfoUpdated}
           // LinkComponent={Link}
           type="submit"
         >
