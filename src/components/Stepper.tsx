@@ -5,6 +5,7 @@ import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import { StepLabel } from '@mui/material'
 
 export default function Stepper({
   steps,
@@ -52,12 +53,12 @@ export default function Stepper({
     setActiveStep(step)
   }
 
-  const handleComplete = () => {
-    const newCompleted = completed
-    newCompleted[activeStep] = true
-    setCompleted(newCompleted)
-    handleNext()
-  }
+  // const handleComplete = () => {
+  //   const newCompleted = completed
+  //   newCompleted[activeStep] = true
+  //   setCompleted(newCompleted)
+  //   handleNext()
+  // }
 
   const handleReset = () => {
     setActiveStep(0)
@@ -66,12 +67,10 @@ export default function Stepper({
 
   return (
     <Box sx={{ width: '100%' }} className="max-w-md mx-auto">
-      <MUIStepper activeStep={activeStep} className="mb-4">
-        {steps.map(({ label }, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
+      <MUIStepper activeStep={activeStep} alternativeLabel className="mb-4">
+        {steps.map((label) => (
+          <Step key={label.label}>
+            <StepLabel>{label.label}</StepLabel>
           </Step>
         ))}
       </MUIStepper>
