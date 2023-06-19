@@ -6,9 +6,9 @@ import ControllerCheckbox from './ControllerCheckbox'
 import ControllerText from './ControllerText'
 import { useFormContext } from 'react-hook-form'
 import bloodTypes from '@/CONST/bloodTypes'
-import MonitorHeartIcon from '@mui/icons-material/MonitorHeart'
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation'
 import { useEffect } from 'react'
-const ModalMedicInfo = ({ name = '' }) => {
+const ModalMedicInfo = ({ name = '', justIcon = false }) => {
   const medicModal = useModal()
   const methods = useFormContext()
 
@@ -24,29 +24,32 @@ const ModalMedicInfo = ({ name = '' }) => {
   return (
     <>
       <Box className="flex w-full justify-center">
-        {!medicalInfoUpdated ? (
-          <Tooltip title="Actualiza Formulario medico">
+        <Tooltip title="Información medica">
+          {justIcon ? (
             <IconButton
               onClick={(e) => {
                 e.preventDefault()
                 medicModal.handleOpen()
               }}
+              color={medicalInfoUpdated ? 'success' : 'error'}
             >
-              <MonitorHeartIcon color="error" />
+              <MedicalInformationIcon />
             </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Formulario medico actualizado">
-            <IconButton
+          ) : (
+            <Button
+              variant="outlined"
+              fullWidth
               onClick={(e) => {
                 e.preventDefault()
                 medicModal.handleOpen()
               }}
+              color={medicalInfoUpdated ? 'success' : 'error'}
+              endIcon={<MedicalInformationIcon />}
             >
-              <MonitorHeartIcon color="success" />
-            </IconButton>
-          </Tooltip>
-        )}
+              Actualizar info
+            </Button>
+          )}
+        </Tooltip>
       </Box>
 
       <Modal {...medicModal} title="Información Medica">

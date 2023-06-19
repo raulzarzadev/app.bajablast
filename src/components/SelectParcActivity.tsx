@@ -19,7 +19,6 @@ const SelectParkActivity = ({
   const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
     return clients?.every((client) => !!client?.activity?.name)
   }
-  console.log(clients)
   return (
     <Box>
       <div>

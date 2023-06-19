@@ -1,5 +1,4 @@
 import { Box, Button, IconButton, TextField } from '@mui/material'
-import { useContext, useEffect, useState } from 'react'
 import ControllerText from './ControllerText'
 import ModalMedicInfo from './ModalMedicInfo'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
@@ -65,7 +64,7 @@ const AddFriendsForm = ({
                 </Box>
                 <Box component={'td'}>
                   {/** The name have last dot to access the nested object  */}
-                  <ModalMedicInfo name={`friends.${index}.`} />
+                  <ModalMedicInfo name={`friends.${index}.`} justIcon />
                 </Box>
               </Box>
             ))}
