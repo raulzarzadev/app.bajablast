@@ -21,14 +21,16 @@ import LoadingButton from '@/components/LoadingButton'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 const Clients = () => {
   const [clients, setClients] = useState<NewClient[]>([])
-  const db = localStorage.getItem('tmp-bb-db')
+  const [db, setDB] = useState([])
   useEffect(() => {
-    setClients(JSON.parse(db || '[]'))
-  }, [db])
-  console.log({ clients })
-  const handleRemove = (index: number) => {
+    const db = localStorage.getItem('tmp-bb-db')
     const oldDb = JSON.parse(db || '[]')
-    const newClients = [...oldDb.slice(0, index)]
+    setDB(oldDb)
+    setClients(oldDb)
+  }, [])
+
+  const handleRemove = (index: number) => {
+    const newClients = [...db.slice(0, index)]
     localStorage.setItem('tmp-bb-db', JSON.stringify(newClients))
     setClients(newClients)
   }
