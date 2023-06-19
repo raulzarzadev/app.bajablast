@@ -121,7 +121,7 @@ const ClientsRow = ({
         </IconButton>
       </TableCell>
       <TableCell>{client.name}</TableCell>
-      <TableCell>{client?.friends?.length}</TableCell>
+      <TableCell>{(client?.friends?.length || 0) + 1}</TableCell>
       <TableCell align="right">
         <CurrencySpan quantity={total} />
       </TableCell>
