@@ -22,12 +22,14 @@ const SelectParkActivity = ({
   console.log(clients)
   return (
     <Box>
-      <table>
-        <tbody>
+      <div>
+        <div>
           {clients?.map((client, i) => (
-            <tr key={(client?.name || '') + i}>
-              <td>{client?.name || ''}</td>
-              <td className="flex overflow-x-auto ">
+            <div key={(client?.name || '') + i}>
+              <Typography variant="h6" className="text-center">
+                {client?.name || ''}
+              </Typography>
+              <div className="flex overflow-x-auto ">
                 <SelectActivity
                   selected={client?.activity?.name}
                   activities={activities}
@@ -43,11 +45,11 @@ const SelectParkActivity = ({
                     setClients?.(aux)
                   }}
                 />
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
       <div className="w-full flex justify-evenly">
         <Button
           onClick={() => {
@@ -90,7 +92,7 @@ const SelectActivity = ({
   <>
     {activities.map((activity) => (
       <Button
-        className=" w-22 aspect-video text-center flex flex-col items-center justify-center m-1"
+        className=" w-22 aspect-video text-center flex flex-col items-center justify-center m-1 mt-0"
         key={activity.name}
         onClick={(e) => {
           e.preventDefault()

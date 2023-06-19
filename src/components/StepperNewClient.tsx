@@ -65,7 +65,7 @@ function StepperNewClient() {
             )
           },
           {
-            label: 'Guardar',
+            label: 'Pagar',
             component: <FinishNewClient />
           }
         ]}
