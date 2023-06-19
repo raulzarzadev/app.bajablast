@@ -4,11 +4,12 @@ import { useContext } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 const FinishNewClient = () => {
-  const { client, friends } = useContext(NewClientContext)
+  const { client, friends = [] } = useContext(NewClientContext)
   console.log({ client, friends })
   const total =
-    client?.activity?.price +
-    friends?.reduce((acc, friend) => acc + friend?.activity?.price, 0)
+    (client?.activity?.price || 0) +
+    friends?.reduce((acc, friend) => acc + (friend?.activity?.price || 0), 0)
+
   return (
     <Box component={'section'}>
       <table className="w-full text-center">
@@ -20,13 +21,13 @@ const FinishNewClient = () => {
           </tr>
           <tr>
             <td>{client?.name}</td>
-            <td>{client?.activity?.activityId}</td>
+            <td>{client?.activity?.name}</td>
             <td>{client?.activity?.price}</td>
           </tr>
           {friends?.map((friend) => (
             <tr key={friend.id}>
               <td>{friend?.name}</td>
-              <td>{friend?.activity?.activityId}</td>
+              <td>{friend?.activity?.name}</td>
               <td>{friend?.activity?.price}</td>
             </tr>
           ))}

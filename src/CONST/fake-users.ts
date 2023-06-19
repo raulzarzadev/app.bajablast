@@ -6,7 +6,9 @@ export const client: UserType = {
   birthday: new Date(1990, 7, 12),
   rol: 'CLIENT',
   phone: '525543375016',
-  emergencyPhone: '525543374016'
+  emergencyPhone: '525543374016',
+  bloodType: 'N/A',
+  medicalInfo: ''
 }
 
 export const collaborator: UserType = {
@@ -15,7 +17,9 @@ export const collaborator: UserType = {
   birthday: new Date(1999, 3, 28),
   rol: 'COLLABORATOR',
   phone: '525543375016',
-  emergencyPhone: '525543374016'
+  emergencyPhone: '525543374016',
+  bloodType: 'N/A',
+  medicalInfo: ''
 }
 
 export const coordinator: UserType = {
@@ -24,5 +28,7 @@ export const coordinator: UserType = {
   birthday: new Date(2002, 1, 4),
   rol: 'COORDINATOR',
   phone: '525543375016',
-  emergencyPhone: '525543374016'
+  emergencyPhone: '525543374016',
+  bloodType: 'N/A',
+  medicalInfo: ''
 }
