@@ -3,6 +3,7 @@ import { Box } from '@mui/material'
 import { useContext } from 'react'
 import LoadingButton from './LoadingButton'
 import { NewClient } from '@/types/user'
+import CurrencySpan from './CurrencySpan'
 
 const FinishNewClient = ({
   handleFinish,
@@ -30,7 +31,9 @@ const FinishNewClient = ({
             <tr key={(friend?.id || '') + i}>
               <td>{friend?.name}</td>
               <td>{friend?.activity?.name}</td>
-              <td>{friend?.activity?.price}</td>
+              <td>
+                <CurrencySpan quantity={friend?.activity?.price} />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -38,7 +41,9 @@ const FinishNewClient = ({
           <tr>
             <td></td>
             <td>Total:</td>
-            <td>${total.toFixed(2)}</td>
+            <td>
+              <CurrencySpan quantity={total} />
+            </td>
           </tr>
         </tfoot>
       </table>

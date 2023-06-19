@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { NewClientContext } from '@/context/new-client'
 import { Friend, NewClient } from '@/types/user'
+import CurrencySpan from './CurrencySpan'
 
 const SelectParkActivity = ({
   clients,
@@ -108,7 +109,7 @@ const SelectActivity = ({
             {activity.name}
           </Typography>
           <Typography variant="caption" component={'p'}>
-            ${activity.price.toFixed(2)}
+            <CurrencySpan quantity={activity.price} />
           </Typography>
         </div>
       </Button>
