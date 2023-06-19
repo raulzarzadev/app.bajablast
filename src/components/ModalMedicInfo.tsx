@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form'
 import bloodTypes from '@/CONST/bloodTypes'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation'
 import { useEffect } from 'react'
+
 const ModalMedicInfo = ({ name = '', justIcon = false }) => {
   const medicModal = useModal()
   const methods = useFormContext()

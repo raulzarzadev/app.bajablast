@@ -10,18 +10,24 @@ export const NewClientContext = createContext<{
   setStep?: (step: number) => void
 }>({})
 
-export function NewClientProvider({ children }: { children: ReactNode }) {
-  const [client, setClient] = useState<NewClient | undefined>()
-  const [friends, setFriends] = useState([])
+export function NewClientProvider({
+  children,
+  client
+}: {
+  client?: NewClient
+  children: ReactNode
+}) {
+  const [_client, setClient] = useState<NewClient | undefined>(client)
+  const [friends, setFriends] = useState(client?.friends || [])
   const [step, setStep] = useState(0)
   return (
     <NewClientContext.Provider
       value={{
-        client,
+        client: _client,
         setClient,
         friends,
         setFriends,
-        step: 0,
+        step,
         setStep
       }}
     >

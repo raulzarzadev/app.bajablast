@@ -1,7 +1,8 @@
 import { BloodType } from '@/CONST/bloodTypes'
 import { ClientActivity } from './activities'
+import { BaseType } from './base'
 
-export type UserType = {
+export interface UserType extends Partial<BaseType> {
   name: string
   email: string
   phone: string
@@ -21,4 +22,10 @@ export interface NewClient extends UserType {
   medicalInfoUpdated?: boolean
   activity?: ClientActivity
   signature?: string | null
+  friends?: Friend[]
+  payment?: {
+    method: 'cash' | 'card'
+    date: Date
+    amount: number
+  }
 }

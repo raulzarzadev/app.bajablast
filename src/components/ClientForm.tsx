@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import SignatureCanvas from 'react-signature-canvas'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useId, useRef, useState } from 'react'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
@@ -19,7 +19,9 @@ const ClientForm = ({
   client?: NewClient
   handleSubmit?: (data: NewClient) => void
 }) => {
+  const id = useId()
   const defaultClient: NewClient = {
+    id,
     bloodType: 'N/A',
     birthday: new Date(),
     signature: '',

@@ -5,6 +5,7 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import CloseIcon from '@mui/icons-material/Close'
 import ControllerDate from './ControllerDate'
 import { Friend } from '@/types/user'
+import { useId } from 'react'
 
 const AddFriendsForm = ({
   friends,
@@ -31,8 +32,14 @@ const AddFriendsForm = ({
     name: 'friends' // unique name for your Field Array,
   })
 
-  const newFriends = methods.watch('friends')
-
+  const newFriends = methods.watch('friends') || []
+  const newFriendsWhitId =
+    [
+      ...newFriends.map((friend, i) => ({
+        ...friend,
+        id: fields[i].id
+      }))
+    ] || []
   return (
     <div>
       <FormProvider {...methods}>
@@ -98,7 +105,7 @@ const AddFriendsForm = ({
         </Button>
         <Button
           onClick={() => {
-            handleFinish?.(newFriends || [])
+            handleFinish?.(newFriendsWhitId)
           }}
         >
           Listo

@@ -24,7 +24,7 @@ const SelectParkActivity = ({
       <div>
         <div>
           {clients?.map((client, i) => (
-            <div key={(client?.name || '') + i}>
+            <div key={client?.id || i}>
               <Typography variant="h6" className="text-center">
                 {client?.name || ''}
               </Typography>

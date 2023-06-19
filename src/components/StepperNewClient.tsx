@@ -1,11 +1,12 @@
 import Stepper, { ManageStepper } from './Stepper'
 import ClientForm from './ClientForm'
 import AddFriendsForm from './AddFriendsForm'
-import SelectParkActivity from './SelectParcActivity'
+import SelectParkActivity from './SelectParkActivity'
 import { createContext, useContext, useState } from 'react'
 import FinishNewClient from './FinishNewClient'
 import { NewClientContext, NewClientProvider } from '@/context/new-client'
-import { Friend, NewClient } from '@/types/user'
+import { NewClient } from '@/types/user'
+import { useRouter } from 'next/navigation'
 
 export type StepperContextType = {
   step: number
@@ -18,6 +19,40 @@ export const StepperContext = createContext<StepperContextType>({
 function StepperNewClient() {
   const [step, setStep] = useState(0)
   const newClientContext = useContext(NewClientContext)
+  const router = useRouter()
+  const onSubmit = async () => {
+    const { client, friends } = newClientContext
+
+    return new Promise<void>((res, rej) => {
+      // setTimeout(() => {
+      //   rej()
+      // }, 500)
+      console.log({ client, friends })
+      const db = localStorage.getItem('tmp-bb-db') || '[]'
+
+      const oldDB = JSON.parse(db)
+
+      console.log({ oldDB })
+
+      //Delete old client when is editing
+
+      const newClient = {
+        ...client,
+        friends
+      }
+      const oldDbClean = oldDB.filter(
+        (client: any) => client.id !== newClient.id
+      )
+      console.log({ oldDbClean, client })
+      const newDB = [...oldDbClean, newClient]
+
+      localStorage.setItem('tmp-bb-db', JSON.stringify(newDB))
+      setTimeout(() => {
+        res()
+        router.push('/bb/cashbox/clients')
+      }, 2000)
+    })
+  }
   return (
     <StepperContext.Provider value={{ step, setStep }}>
       <Stepper
@@ -66,7 +101,18 @@ function StepperNewClient() {
           },
           {
             label: 'Pagar',
-            component: <FinishNewClient />
+            component: (
+              <FinishNewClient
+                clients={[
+                  newClientContext.client as NewClient,
+                  ...(newClientContext.friends as NewClient[])
+                ]}
+                handleFinish={async () => {
+                  console.log('finish')
+                  return onSubmit()
+                }}
+              />
+            )
           }
         ]}
       />
@@ -74,9 +120,13 @@ function StepperNewClient() {
   )
 }
 
-export default function StepperNewClientCOntext() {
+export default function StepperNewClientContext({
+  client
+}: {
+  client?: NewClient
+}) {
   return (
-    <NewClientProvider>
+    <NewClientProvider client={client}>
       <StepperNewClient />
     </NewClientProvider>
   )

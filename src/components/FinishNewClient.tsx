@@ -1,14 +1,20 @@
 import { NewClientContext } from '@/context/new-client'
 import { Box } from '@mui/material'
 import { useContext } from 'react'
-import { useFormContext } from 'react-hook-form'
+import LoadingButton from './LoadingButton'
+import { NewClient } from '@/types/user'
 
-const FinishNewClient = () => {
-  const { client, friends = [] } = useContext(NewClientContext)
-  console.log({ client, friends })
-  const total =
-    (client?.activity?.price || 0) +
-    friends?.reduce((acc, friend) => acc + (friend?.activity?.price || 0), 0)
+const FinishNewClient = ({
+  handleFinish,
+  clients
+}: {
+  clients: NewClient[]
+  handleFinish?: () => void | Promise<void>
+}) => {
+  const total = clients?.reduce(
+    (acc, client) => acc + (client?.activity?.price || 0),
+    0
+  )
 
   return (
     <Box component={'section'}>
@@ -19,13 +25,9 @@ const FinishNewClient = () => {
             <th>Actividad</th>
             <th>Cantidad</th>
           </tr>
-          <tr>
-            <td>{client?.name}</td>
-            <td>{client?.activity?.name}</td>
-            <td>{client?.activity?.price}</td>
-          </tr>
-          {friends?.map((friend, i) => (
-            <tr key={(friend?.name || '') + i}>
+
+          {clients?.map((friend, i) => (
+            <tr key={(friend?.id || '') + i}>
               <td>{friend?.name}</td>
               <td>{friend?.activity?.name}</td>
               <td>{friend?.activity?.price}</td>
@@ -40,6 +42,13 @@ const FinishNewClient = () => {
           </tr>
         </tfoot>
       </table>
+      <div className="w-full justify-center my-8 flex">
+        <LoadingButton
+          onClick={handleFinish}
+          aria-label="Save"
+          label="Registrar"
+        />
+      </div>
     </Box>
   )
 }
