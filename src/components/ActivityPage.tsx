@@ -5,6 +5,7 @@ import { ParkActivity } from '@/types/activities'
 import { Box, Container, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
+import ActivityCollaboratorsSchedule from './ActivityCollaboratorsSchedule'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -39,6 +40,12 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
           </Box>
         </Box>
       </Container>
+      <Container>
+        {['COORDINATOR', 'ADMIN', 'COLLABORATOR'].includes(user?.rol || '') && (
+          <ActivityCollaboratorsSchedule />
+        )}
+      </Container>
+
       <Container>
         {['COORDINATOR', 'ADMIN'].includes(user?.rol || '') && (
           <ActivityAdmin />

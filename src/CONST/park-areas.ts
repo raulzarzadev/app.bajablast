@@ -8,6 +8,12 @@ type ParkAreas = {
 }
 export const parkAreas: ParkAreas[] = [
   {
+    name: 'Administración',
+    description: 'Acceso de usuarios y administración de caja',
+    accessibleTo: ['COLLABORATOR', 'COORDINATOR'],
+    href: '/bb/admin'
+  },
+  {
     name: 'Caja',
     description: 'Acceso de usuarios y administración de caja',
     accessibleTo: ['COLLABORATOR', 'COORDINATOR'],
