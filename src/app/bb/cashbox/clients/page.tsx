@@ -2,10 +2,13 @@
 import { NewClient } from '@/types/user'
 import { Box, Button, Typography } from '@mui/material'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
+import { UserContext } from '@/context/user'
 
 const Clients = () => {
+  const { user } = useContext(UserContext)
+
   const [clients, setClients] = useState<NewClient[]>([])
   const [db, setDB] = useState([])
   useEffect(() => {
@@ -45,13 +48,21 @@ const Clients = () => {
         <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
       )}
 
-      <Typography component={'h6'} variant="h6" className="w-full text-left">
-        Pagos
-      </Typography>
-      {paidClients.length === 0 ? (
-        <Typography variant="h6">Aún no hay pagos realizados</Typography>
-      ) : (
-        <ClientsTable clients={paidClients} />
+      {user?.rol === 'COORDINATOR' && (
+        <>
+          <Typography
+            component={'h6'}
+            variant="h6"
+            className="w-full text-left"
+          >
+            Pagos
+          </Typography>
+          {paidClients.length === 0 ? (
+            <Typography variant="h6">Aún no hay pagos realizados</Typography>
+          ) : (
+            <ClientsTable clients={paidClients} />
+          )}
+        </>
       )}
     </Box>
   )

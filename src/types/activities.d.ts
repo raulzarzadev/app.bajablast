@@ -1,3 +1,5 @@
+import { BaseType } from './base'
+
 export type Weekdays =
   | 'Monday'
   | 'Tuesday'
@@ -9,11 +11,11 @@ export type Weekdays =
 export type Schedule = {
   [key in Weekdays]: `${number}:${number}-${number}:${number}` | '24' | null
 }
-export type ParkActivity = {
+export interface ParkActivity extends Partial<BaseType> {
+  shortName: string
   name: string
   description: string
-  activityId: string
-  schedule: Schedule[]
+  schedule: Schedule
   price: number
 }
 

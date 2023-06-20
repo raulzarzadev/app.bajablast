@@ -1,22 +1,23 @@
 import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Container, Typography } from '@mui/material'
-import Link from 'next/link'
 
 const ParkActivities = ({
   onClickActivity
 }: {
-  onClickActivity: (activityId: string) => void
+  onClickActivity?: (activityName: string) => void
 }) => {
   return (
-    <Container component={'section'} className="">
-      <Box component={'div'} className="flex gap-2 flex-wrap justify-center">
+    <Container component={'section'} className="max-w-md mx-auto">
+      <Typography variant="h6">Actividades</Typography>
+      <Box component={'div'} className="flex gap-2 flex-wrap justify-start ">
         {activities.map((activity) => (
           <Button
             onClick={(e) => {
               e.preventDefault()
-              onClickActivity(activity.activityId)
+              onClickActivity?.(activity?.id || activity.shortName)
             }}
             key={activity.name}
+            className="p-0"
           >
             <Box
               component={'article'}

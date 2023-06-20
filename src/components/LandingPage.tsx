@@ -1,4 +1,6 @@
+import { Button } from '@mui/material'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const LandingPage = () => {
   return (
@@ -13,7 +15,11 @@ const LandingPage = () => {
           />
           p
         </div>
-        <span></span>
+        <span>
+          <Button LinkComponent={Link} href="/bb">
+            Entrar al parque
+          </Button>
+        </span>
       </div>
     </div>
   )
