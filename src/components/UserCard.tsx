@@ -7,8 +7,8 @@ import Image from 'next/image'
 import { useContext } from 'react'
 import { UserContext } from '@/context/user'
 import { dateMx } from '@/utils/utils-date'
-
-const UserCard = () => {
+import EditIcon from '@mui/icons-material/Edit'
+const UserCard = ({ onEdit }: { onEdit?: () => void }) => {
   const modal = useModal()
   const { user } = useContext(UserContext)
   if (!user) return <div>No user </div>
@@ -19,11 +19,26 @@ const UserCard = () => {
         <p aria-label="user-rol" className="text-end text-sm italic">
           {user.isAdmin && 'admin'} {user?.rol}
         </p>
-        <p aria-label="user-name">{user?.name}</p>
-        <p aria-label="user-age">{dateMx(user?.birthday)}</p>
-        <p aria-label="user-email">{user?.email}</p>
-        <p aria-label="user-mobil">{user?.phone}</p>
-        <p aria-label="user-mobil-emergency">{user?.emergencyPhone}</p>
+        <div className="flex">
+          {onEdit && (
+            <span>
+              <IconButton
+                onClick={(e) => {
+                  onEdit()
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </span>
+          )}
+          <div>
+            <p aria-label="user-name">{user?.name} </p>
+            <p aria-label="user-age">{dateMx(user?.birthday)}</p>
+            <p aria-label="user-email">{user?.email}</p>
+            <p aria-label="user-mobil">{user?.phone}</p>
+            <p aria-label="user-mobil-emergency">{user?.emergencyPhone}</p>
+          </div>
+        </div>
       </div>
       <Tooltip title="Open settings ">
         <IconButton

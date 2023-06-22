@@ -1,4 +1,13 @@
-import { Box, Button, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Typography
+} from '@mui/material'
 import { useForm, FormProvider } from 'react-hook-form'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
@@ -10,14 +19,17 @@ import ControllerText from './ControllerText'
 import ControllerCheckbox from './ControllerCheckbox'
 import Image from 'next/image'
 import ModalMedicInfo from './ModalMedicInfo'
-import { NewClient } from '@/types/user'
+import { NewClient, UserType } from '@/types/user'
+import { roles } from '@/CONST/user'
 
 const ClientForm = ({
   client,
-  handleSubmit
+  handleSubmit,
+  editRol
 }: {
   client?: NewClient
   handleSubmit?: (data: NewClient) => void
+  editRol: boolean
 }) => {
   const id = useId()
   const defaultClient: NewClient = {
@@ -32,7 +44,8 @@ const ClientForm = ({
     medicalInfoUpdated: false,
     termsAccepted: false,
     rol: 'CLIENT',
-    emergencyPhone: ''
+    emergencyPhone: '',
+    image: ''
   }
   const methods = useForm({
     defaultValues: client || defaultClient
@@ -52,13 +65,39 @@ const ClientForm = ({
     }
     handleSubmit?.(clientData)
   }
-
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col gap-4 mx-auto max-w-md"
       >
+        {editRol && (
+          <FormControl className="mx-auto">
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Seleccionar tipo de usuario
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              value={formValues.rol}
+              onChange={(e) =>
+                methods.setValue(
+                  'rol',
+                  e.target.value as unknown as UserType['rol']
+                )
+              }
+            >
+              {roles.map(({ key, label }) => (
+                <FormControlLabel
+                  key={key}
+                  value={key}
+                  control={<Radio />}
+                  label={label}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        )}
         <ControllerText name="name" label="Nombre" />
         <ControllerText name="email" label="Correo" />
         <ControllerPhone name="phone" label="telefono" />
