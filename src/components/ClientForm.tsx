@@ -29,11 +29,9 @@ const ClientForm = ({
 }: {
   client?: NewClient
   handleSubmit?: (data: NewClient) => void
-  editRol: boolean
+  editRol?: boolean
 }) => {
-  const id = useId()
   const defaultClient: NewClient = {
-    id,
     bloodType: 'N/A',
     birthday: new Date(),
     signature: '',

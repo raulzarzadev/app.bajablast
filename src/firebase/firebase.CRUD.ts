@@ -2,11 +2,9 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
-  deleteObject,
-  uploadBytes
+  deleteObject
 } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
-import { format as fnsFormat } from 'date-fns'
 import { v4 as uidGenerator } from 'uuid'
 
 import {
@@ -25,8 +23,7 @@ import {
   where,
   writeBatch
 } from 'firebase/firestore'
-//import { Dates } from 'firebase-dates-util'
-import { es } from 'date-fns/locale'
+
 export class FirebaseCRUD {
   collectionName: string
   db: any
@@ -44,6 +41,7 @@ export class FirebaseCRUD {
    * @callback cb a function to return the progress
    *
    */
+
   uploadFile = (
     file: Blob | Uint8Array | ArrayBuffer,
     fieldName = '',
@@ -132,6 +130,7 @@ export class FirebaseCRUD {
   }
 
   // -------------------------------------------------------------> CRUD-Items
+
   /**
    *
    * @param item object to create
@@ -175,6 +174,7 @@ export class FirebaseCRUD {
         })
     )
   }
+
   async updateItem(itemId: string, item: object) {
     const newItem = {
       ...item,
@@ -190,8 +190,6 @@ export class FirebaseCRUD {
   }
 
   async setItem(itemId: string, newItem: object) {
-    const currentUser = getAuth().currentUser
-
     const item = {
       id: itemId,
       ...this.createItemMetadata(),
@@ -277,6 +275,7 @@ export class FirebaseCRUD {
   /**
    * listen all documents in a collection implementing filters
    * @param filters[]: where(itemField,'==','value')
+   * @param cb callback with array of items
    */
   async listenItems(filters: any, cb: CallableFunction) {
     this.validateFilters(filters, this.collectionName)

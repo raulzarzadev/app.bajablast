@@ -1,6 +1,4 @@
-import { NewClientContext } from '@/context/new-client'
 import { Box } from '@mui/material'
-import { useContext } from 'react'
 import LoadingButton from './LoadingButton'
 import { NewClient } from '@/types/user'
 import CurrencySpan from './CurrencySpan'

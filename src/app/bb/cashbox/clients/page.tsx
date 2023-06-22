@@ -2,28 +2,30 @@
 import { NewClient } from '@/types/user'
 import { Box, Button, Typography } from '@mui/material'
 import Link from 'next/link'
-import { useContext, useEffect, useState } from 'react'
+import { SetStateAction, useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
 import { UserContext } from '@/context/user'
+import { deleteUser, listenClients } from '@/firebase/users'
 
 const Clients = () => {
   const { user } = useContext(UserContext)
 
   const [clients, setClients] = useState<NewClient[]>([])
-  const [db, setDB] = useState([])
+
   useEffect(() => {
-    const db = localStorage.getItem('tmp-bb-db')
-    const oldDb = JSON.parse(db || '[]')
-    setDB(oldDb)
-    setClients(oldDb)
+    listenClients((clients: SetStateAction<NewClient[]>) => {
+      console.log({ clients })
+      setClients(clients)
+    })
   }, [])
 
-  const handleRemove = (clientId: NewClient['id']) => {
-    const newClients = [
-      ...db.filter((client: NewClient) => client?.id !== clientId)
-    ]
-    localStorage.setItem('tmp-bb-db', JSON.stringify(newClients))
-    setClients(newClients)
+  const handleRemove = async (clientId: NewClient['id']) => {
+    try {
+      const res = await deleteUser(clientId || '')
+      console.log({ res })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const awaitingClients = clients.filter((client) => !client.payment)
