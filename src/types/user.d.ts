@@ -11,6 +11,7 @@ export interface UserType extends Partial<BaseType> {
   emergencyPhone: string
   bloodType: BloodType
   medicalInfo: string
+  image: string
 }
 
 export interface Friend extends Partial<UserType> {

@@ -19,6 +19,7 @@ import { UserContext } from '@/context/user'
 import { client, collaborator, coordinator } from '@/CONST/fake-users'
 import { Skeleton } from '@mui/material'
 import Image from 'next/image'
+import { googleLogin } from '@/firebase/auth'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -207,6 +208,16 @@ function Navigation() {
                   open={Boolean(anchorElSignIn)}
                   onClose={handleCloseSignIn}
                 >
+                  <MenuItem>
+                    <Button
+                      onClick={(e) => {
+                        googleLogin()
+                        handleCloseUserMenu()
+                      }}
+                    >
+                      Google
+                    </Button>
+                  </MenuItem>
                   <MenuItem>
                     <Button
                       onClick={(e) => {
