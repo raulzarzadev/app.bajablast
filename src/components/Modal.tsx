@@ -44,7 +44,13 @@ const Modal = ({
           className=" flex w-full justify-between items-center sticky top-0 z-50 bg-white p-1 pb-0 shadow-md  "
         >
           <span>{title && <Typography>{title}</Typography>}</span>
-          <IconButton onClick={onClose}>
+          <IconButton
+            onClick={(e) => {
+              console.log(e)
+              console.log({ open })
+              onClose(e)
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>

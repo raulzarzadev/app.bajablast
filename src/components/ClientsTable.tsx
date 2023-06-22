@@ -52,6 +52,7 @@ const ClientsTable = ({
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
+            {handleRemove && <TableCell align="center">Ops</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -64,7 +65,7 @@ const ClientsTable = ({
           ))}
         </TableBody>
         <TableFooter>
-          <TableCell colSpan={2} align="right">
+          <TableCell colSpan={handleRemove ? 3 : 2} align="right">
             Total:
           </TableCell>
           <TableCell align="right">
@@ -84,31 +85,17 @@ const ClientsRow = ({
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
   //FIXME:  this modal is not working but the rest of the modals work fine
-  const modal = useModal()
-
-  const modalEdit = useModal()
+  const modalDetails = useModal()
   //* calculate the total of the client counting friends and himself
   const total =
     (client?.friends?.reduce((acc, friend) => {
       return acc + (friend?.activity?.price || 0)
     }, 0) || 0) + (client?.activity?.price || 0)
 
-  const handleEdit = () => {
-    modalEdit.handleOpen()
-  }
-
-  const handlePay = async (payment: NewClient['payment']) => {
-    const clientId = client.id || ''
-    const res = await updateUser(clientId, { payment })
-    return
-  }
-
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
-
   return (
     <TableRow
       onClick={(e) => {
-        modal.handleOpen()
+        modalDetails.handleOpen()
       }}
     >
       {handleRemove && (
@@ -125,104 +112,136 @@ const ClientsRow = ({
       )}
       <TableCell>{client.name}</TableCell>
       <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
-      <TableCell colSpan={1} align="right">
+      <TableCell align="right">
         <CurrencySpan quantity={total} />
-        <Modal
-          {...modal}
-          open={modal.open}
-          title={`Detalle de cliente ${client.name}`}
-        >
-          <Box>
-            <Typography>
-              {client.name} - {client.activity?.name} -
-              <CurrencySpan quantity={client.activity?.price} />
-            </Typography>
-            {client.friends?.map((friend) => (
-              <Typography key={friend.name}>
-                {friend.name} - {friend.activity?.name} -
-                <CurrencySpan quantity={friend.activity?.price} />
-              </Typography>
-            ))}
-          </Box>
-
-          <Box className="flex flex-col w-full justify-evenly mb-8">
-            {!!client.payment ? (
-              <Box className="flex w-full justify-center my-10">
-                <Typography variant="h4" className="mt-10">
-                  Pagado <CurrencySpan quantity={client.payment.amount} />
-                </Typography>
-              </Box>
-            ) : (
-              <>
-                {' '}
-                <Box className="flex w-full justify-end items-baseline">
-                  <Typography variant="h6">Total:</Typography>
-                  <CurrencySpan quantity={total} />
-                </Box>
-                <Box className="flex w-full justify-center">
-                  <FormControl className="">
-                    <FormLabel id="demo-row-radio-buttons-group-label">
-                      Metodo de pago
-                    </FormLabel>
-                    <RadioGroup
-                      value={paymentMethod}
-                      onChange={(e) => {
-                        setPaymentMethod(e.target.value as PaymentMethod)
-                      }}
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                    >
-                      <FormControlLabel
-                        value="cash"
-                        control={<Radio />}
-                        label="Efectivo"
-                      />
-                      <FormControlLabel
-                        value="card"
-                        control={<Radio />}
-                        label="Tarjeta"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Box>
-                <Box className="flex w-full justify-evenly">
-                  <Button
-                    onClick={() => {
-                      handleEdit()
-                    }}
-                  >
-                    Editar
-                  </Button>
-                  <LoadingButton
-                    onClick={() => {
-                      return handlePay({
-                        amount: total,
-                        date: new Date(),
-                        method: paymentMethod
-                      })
-                    }}
-                    label="Pagar"
-                    icon={<AttachMoneyIcon />}
-                  />
-                </Box>
-              </>
-            )}
-          </Box>
-          {/* <Button
-            onClick={(e) => {
-              console.log('Pagado')
-              
-            }}
-            >
-            Pagar
-          </Button> */}
-        </Modal>
-        <Modal {...modalEdit} title={`Editar cliente ${client.name}`}>
-          <StepperNewClientContext client={client} />
-        </Modal>
       </TableCell>
+      {handleRemove && (
+        <TableCell>
+          <ModalPayment client={client} />
+          <ModalEditClient client={client} />
+        </TableCell>
+      )}
     </TableRow>
+  )
+}
+const ModalEditClient = ({ client }) => {
+  const modal = useModal()
+  return (
+    <>
+      <Button
+        size="small"
+        onClick={(e) => {
+          e.preventDefault()
+          modal.handleOpen()
+        }}
+      >
+        Edit
+      </Button>
+      <Modal {...modal} title={`Editar cliente ${client.name}`}>
+        <StepperNewClientContext client={client} />
+      </Modal>
+    </>
+  )
+}
+const ModalPayment = ({ client }) => {
+  const total =
+    (client?.friends?.reduce((acc, friend) => {
+      return acc + (friend?.activity?.price || 0)
+    }, 0) || 0) + (client?.activity?.price || 0)
+
+  const handlePay = async (payment: NewClient['payment']) => {
+    const clientId = client.id || ''
+    const res = await updateUser(clientId, { payment })
+    return
+  }
+
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
+
+  const modalDetails = useModal()
+  return (
+    <>
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          modalDetails.handleOpen()
+        }}
+        size="small"
+      >
+        Pagar
+      </Button>
+      <Modal {...modalDetails} title={`Detalle de cliente ${client.name}`}>
+        <Box>
+          <Typography>
+            {client.name} - {client.activity?.name} -
+            <CurrencySpan quantity={client.activity?.price} />
+          </Typography>
+          {client.friends?.map((friend) => (
+            <Typography key={friend.name}>
+              {friend.name} - {friend.activity?.name} -
+              <CurrencySpan quantity={friend.activity?.price} />
+            </Typography>
+          ))}
+        </Box>
+
+        <Box className="flex flex-col w-full justify-evenly mb-8">
+          {!!client.payment ? (
+            <Box className="flex w-full justify-center my-10">
+              <Typography variant="h4" className="mt-10">
+                Pagado <CurrencySpan quantity={client.payment.amount} />
+              </Typography>
+            </Box>
+          ) : (
+            <>
+              {' '}
+              <Box className="flex w-full justify-end items-baseline">
+                <Typography variant="h6">Total:</Typography>
+                <CurrencySpan quantity={total} />
+              </Box>
+              <Box className="flex w-full justify-center">
+                <FormControl className="">
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Metodo de pago
+                  </FormLabel>
+                  <RadioGroup
+                    value={paymentMethod}
+                    onChange={(e) => {
+                      setPaymentMethod(e.target.value as PaymentMethod)
+                    }}
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="cash"
+                      control={<Radio />}
+                      label="Efectivo"
+                    />
+                    <FormControlLabel
+                      value="card"
+                      control={<Radio />}
+                      label="Tarjeta"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+              <Box className="flex w-full justify-evenly">
+                <LoadingButton
+                  onClick={() => {
+                    return handlePay({
+                      amount: total,
+                      date: new Date(),
+                      method: paymentMethod
+                    })
+                  }}
+                  label="Pagar"
+                  icon={<AttachMoneyIcon />}
+                />
+              </Box>
+            </>
+          )}
+        </Box>
+      </Modal>
+    </>
   )
 }
 
