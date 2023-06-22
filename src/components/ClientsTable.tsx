@@ -26,6 +26,7 @@ import LoadingButton from './LoadingButton'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import StepperNewClientContext from './StepperNewClient'
 import CurrencySpan from './CurrencySpan'
+import { updateUser } from '@/firebase/users'
 
 const ClientsTable = ({
   clients,
@@ -96,25 +97,10 @@ const ClientsRow = ({
     modalEdit.handleOpen()
   }
 
-  const handlePay = (payment: NewClient['payment']) => {
-    const db = JSON.parse(localStorage.getItem('tmp-bb-db') || '[]')
-    //* remove old client
-    const cleanDB = db.filter(({ id }: any) => id !== client?.id)
-    //* add new client with payment info
-    const newDB = [
-      ...cleanDB,
-      {
-        ...client,
-        payment
-      }
-    ]
-    localStorage.setItem('tmp-bb-db', JSON.stringify(newDB))
-
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
-      }, 2000)
-    })
+  const handlePay = async (payment: NewClient['payment']) => {
+    const clientId = client.id || ''
+    const res = await updateUser(clientId, { payment })
+    return
   }
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')

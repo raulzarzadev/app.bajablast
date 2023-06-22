@@ -15,8 +15,10 @@ export const createUser = async (
 export const createClient = async (newUser: Partial<NewClient>) =>
   await usersCRUD.createItem({ ...newUser })
 
-export const updateUser = async (userId: string, updates: Partial<UserType>) =>
-  await usersCRUD.updateItem(userId, updates)
+export const updateUser = async (
+  userId: string,
+  updates: Partial<UserType> | Partial<NewClient>
+) => await usersCRUD.updateItem(userId, updates)
 
 export const deleteUser = async (userId: BaseType['id']) =>
   await usersCRUD.deleteItem(userId)
