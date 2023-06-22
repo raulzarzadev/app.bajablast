@@ -124,7 +124,7 @@ const ClientsRow = ({
     </TableRow>
   )
 }
-const ModalEditClient = ({ client }) => {
+const ModalEditClient = ({ client }: { client: NewClient }) => {
   const modal = useModal()
   return (
     <>
@@ -143,7 +143,7 @@ const ModalEditClient = ({ client }) => {
     </>
   )
 }
-const ModalPayment = ({ client }) => {
+const ModalPayment = ({ client }: { client: NewClient }) => {
   const total =
     (client?.friends?.reduce((acc, friend) => {
       return acc + (friend?.activity?.price || 0)

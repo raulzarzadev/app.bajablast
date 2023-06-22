@@ -8,7 +8,8 @@ export const client: UserType = {
   phone: '525543375016',
   emergencyPhone: '525543374016',
   bloodType: 'N/A',
-  medicalInfo: ''
+  medicalInfo: '',
+  image: ''
 }
 
 export const collaborator: UserType = {
@@ -19,7 +20,8 @@ export const collaborator: UserType = {
   phone: '525543375016',
   emergencyPhone: '525543374016',
   bloodType: 'N/A',
-  medicalInfo: ''
+  medicalInfo: '',
+  image: ''
 }
 
 export const coordinator: UserType = {
@@ -30,5 +32,6 @@ export const coordinator: UserType = {
   phone: '525543375016',
   emergencyPhone: '525543374016',
   bloodType: 'N/A',
-  medicalInfo: ''
+  medicalInfo: '',
+  image: ''
 }

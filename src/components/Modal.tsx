@@ -45,10 +45,8 @@ const Modal = ({
         >
           <span>{title && <Typography>{title}</Typography>}</span>
           <IconButton
-            onClick={(e) => {
-              console.log(e)
-              console.log({ open })
-              onClose(e)
+            onClick={() => {
+              onClose()
             }}
           >
             <CloseIcon />
