@@ -16,8 +16,6 @@ export type UserContextType = {
 
 export function UserContextProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserType | null | undefined>(undefined)
-  const auth = useAuth()
-  console.log(auth)
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

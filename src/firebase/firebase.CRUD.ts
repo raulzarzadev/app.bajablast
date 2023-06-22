@@ -137,26 +137,56 @@ export class FirebaseCRUD {
    * @param item object to create
    * @returns promise add doc
    */
-  async createItem(item: object) {
-    const currentUser = getAuth().currentUser
 
+  createItemMetadata() {
+    const currentUser = getAuth().currentUser
+    return {
+      created: {
+        at: new Date(),
+        by: currentUser?.uid
+      },
+      updated: {
+        at: new Date(),
+        by: currentUser?.uid
+      }
+    }
+  }
+
+  updateItemMetadata() {
+    const currentUser = getAuth().currentUser
+    return {
+      updated: {
+        at: new Date(),
+        by: currentUser?.uid
+      }
+    }
+  }
+
+  async createItem(item: object) {
     const newItem = {
-      updatedAt: new Date(),
-      createdAt: new Date(),
-      userId: currentUser?.uid,
-      ...item
+      ...item,
+      ...this.createItemMetadata()
     }
 
-    const res = newItem
-    // console.log(itemDatesToFirebaseTimestamp);
-
-    return await addDoc(collection(this.db, this.collectionName), res).then(
+    return await addDoc(collection(this.db, this.collectionName), newItem).then(
       (res) =>
         this.formatResponse(true, `${this.collectionName}_CREATED`, {
           id: res.id
         })
     )
-    // .catch((err) => console.error(err))
+  }
+  async updateItem(itemId: string, item: object) {
+    const newItem = {
+      ...item,
+      ...this.updateItemMetadata()
+    }
+    return await updateDoc(doc(this.db, this.collectionName, itemId), newItem)
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => console.error(err))
   }
 
   async setItem(itemId: string, newItem: object) {
@@ -164,9 +194,7 @@ export class FirebaseCRUD {
 
     const item = {
       id: itemId,
-      updatedAt: new Date(),
-      createdAt: new Date(),
-      userId: currentUser?.uid,
+      ...this.createItemMetadata(),
       ...newItem
     }
 
@@ -186,7 +214,6 @@ export class FirebaseCRUD {
   async getItem(itemId: string) {
     const ref = doc(this.db, this.collectionName, itemId)
     const docSnap = await getDoc(ref)
-    // FirebaseCRUD.showDataFrom(docSnap, this.collectionName);
     return this.normalizeItem(docSnap)
   }
 
@@ -206,20 +233,6 @@ export class FirebaseCRUD {
       res.push(this.normalizeItem(doc))
     })
     return res
-  }
-
-  async updateItem(itemId: string, item: object) {
-    const newItem = {
-      ...item,
-      updatedAt: new Date()
-    }
-    return await updateDoc(doc(this.db, this.collectionName, itemId), newItem)
-      .then((res) =>
-        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
-          id: itemId
-        })
-      )
-      .catch((err) => console.error(err))
   }
 
   async deleteItem(itemId: string) {
@@ -363,43 +376,6 @@ export class FirebaseCRUD {
     }
     const formattedType = type.toUpperCase()
     return { type: formattedType, ok, res }
-  }
-
-  // -------------------------------------------------------------> Dates
-
-  formatDate = (
-    date: string | number | Date,
-    stringFormat = 'dd/MM/yy'
-  ): string => {
-    if (!date) {
-      console.error('not a date')
-      return 'NaD'
-    }
-    const objectDate = new Date(date)
-    function isValidDate(d: string | number | Date): boolean {
-      return d instanceof Date && !isNaN(d as any)
-    }
-
-    if (isValidDate(objectDate)) {
-      return fnsFormat(
-        new Date(
-          objectDate.setMinutes(
-            objectDate.getMinutes() + objectDate.getTimezoneOffset()
-          )
-        ),
-        stringFormat,
-        { locale: es }
-      )
-    } else {
-      console.error('date is not valid date')
-      return 'NaD'
-    }
-  }
-
-  dateToFirebase(date: string): Timestamp | null {
-    const dateFormatted = this.transformAnyToDate(date)
-    if (!dateFormatted) return null
-    return Timestamp.fromDate(dateFormatted)
   }
 }
 

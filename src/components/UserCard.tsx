@@ -11,14 +11,13 @@ import { dateMx } from '@/utils/utils-date'
 const UserCard = () => {
   const modal = useModal()
   const { user } = useContext(UserContext)
-
   if (!user) return <div>No user </div>
 
   return (
     <Box aria-label="user-card" className="flex items-center">
       <div>
         <p aria-label="user-rol" className="text-end text-sm italic">
-          {user?.rol}
+          {user.isAdmin && 'admin'} {user?.rol}
         </p>
         <p aria-label="user-name">{user?.name}</p>
         <p aria-label="user-age">{dateMx(user?.birthday)}</p>
@@ -26,7 +25,7 @@ const UserCard = () => {
         <p aria-label="user-mobil">{user?.phone}</p>
         <p aria-label="user-mobil-emergency">{user?.emergencyPhone}</p>
       </div>
-      <Tooltip title="Open settings">
+      <Tooltip title="Open settings ">
         <IconButton
           aria-label="open-user-menu"
           onClick={modal.handleOpen}
@@ -34,13 +33,14 @@ const UserCard = () => {
         >
           <Avatar
             alt="Remy Sharp"
-            src={'/logo/bb-blue.png'}
-            className="w-28 aspect-square"
+            src={user.image}
+            sx={{ width: 76, height: 76 }}
           />
         </IconButton>
       </Tooltip>
+
       <Modal {...modal}>
-        <Image src={'/logo/bb-blue.png'} alt="baja-blast-user" fill />
+        <Image src={user.image} alt="baja-blast-user" fill />
       </Modal>
     </Box>
   )

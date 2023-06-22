@@ -7,11 +7,12 @@ export interface UserType extends Partial<BaseType> {
   email: string
   phone: string
   birthday: Date
-  rol: 'CLIENT' | 'COLLABORATOR' | 'COORDINATOR' | 'ADMIN'
+  rol: 'CLIENT' | 'COLLABORATOR' | 'COORDINATOR'
   emergencyPhone: string
   bloodType: BloodType
   medicalInfo: string
   image: string
+  isAdmin?: boolean
 }
 
 export interface Friend extends Partial<UserType> {

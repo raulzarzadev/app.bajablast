@@ -9,7 +9,7 @@ import { getStorage } from 'firebase/storage'
 import { FirebaseCRUD } from './firebase.CRUD'
 import { UserType } from '@/types/user'
 import { app, db } from './main'
-import { getUser } from './users'
+import { findUserByEmail, getUser, setUser } from './users'
 
 const auth = getAuth(app)
 const storage = getStorage(app)
@@ -29,32 +29,37 @@ export const createUserFromGoogleProvider = async (newItem: any) => {
   return await usersCRUD.setItem(uid, userFormatted)
 }
 
-export function authStateChanged(cb: CallableFunction) {
+export async function authStateChanged(cb: CallableFunction) {
   onAuthStateChanged(auth, async (user) => {
-    console.log(user)
-    // FIXME: this function is called multiple times
-    if (!user) {
-      console.log(user)
-      // console.log('not logged');
-      return cb(null)
+    if (user?.email) {
+      const dbUser = await getUser(user.uid)
+      cb(dbUser)
     } else {
-      getUser(user.uid).then((res) => {
-        cb(res)
-      })
+      cb(null)
     }
   })
 }
 
 export async function googleLogin() {
   const provider = new GoogleAuthProvider()
-  const user = await signInWithPopup(auth, provider)
-    .then((result) => {
+  await signInWithPopup(auth, provider)
+    .then(async (result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result)
       const token = credential?.accessToken
       // The signed-in user info.
       const user = result.user
-      return user
+      if (user) {
+        const dbUser = await findUserByEmail({ email: user.email || '' })
+        if (dbUser) return dbUser
+        const newUser = await setUser(user.uid, {
+          name: user.displayName || '',
+          email: user.email || '',
+          rol: 'CLIENT',
+          image: user.photoURL || ''
+        })
+        return newUser
+      }
     })
     .catch((error) => {
       // Handle Errors here.
@@ -66,7 +71,6 @@ export async function googleLogin() {
       const credential = GoogleAuthProvider.credentialFromError(error)
       console.error({ error })
       return null
-      // ...
     })
 }
 

@@ -19,7 +19,9 @@ import { UserContext } from '@/context/user'
 import { client, collaborator, coordinator } from '@/CONST/fake-users'
 import { Skeleton } from '@mui/material'
 import Image from 'next/image'
-import { googleLogin } from '@/firebase/auth'
+import { googleLogin, logout } from '@/firebase/auth'
+import useAuth from '@/hooks/useAuth'
+import useUser from '@/hooks/useUser'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -32,6 +34,10 @@ const settings = [
 ]
 
 function Navigation() {
+  //* This are checking the login status
+  useAuth()
+  const { user } = useUser()
+
   const [anchorElSignIn, setAnchorElSignIn] =
     React.useState<null | HTMLElement>(null)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -60,15 +66,6 @@ function Navigation() {
   const handleCloseSignIn = () => {
     setAnchorElSignIn(null)
   }
-
-  const { user, setUser } = React.useContext(UserContext)
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setUser(null)
-    }, 2000)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <AppBar position="static" role="navigation">
@@ -215,37 +212,7 @@ function Navigation() {
                         handleCloseUserMenu()
                       }}
                     >
-                      Google
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      onClick={(e) => {
-                        handleCloseUserMenu()
-                        setUser(client)
-                      }}
-                    >
-                      Cliente
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      onClick={(e) => {
-                        handleCloseUserMenu()
-                        setUser(collaborator)
-                      }}
-                    >
-                      Colaborador
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      onClick={(e) => {
-                        handleCloseUserMenu()
-                        setUser(coordinator)
-                      }}
-                    >
-                      Coordinador
+                      Entrar con Google
                     </Button>
                   </MenuItem>
                 </Menu>
@@ -260,10 +227,7 @@ function Navigation() {
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0 }}
                   >
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
-                    />
+                    <Avatar alt="Remy Sharp" src={user.image} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -300,11 +264,11 @@ function Navigation() {
                   <MenuItem>
                     <Button
                       onClick={(e) => {
-                        setUser(null)
+                        logout()
                         handleCloseSignIn()
                       }}
                     >
-                      log out
+                      Salir
                     </Button>
                   </MenuItem>
                 </Menu>

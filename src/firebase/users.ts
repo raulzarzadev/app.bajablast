@@ -1,23 +1,26 @@
 import { UserType } from '@/types/user'
 import { usersCRUD } from './auth'
 import { where } from 'firebase/firestore'
+import { BaseType } from '@/types/base'
 
-export const setUser = async (itemId: string, newItem: object) =>
-  await usersCRUD.setItem(itemId, newItem)
+export const setUser = async (
+  userId: BaseType['id'],
+  newUser: Pick<UserType, 'email' | 'name' | 'image' | 'rol'>
+) => await usersCRUD.setItem(userId, { ...newUser, id: userId })
 
-export const createUser = async (newItem: any) =>
-  await usersCRUD.createItem(newItem)
+export const updateUser = async (userId: string, updates: Partial<UserType>) =>
+  await usersCRUD.updateItem(userId, updates)
 
-export const updateUser = async (itemId: string, newItem: Partial<UserType>) =>
-  await usersCRUD.updateItem(itemId, newItem)
+export const deleteUser = async (userId: BaseType['id']) =>
+  await usersCRUD.deleteItem(userId)
 
-export const deleteUser = async (itemId: string) =>
-  await usersCRUD.deleteItem(itemId)
+export const getUser = async (userId: BaseType['id']) =>
+  await usersCRUD.getItem(userId)
 
-export const getUser = async (itemId: string) => await usersCRUD.getItem(itemId)
-
-export const listenUser = async (itemId: string, cb: CallableFunction) =>
-  await usersCRUD.listenItem(itemId, cb)
+export const listenUser = async (
+  userId: BaseType['id'],
+  cb: CallableFunction
+) => await usersCRUD.listenItem(userId, cb)
 
 export async function findUserByEmail({ email }: { email: string }) {
   const formatFoundUser = (
