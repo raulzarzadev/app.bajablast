@@ -1,5 +1,4 @@
 'use client'
-import ClientForm from '@/components/ClientForm'
 import ClientOptions from '@/components/ClientOptions'
 import CollaboratorOptions from '@/components/CollaboratorOptions'
 import CoordinatorOptions from '@/components/CoordinatorOptions'

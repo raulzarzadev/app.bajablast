@@ -48,7 +48,7 @@ const ClientForm = ({
     image: ''
   }
   const methods = useForm({
-    defaultValues: client || defaultClient
+    defaultValues: { ...defaultClient, ...client } || defaultClient
   })
   const formValues = methods.watch()
   const termsAndCondsModal = useModal()
