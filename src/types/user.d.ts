@@ -2,6 +2,7 @@ import { BloodType } from '@/CONST/bloodTypes'
 import { ClientActivity } from './activities'
 import { BaseType } from './base'
 import { roles } from '@/CONST/user'
+import { PaymentMethods } from '@/CONST/paymentMethods'
 
 export type Rol = (typeof roles)[number]['key']
 export interface UserType extends Partial<BaseType> {
@@ -30,10 +31,9 @@ export interface NewClient extends UserType {
   friends?: Friend[]
   payment?: Payment
 }
-export type PaymentMethod = 'cash' | 'card' | 'usd'
 
 export type Payment = {
-  method: PaymentMethod
+  method: PaymentMethods
   date: Date
   amount: number
   created: {

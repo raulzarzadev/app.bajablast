@@ -15,8 +15,6 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import Link from 'next/link'
-import { UserContext } from '@/context/user'
-import { client, collaborator, coordinator } from '@/CONST/fake-users'
 import { Skeleton } from '@mui/material'
 import Image from 'next/image'
 import { googleLogin, logout } from '@/firebase/auth'
@@ -25,7 +23,7 @@ import useUser from '@/hooks/useUser'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
-  { label: 'Productos', href: '/' }
+  { label: 'Actividades', href: '/bb' }
 ]
 const settings = [
   //'Profile', 'Account', 'Dashboard', 'Logout'
@@ -71,33 +69,20 @@ function Navigation() {
     <AppBar position="static" role="navigation">
       <Container maxWidth="xl">
         <Toolbar disableGutters role="logo">
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-            <Image
-              src={'/logos/bb-blue.png'}
-              width={50}
-              height={50}
-              alt="logo"
-              style={{ width: 50, height: 50 }}
-            />
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            BBApp
-          </Typography>
-
+          <Link href={'/'}>
+            <Box
+              className="items-center"
+              sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
+            >
+              <Image
+                src={'/icons/Logotipo-01-512px.png'}
+                width={80}
+                height={50}
+                alt="logo"
+                style={{ width: 80, height: 50 }}
+              />
+            </Box>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -136,33 +121,21 @@ function Navigation() {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-            <Image
-              src={'/logos/bb-blue.png'}
-              width={50}
-              height={50}
-              alt="logo"
-              style={{ width: 50, height: 50 }}
-            />
-          </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component={Link}
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
+          <Box
+            className={'w-full justify-center '}
+            sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}
           >
-            BBApp
-          </Typography>
+            <Link href={'/'}>
+              <Image
+                src={'/icons/Logotipo-01-512px.png'}
+                width={80}
+                height={50}
+                alt="logo"
+                style={{ width: 80, height: 50 }}
+              />
+            </Link>
+          </Box>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -248,17 +221,13 @@ function Navigation() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem
-                      role="listitem"
-                      key={setting.label}
-                      onClick={handleCloseUserMenu}
-                    >
-                      <Link href={setting.href}>
+                    <Link href={setting.href} key={setting.label}>
+                      <MenuItem role="listitem">
                         <Typography textAlign="center">
                           {setting.label}
                         </Typography>
-                      </Link>
-                    </MenuItem>
+                      </MenuItem>
+                    </Link>
                   ))}
 
                   <MenuItem>
