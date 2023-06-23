@@ -280,7 +280,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   <RadioGroup
                     value={paymentMethod}
                     onChange={(e) => {
-                      setPaymentMethod(e.target.value as PaymentMethod)
+                      setPaymentMethod(e.target.value as PaymentMethods)
                     }}
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
