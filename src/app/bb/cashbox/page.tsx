@@ -1,4 +1,5 @@
 'use client'
+import withAuth from '@/HOCs/withAuth'
 import { Box, Button, Typography } from '@mui/material'
 import Link from 'next/link'
 
@@ -20,4 +21,4 @@ const Cashbox = () => {
   )
 }
 
-export default Cashbox
+export default withAuth(Cashbox)

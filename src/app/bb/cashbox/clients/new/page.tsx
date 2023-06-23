@@ -1,5 +1,6 @@
 'use client'
 
+import withAuth from '@/HOCs/withAuth'
 import StepperNewClient from '@/components/StepperNewClient'
 import { Box, Typography } from '@mui/material'
 
@@ -14,4 +15,4 @@ const NewClient = () => {
   )
 }
 
-export default NewClient
+export default withAuth(NewClient)

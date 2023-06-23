@@ -6,6 +6,7 @@ import { SetStateAction, useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
 import { UserContext } from '@/context/user'
 import { deleteUser, listenClients } from '@/firebase/users'
+import withAuth from '@/HOCs/withAuth'
 
 const Clients = () => {
   const { user } = useContext(UserContext)
@@ -70,4 +71,4 @@ const Clients = () => {
   )
 }
 
-export default Clients
+export default withAuth(Clients)

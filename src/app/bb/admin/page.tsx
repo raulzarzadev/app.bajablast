@@ -1,4 +1,5 @@
 'use client'
+import withAuth from '@/HOCs/withAuth'
 import { Container, Typography } from '@mui/material'
 import {
   XAxis,
@@ -96,4 +97,4 @@ const DoubleChart = ({
   )
 }
 
-export default Admin
+export default withAuth(Admin)
