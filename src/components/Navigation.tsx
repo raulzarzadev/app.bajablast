@@ -19,6 +19,7 @@ import Image from 'next/image'
 import { googleLogin, logout } from '@/firebase/auth'
 import useAuth from '@/hooks/useAuth'
 import useUser from '@/hooks/useUser'
+import { imageLoader } from './UserHome'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -74,6 +75,7 @@ function Navigation() {
               sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
             >
               <Image
+                loader={imageLoader}
                 src={'/icons/Logotipo-01-512px.png'}
                 width={80}
                 height={50}
@@ -126,6 +128,7 @@ function Navigation() {
           >
             <Link href={'/'}>
               <Image
+                loader={imageLoader}
                 src={'/icons/Logotipo-01-512px.png'}
                 width={80}
                 height={50}
