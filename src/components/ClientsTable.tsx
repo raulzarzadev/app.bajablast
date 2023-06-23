@@ -3,6 +3,7 @@ import { NewClient, PaymentMethod } from '@/types/user'
 import {
   Box,
   Button,
+  Container,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -28,6 +29,9 @@ import StepperNewClientContext from './StepperNewClient'
 import CurrencySpan from './CurrencySpan'
 import { updateUser } from '@/firebase/users'
 import useUser from '@/hooks/useUser'
+import { dateFormat, dateMx } from '@/utils/utils-date'
+import ShowUser from './ShowUser'
+import { USD_PRICE } from '@/CONST/CURRENCY'
 
 const ClientsTable = ({
   clients,
@@ -36,10 +40,23 @@ const ClientsTable = ({
   clients: NewClient[]
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
+  const totalRequested = clients.reduce((acc, client) => {
+    //* Get the total of money calculated by the activity price requested and their friends activity
+    return (
+      acc +
+      (client.activity?.price || 0) +
+      (client?.friends?.reduce((acc, friend) => {
+        return acc + (friend.activity?.price || 0)
+      }, 0) || 0)
+    )
+  }, 0)
   const totalPayments = clients.reduce((acc, client) => {
     return acc + (client?.payment?.amount || 0)
   }, 0)
-
+  const clientsTotal = clients.reduce((acc, client) => {
+    return acc + (client?.friends?.length || 0) + 1
+  }, 0)
+  const awaitingClientTable = clients.some((client) => !client.payment)
   return (
     <TableContainer component={Paper}>
       <Table
@@ -53,7 +70,7 @@ const ClientsTable = ({
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
-            {handleRemove && <TableCell align="center">Ops</TableCell>}
+            <TableCell align="center">Ops</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -66,11 +83,14 @@ const ClientsTable = ({
           ))}
         </TableBody>
         <TableFooter>
-          <TableCell colSpan={handleRemove ? 3 : 2} align="right">
+          <TableCell align="right" colSpan={!handleRemove ? 1 : 2}>
             Total:
           </TableCell>
+          <TableCell align="center">{clientsTotal}</TableCell>
           <TableCell align="right">
-            <CurrencySpan quantity={totalPayments} />
+            <CurrencySpan
+              quantity={awaitingClientTable ? totalRequested : totalPayments}
+            />
           </TableCell>
         </TableFooter>
       </Table>
@@ -85,9 +105,8 @@ const ClientsRow = ({
   client: NewClient
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
-  //FIXME:  this modal is not working but the rest of the modals work fine
   const modalDetails = useModal()
-  //* calculate the total of the client counting friends and himself
+
   const total =
     (client?.friends?.reduce((acc, friend) => {
       return acc + (friend?.activity?.price || 0)
@@ -116,12 +135,15 @@ const ClientsRow = ({
       <TableCell align="right">
         <CurrencySpan quantity={total} />
       </TableCell>
-      {handleRemove && (
-        <TableCell>
-          <ModalPayment client={client} />
-          <ModalEditClient client={client} />
-        </TableCell>
-      )}
+
+      <TableCell>
+        <ModalPayment client={client} />
+        {handleRemove && (
+          <>
+            <ModalEditClient client={client} />
+          </>
+        )}
+      </TableCell>
     </TableRow>
   )
 }
@@ -169,35 +191,85 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
         }}
         size="small"
       >
-        Pagar
+        {client.payment ? 'Detalles' : 'Pagar'}
       </Button>
       <Modal {...modalDetails} title={`Detalle de cliente ${client.name}`}>
-        <Box>
-          <Typography>
-            {client.name} - {client.activity?.name} -
-            <CurrencySpan quantity={client.activity?.price} />
-          </Typography>
-          {client.friends?.map((friend) => (
-            <Typography key={friend.name}>
-              {friend.name} - {friend.activity?.name} -
-              <CurrencySpan quantity={friend.activity?.price} />
-            </Typography>
-          ))}
+        <Box className="my-4">
+          <table className="w-full text-center">
+            <tbody>
+              <tr>
+                <th>Nombre</th>
+                <th>Paquete</th>
+                <th>Cantidad</th>
+              </tr>
+              <tr>
+                <td> {client.name} </td>
+                <td>{client.activity?.name}</td>
+                <td>
+                  <CurrencySpan quantity={client.activity?.price} />
+                </td>
+              </tr>
+              {!!client.friends?.length && (
+                <tr>
+                  <th colSpan={3}>Acompañantes ({client.friends?.length})</th>
+                </tr>
+              )}
+              {client.friends?.map((friend) => (
+                <tr key={friend.name}>
+                  <td>{friend.name} </td>
+                  <td>{friend.activity?.name}</td>
+                  <td>
+                    <CurrencySpan quantity={friend.activity?.price} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Box>
 
-        <Box className="flex flex-col w-full justify-evenly mb-8">
+        <Box className="flex w-full justify-evenly text-center items-center my-4">
+          <Typography>
+            Creado:{' '}
+            {client?.created?.at &&
+              dateFormat(client?.created?.at, 'HH:mm dd/MM/yy ')}{' '}
+          </Typography>
+          <Typography className="whitespace-nowrap">
+            Por: <ShowUser userId={client.created?.by} />
+          </Typography>
+        </Box>
+
+        <Box className="flex flex-col w-full justify-evenly mb-4">
           {!!client.payment ? (
-            <Box className="flex w-full justify-center my-10">
-              <Typography variant="h4" className="mt-10">
+            <Box className="flex w-full justify-center flex-col items-center text-center">
+              <Box className=""></Box>
+              <Typography variant="h4" className="">
                 Pagado <CurrencySpan quantity={client.payment.amount} />
+              </Typography>
+              <Typography>
+                Fecha :{' '}
+                {dateFormat(
+                  client?.payment?.created?.at || client?.payment.date,
+                  'HH:mm - dd/MM/yy'
+                )}
+              </Typography>
+              <Typography className="">
+                Cobrado por : <ShowUser userId={client?.payment?.created?.by} />
               </Typography>
             </Box>
           ) : (
             <>
-              {' '}
               <Box className="flex w-full justify-end items-baseline">
-                <Typography variant="h6">Total:</Typography>
+                <Typography>MXN: </Typography>
                 <CurrencySpan quantity={total} />
+              </Box>
+              <Box className="flex w-full justify-end items-baseline">
+                <Typography>
+                  <span className="text-xs">{`$${USD_PRICE.toFixed(
+                    2
+                  )}mxn`}</span>{' '}
+                  USD:
+                </Typography>
+                <CurrencySpan quantity={total / USD_PRICE} />
               </Box>
               <Box className="flex w-full justify-center">
                 <FormControl className="">
@@ -222,6 +294,11 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                       value="card"
                       control={<Radio />}
                       label="Tarjeta"
+                    />
+                    <FormControlLabel
+                      value="usd"
+                      control={<Radio />}
+                      label="Dolares"
                     />
                   </RadioGroup>
                 </FormControl>

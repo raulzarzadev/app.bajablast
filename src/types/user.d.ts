@@ -30,7 +30,7 @@ export interface NewClient extends UserType {
   friends?: Friend[]
   payment?: Payment
 }
-export type PaymentMethod = 'cash' | 'card'
+export type PaymentMethod = 'cash' | 'card' | 'usd'
 
 export type Payment = {
   method: PaymentMethod
