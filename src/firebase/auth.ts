@@ -42,7 +42,7 @@ export async function authStateChanged(cb: CallableFunction) {
 
 export async function googleLogin() {
   const provider = new GoogleAuthProvider()
-  await signInWithPopup(auth, provider)
+  return await signInWithPopup(auth, provider)
     .then(async (result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result)

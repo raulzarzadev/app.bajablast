@@ -13,7 +13,6 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-import AdbIcon from '@mui/icons-material/Adb'
 import Link from 'next/link'
 import { Skeleton } from '@mui/material'
 import Image from 'next/image'
@@ -180,8 +179,9 @@ function Navigation() {
                 >
                   <MenuItem>
                     <Button
-                      onClick={(e) => {
-                        googleLogin()
+                      onClick={async (e) => {
+                        const res = await googleLogin()
+                        if (!!res) console.log('logged')
                         handleCloseUserMenu()
                       }}
                     >
@@ -232,8 +232,9 @@ function Navigation() {
 
                   <MenuItem>
                     <Button
-                      onClick={(e) => {
-                        logout()
+                      onClick={async (e) => {
+                        await logout()
+                        console.log('logout')
                         handleCloseSignIn()
                       }}
                     >

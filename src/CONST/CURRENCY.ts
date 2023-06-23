@@ -1,3 +1,3 @@
 import { paymentMethods } from './paymentMethods'
 
-export const USD_PRICE = paymentMethods.find((p) => p.key === 'usd')
+export const USD_PRICE = paymentMethods.find((p) => p.key === 'usd')?.value || 0

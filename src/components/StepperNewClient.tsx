@@ -21,7 +21,6 @@ function StepperNewClient() {
   const [step, setStep] = useState(0)
   const newClientContext = useContext(NewClientContext)
   const router = useRouter()
-  console.log(newClientContext.client)
   const onSubmit = async () => {
     try {
       const { client, friends } = newClientContext

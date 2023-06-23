@@ -1,5 +1,5 @@
 import useModal from '@/hooks/useModal'
-import { NewClient, PaymentMethod } from '@/types/user'
+import { NewClient } from '@/types/user'
 import {
   Box,
   Button,
@@ -31,6 +31,7 @@ import { updateUser } from '@/firebase/users'
 import useUser from '@/hooks/useUser'
 import { dateFormat, dateMx } from '@/utils/utils-date'
 import ShowUser from './ShowUser'
+import { PaymentMethods } from '@/CONST/paymentMethods'
 import { USD_PRICE } from '@/CONST/CURRENCY'
 
 const ClientsTable = ({
@@ -179,7 +180,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
     return
   }
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash')
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>('cash')
 
   const modalDetails = useModal()
   return (

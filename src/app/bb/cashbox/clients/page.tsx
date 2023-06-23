@@ -22,8 +22,7 @@ const Clients = () => {
 
   const handleRemove = async (clientId: NewClient['id']) => {
     try {
-      const res = await deleteUser(clientId || '')
-      console.log({ res })
+      await deleteUser(clientId || '')
     } catch (error) {
       console.error(error)
     }
