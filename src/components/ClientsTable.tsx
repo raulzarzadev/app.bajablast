@@ -27,6 +27,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import StepperNewClientContext from './StepperNewClient'
 import CurrencySpan from './CurrencySpan'
 import { updateUser } from '@/firebase/users'
+import useUser from '@/hooks/useUser'
 
 const ClientsTable = ({
   clients,
@@ -144,6 +145,7 @@ const ModalEditClient = ({ client }: { client: NewClient }) => {
   )
 }
 const ModalPayment = ({ client }: { client: NewClient }) => {
+  const { user } = useUser()
   const total =
     (client?.friends?.reduce((acc, friend) => {
       return acc + (friend?.activity?.price || 0)
@@ -230,7 +232,11 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                     return handlePay({
                       amount: total,
                       date: new Date(),
-                      method: paymentMethod
+                      method: paymentMethod,
+                      created: {
+                        by: user?.id,
+                        at: new Date()
+                      }
                     })
                   }}
                   label="Pagar"

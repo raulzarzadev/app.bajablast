@@ -5,7 +5,7 @@ import CoordinatorOptions from '@/components/CoordinatorOptions'
 import UserCard from '@/components/UserCard'
 import { UserContext } from '@/context/user'
 import { useRouter } from 'next/navigation'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 const Profile = () => {
   const { user } = useContext(UserContext)
   const router = useRouter()

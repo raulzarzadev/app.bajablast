@@ -22,16 +22,22 @@ export interface Friend extends Partial<UserType> {
   id?: string
 }
 
-export type PaymentMethod = 'cash' | 'card'
 export interface NewClient extends UserType {
   termsAccepted?: boolean
   medicalInfoUpdated?: boolean
   activity?: ClientActivity
   signature?: string | null
   friends?: Friend[]
-  payment?: {
-    method: PaymentMethod
-    date: Date
-    amount: number
+  payment?: Payment
+}
+export type PaymentMethod = 'cash' | 'card'
+
+export type Payment = {
+  method: PaymentMethod
+  date: Date
+  amount: number
+  created: {
+    at: Date
+    by: UserType['id']
   }
 }
