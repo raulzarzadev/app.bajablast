@@ -4,14 +4,18 @@ import useModal from '@/hooks/useModal'
 import { Avatar, Box, IconButton, Tooltip, Typography } from '@mui/material'
 import Modal from './Modal'
 import Image from 'next/image'
-import { useContext } from 'react'
-import { UserContext } from '@/context/user'
+
 import { dateMx } from '@/utils/utils-date'
 import EditIcon from '@mui/icons-material/Edit'
-const UserCard = ({ onEdit }: { onEdit?: () => void }) => {
+import { UserType } from '@/types/user'
+const UserCard = ({
+  onEdit,
+  user
+}: {
+  onEdit?: () => void
+  user: UserType
+}) => {
   const modal = useModal()
-  const { user } = useContext(UserContext)
-  if (!user) return <div>No user </div>
 
   return (
     <Box aria-label="user-card" className="flex items-center">

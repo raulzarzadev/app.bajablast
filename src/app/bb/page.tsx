@@ -16,9 +16,6 @@ const BB = () => {
         BB
       </Typography>
 
-      {/* <UserCard /> */}
-
-      {/* <ParkActivities /> */}
       <ParkActivities
         onClickActivity={(activityName) => {
           router.push(`/bb/${activityName}`)

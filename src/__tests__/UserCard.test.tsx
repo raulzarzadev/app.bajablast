@@ -1,10 +1,11 @@
+import { collaborator } from '@/CONST/fake-users'
 import UserCard from '@/components/UserCard'
 import { render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 
 describe('User Card Information', () => {
   beforeEach(() => {
-    render(<UserCard />)
+    render(<UserCard user={collaborator} />)
   })
   afterEach(() => {
     document.body.innerHTML = ''

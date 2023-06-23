@@ -14,11 +14,14 @@ const Profile = () => {
   }
   return (
     <main className="flex min-h-screen flex-col items-center p-12 gap-12">
-      <UserCard
-        onEdit={() => {
-          handleEdit()
-        }}
-      />
+      {user && (
+        <UserCard
+          user={user}
+          onEdit={() => {
+            handleEdit()
+          }}
+        />
+      )}
       {(user?.isAdmin || user?.rol === 'CLIENT') && <ClientOptions />}
       {(user?.isAdmin || user?.rol === 'COLLABORATOR') && (
         <CollaboratorOptions />
