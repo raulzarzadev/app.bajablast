@@ -41,3 +41,7 @@ export type Payment = {
     by: UserType['id']
   }
 }
+
+export interface Client extends NewClient {
+  id: string
+}

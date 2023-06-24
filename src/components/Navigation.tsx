@@ -19,7 +19,7 @@ import Image from 'next/image'
 import { googleLogin, logout } from '@/firebase/auth'
 import useAuth from '@/hooks/useAuth'
 import useUser from '@/hooks/useUser'
-import { imageLoader } from './UserHome'
+import useClients from '@/hooks/useClients'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -34,6 +34,8 @@ const settings = [
 function Navigation() {
   //* This are checking the login status
   useAuth()
+  useClients()
+
   const { user } = useUser()
 
   const [anchorElSignIn, setAnchorElSignIn] =
@@ -75,7 +77,7 @@ function Navigation() {
               sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
             >
               <Image
-                loader={imageLoader}
+                //loader={imageLoader}
                 src={'/icons/Logotipo-01-512px.png'}
                 width={80}
                 height={50}
@@ -128,7 +130,7 @@ function Navigation() {
           >
             <Link href={'/'}>
               <Image
-                loader={imageLoader}
+                //loader={imageLoader}
                 src={'/icons/Logotipo-01-512px.png'}
                 width={80}
                 height={50}
