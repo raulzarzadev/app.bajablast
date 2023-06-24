@@ -11,9 +11,6 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
   const { user } = useUser()
   useEffect(() => {
-    // fetch(`/api/activities/${activityId}`)
-    //   .then((res) => res.json())
-    //   .then(setActivity)
     const find = activities.find(({ id }) => id === activityId)
     setActivity(find)
   }, [activityId])

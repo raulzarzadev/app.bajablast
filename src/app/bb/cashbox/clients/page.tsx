@@ -2,23 +2,16 @@
 import { NewClient } from '@/types/user'
 import { Box, Button, Typography } from '@mui/material'
 import Link from 'next/link'
-import { SetStateAction, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
 import { UserContext } from '@/context/user'
 import { deleteUser, listenClients } from '@/firebase/users'
 import withAuth from '@/HOCs/withAuth'
+import useClients from '@/hooks/useClients'
 
 const Clients = () => {
   const { user } = useContext(UserContext)
-
-  const [clients, setClients] = useState<NewClient[]>([])
-
-  useEffect(() => {
-    listenClients((clients: SetStateAction<NewClient[]>) => {
-      console.log({ clients })
-      setClients(clients)
-    })
-  }, [])
+  const { clients = [] } = useClients()
 
   const handleRemove = async (clientId: NewClient['id']) => {
     try {
@@ -28,13 +21,13 @@ const Clients = () => {
     }
   }
 
-  const awaitingClients = clients.filter((client) => !client.payment)
-  const paidClients = clients.filter((client) => !!client.payment)
+  const awaitingClients = clients?.filter((client) => !client.payment)
+  const paidClients = clients?.filter((client) => !!client.payment)
 
   return (
     <Box
       component={'section'}
-      className="flex flex-col justify-center items-center pt-12 max-w-md mx-auto"
+      className="flex flex-col justify-center items-center pt-12 max-w-2xl mx-auto p-1"
     >
       <Box className="flex flex-col gap-4 mt-4">
         <Button LinkComponent={Link} href="clients/new">
@@ -44,7 +37,7 @@ const Clients = () => {
       <Typography component={'h6'} variant="h6" className="w-full text-left">
         En espera
       </Typography>
-      {awaitingClients.length === 0 ? (
+      {awaitingClients?.length === 0 ? (
         <Typography variant="h6">Aún no hay clientes en espera</Typography>
       ) : (
         <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
@@ -59,7 +52,7 @@ const Clients = () => {
           >
             Pagos
           </Typography>
-          {paidClients.length === 0 ? (
+          {paidClients?.length === 0 ? (
             <Typography variant="h6">Aún no hay pagos realizados</Typography>
           ) : (
             <ClientsTable clients={paidClients} />

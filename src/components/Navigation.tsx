@@ -19,6 +19,7 @@ import Image from 'next/image'
 import { googleLogin, logout } from '@/firebase/auth'
 import useAuth from '@/hooks/useAuth'
 import useUser from '@/hooks/useUser'
+import useClients from '@/hooks/useClients'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -33,6 +34,8 @@ const settings = [
 function Navigation() {
   //* This are checking the login status
   useAuth()
+  useClients()
+
   const { user } = useUser()
 
   const [anchorElSignIn, setAnchorElSignIn] =

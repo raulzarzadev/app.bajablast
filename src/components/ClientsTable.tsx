@@ -68,6 +68,7 @@ const ClientsTable = ({
         <TableHead>
           <TableRow>
             {handleRemove && <TableCell>Elim</TableCell>}
+            <TableCell align="center">Fecha</TableCell>
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
@@ -84,7 +85,7 @@ const ClientsTable = ({
           ))}
         </TableBody>
         <TableFooter>
-          <TableCell align="right" colSpan={!handleRemove ? 1 : 2}>
+          <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
             Total:
           </TableCell>
           <TableCell align="center">{clientsTotal}</TableCell>
@@ -112,7 +113,8 @@ const ClientsRow = ({
     (client?.friends?.reduce((acc, friend) => {
       return acc + (friend?.activity?.price || 0)
     }, 0) || 0) + (client?.activity?.price || 0)
-
+  const createdAt = client?.created?.at
+  const paymentAt = client?.payment?.created?.at || client?.payment?.date
   return (
     <TableRow
       onClick={(e) => {
@@ -131,6 +133,21 @@ const ClientsRow = ({
           </IconButton>
         </TableCell>
       )}
+      <TableCell align="center">
+        {createdAt && (
+          <div className="whitespace-nowrap text-xs">
+            <span>Creado: </span>
+            <span>{dateFormat(createdAt, 'HH:mm dd-MMM')}</span>
+          </div>
+        )}
+        {paymentAt && (
+          <div className="whitespace-nowrap text-xs">
+            <span>Pagado: </span>
+            <span>{dateFormat(paymentAt, 'HH:mm dd-MMM')}</span>
+          </div>
+        )}
+      </TableCell>
+
       <TableCell>{client.name}</TableCell>
       <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
       <TableCell align="right">

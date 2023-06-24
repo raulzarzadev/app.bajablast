@@ -1,4 +1,3 @@
-import { collaborator } from '@/CONST/fake-users'
 import { Box, Typography } from '@mui/material'
 
 const ActivityCollaboratorsSchedule = () => {

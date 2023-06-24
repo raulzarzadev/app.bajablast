@@ -1,7 +1,7 @@
 import { UserContext } from '@/context/user'
 import { NextComponentType } from 'next'
 import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 
 type WithAuthProps = {
   // Definir aquí las props adicionales que el HOC acepta y pasa al componente envuelto

@@ -1,5 +1,11 @@
+import ClientList from '@/components/ClientList'
+
 const Page = () => {
-  return <div>Clientes</div>
+  return (
+    <div>
+      <ClientList />
+    </div>
+  )
 }
 
 export default Page
