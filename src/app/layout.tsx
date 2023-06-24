@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import { UserContextProvider } from '@/context/user'
 import { PickerDateContextProvider } from '@/context/picker-date'
 import { ClientsContextProvider } from '@/context/clients'
+import { CollaboratorsContextProvider } from '@/context/collaborators'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -49,8 +50,10 @@ export default function RootLayout({
         <PickerDateContextProvider>
           <UserContextProvider>
             <ClientsContextProvider>
-              <Navigation />
-              {children}
+              <CollaboratorsContextProvider>
+                <Navigation />
+                {children}
+              </CollaboratorsContextProvider>
             </ClientsContextProvider>
           </UserContextProvider>
         </PickerDateContextProvider>

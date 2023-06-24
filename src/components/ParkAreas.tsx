@@ -6,18 +6,21 @@ const ParkAreas = () => {
   return (
     <Container component={'section'} className="mt-10 max-w-md mx-auto">
       <Typography variant="h6" component={'h6'} className="">
-        Actividades
+        Areas
       </Typography>
-      <Box component={'div'} className="flex gap-2 flex-wrap justify-start">
+      <Box
+        component={'div'}
+        className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center "
+      >
         {parkAreas.map((area) => (
-          <Button href={`${area.href}`} key={area.name} LinkComponent={Link}>
+          <Link href={`${area.href}`} key={area.name}>
             <Box
               component={'article'}
-              className="truncate flex flex-col gap-2 items-center justify-between  py-4 px-1 text-center bg-slate-200 w-[160px] aspect-square rounded-md shadow-md "
+              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
             >
               <Typography component={'p'}>{area.name}</Typography>
             </Box>
-          </Button>
+          </Link>
         ))}
       </Box>
     </Container>

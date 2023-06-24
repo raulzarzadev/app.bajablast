@@ -2,6 +2,7 @@ import { NewClient, UserType } from '@/types/user'
 import { usersCRUD } from './auth'
 import { where } from 'firebase/firestore'
 import { BaseType } from '@/types/base'
+import { roles } from '@/CONST/user'
 
 export const setUser = async (
   userId: BaseType['id'],
@@ -32,7 +33,12 @@ export const listenUser = async (
 ) => await usersCRUD.listenItem(userId, cb)
 
 export const listenClients = async (cb: CallableFunction) =>
-  await usersCRUD.listenItems([where('rol', '==', 'CLIENT')], cb)
+  await usersCRUD.listenItems([where('rol', '==', roles[0].key)], cb)
+export const listenCollaborators = async (cb: CallableFunction) =>
+  await usersCRUD.listenItems(
+    [where('rol', 'in', [roles[1].key, roles[2].key])],
+    cb
+  )
 
 export async function findUserByEmail({ email }: { email: string }) {
   const formatFoundUser = (

@@ -9,18 +9,9 @@ import { useRouter } from 'next/navigation'
 
 const BB = () => {
   const { user } = useUser()
-  const router = useRouter()
   return (
     <div className="flex flex-col items-center justify-center">
-      <Typography variant="h4" component={'h4'}>
-        BB
-      </Typography>
-
-      <ParkActivities
-        onClickActivity={(activityName) => {
-          router.push(`/bb/${activityName}`)
-        }}
-      />
+      <ParkActivities />
       {['COLLABORATOR', 'COORDINATOR'].includes(user?.rol || '') && (
         <ParkAreas />
       )}

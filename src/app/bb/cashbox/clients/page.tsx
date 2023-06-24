@@ -1,13 +1,13 @@
 'use client'
 import { NewClient } from '@/types/user'
-import { Box, Button, Typography } from '@mui/material'
-import Link from 'next/link'
+import { Box, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
 import { UserContext } from '@/context/user'
 import { deleteUser, listenClients } from '@/firebase/users'
 import withAuth from '@/HOCs/withAuth'
 import useClients from '@/hooks/useClients'
+import LinkApp from '@/components/LinkApp'
 
 const Clients = () => {
   const { user } = useContext(UserContext)
@@ -30,9 +30,7 @@ const Clients = () => {
       className="flex flex-col justify-center items-center pt-12 max-w-2xl mx-auto p-1"
     >
       <Box className="flex flex-col gap-4 mt-4">
-        <Button LinkComponent={Link} href="clients/new">
-          Nuevo cliente
-        </Button>
+        <LinkApp href="clients/new" label="Nuevo cliente" />
       </Box>
       <Typography component={'h6'} variant="h6" className="w-full text-left">
         En espera

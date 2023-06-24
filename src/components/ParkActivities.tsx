@@ -1,5 +1,6 @@
 import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Container, Typography } from '@mui/material'
+import Link from 'next/link'
 
 const ParkActivities = ({
   onClickActivity
@@ -9,13 +10,16 @@ const ParkActivities = ({
   return (
     <Container component={'section'} className="max-w-md mx-auto">
       <Typography variant="h6">Actividades</Typography>
-      <Box component={'div'} className="flex gap-2 flex-wrap justify-start ">
+      <Box
+        component={'div'}
+        className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center  "
+      >
         {activities.map((activity) => (
-          <Button
+          <Link
             onClick={(e) => {
-              e.preventDefault()
               onClickActivity?.(activity?.id || activity.shortName)
             }}
+            href={`/bb/${activity.id}`}
             key={activity.name}
             className="p-0"
           >
@@ -28,7 +32,7 @@ const ParkActivities = ({
                 ${activity.price.toFixed(2)}
               </Typography>
             </Box>
-          </Button>
+          </Link>
         ))}
       </Box>
     </Container>

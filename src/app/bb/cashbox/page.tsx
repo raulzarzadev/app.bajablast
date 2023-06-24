@@ -1,7 +1,7 @@
 'use client'
 import withAuth from '@/HOCs/withAuth'
-import { Box, Button, Typography } from '@mui/material'
-import Link from 'next/link'
+import LinkApp from '@/components/LinkApp'
+import { Box, Typography } from '@mui/material'
 
 const Cashbox = () => {
   return (
@@ -13,9 +13,7 @@ const Cashbox = () => {
         Caja
       </Typography>
       <Box className="my-4">
-        <Button LinkComponent={Link} href={'/bb/cashbox/clients'}>
-          Usuarios
-        </Button>
+        <LinkApp href={'/bb/cashbox/clients'} label="Usuarios" />
       </Box>
     </Box>
   )
