@@ -1,5 +1,5 @@
 'use client'
-import CollaboratorsList from '@/components/CollaboratorsList'
+import CollaboratorsList from '@/components/CollaboratorsTable'
 import useCollaborators from '@/hooks/useCollaborators'
 
 const Page = () => {
