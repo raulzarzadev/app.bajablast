@@ -1,13 +1,22 @@
 'use client'
-import { activities } from '@/CONST/fake-activities'
+// import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Container, Typography } from '@mui/material'
 import Link from 'next/link'
 import AddIcon from '@mui/icons-material/Add'
+import { useEffect, useState } from 'react'
+import { ParkActivity } from '@/types/activities'
+import { listenActivities, listenActivity } from '@/firebase/activities'
+import CurrencySpan from './CurrencySpan'
 const ParkActivities = ({
   onClickActivity
 }: {
   onClickActivity?: (activityName: string) => void
 }) => {
+  const [activities, setActivities] = useState<ParkActivity[]>([])
+  useEffect(() => {
+    listenActivities((res: ParkActivity[]) => setActivities(res))
+  }, [])
+
   return (
     <Container component={'section'} className="max-w-md mx-auto">
       <Typography variant="h6">Actividades</Typography>
@@ -31,7 +40,7 @@ const ParkActivities = ({
             >
               <Typography component={'p'}>{activity.name}</Typography>
               <Typography component={'p'}>
-                ${activity.price.toFixed(2)}
+                <CurrencySpan quantity={activity.price} />
               </Typography>
             </Box>
           </Link>

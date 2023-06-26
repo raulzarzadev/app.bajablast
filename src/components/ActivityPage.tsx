@@ -6,13 +6,14 @@ import { Box, Container, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
 import ActivityCollaboratorsSchedule from './ActivityCollaboratorsSchedule'
+import { listenActivity } from '@/firebase/activities'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
   const { user } = useUser()
   useEffect(() => {
-    const find = activities.find(({ id }) => id === activityId)
-    setActivity(find)
+    //const find = activities.find(({ id }) => id === activityId)
+    if (activityId) listenActivity(activityId, (res) => setActivity(res))
   }, [activityId])
   return (
     <>
