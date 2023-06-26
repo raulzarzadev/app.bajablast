@@ -9,6 +9,11 @@ import Paper from '@mui/material/Paper'
 import { UserType } from '@/types/user'
 import { dateFormat } from '@/utils/utils-date'
 import { Avatar } from '@mui/material'
+import useModal from '@/hooks/useModal'
+import UserCard from './UserCard'
+import Modal from './Modal'
+import ClientForm from './ClientForm'
+import useUser from '@/hooks/useUser'
 
 export default function CollaboratorsTable({
   collaborators
@@ -29,31 +34,70 @@ export default function CollaboratorsTable({
         </TableHead>
         <TableBody>
           {collaborators.map((collaborator) => (
-            <TableRow
-              key={collaborator.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell
-                className="flex flex-col justify-center items-center"
-                align="center"
-                component="th"
-                scope="row"
-              >
-                <Avatar src={collaborator.image} />
-                {collaborator.name}
-              </TableCell>
-              <TableCell align="center">{collaborator.rol}</TableCell>
-              <TableCell align="center">
-                {dateFormat(collaborator.birthday, 'dd/MM/yy')}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap">
-                {collaborator.phone}
-              </TableCell>
-              <TableCell align="center">{collaborator.email}</TableCell>
-            </TableRow>
+            <CollaboratorRow
+              collaborator={collaborator}
+              key={collaborator.id}
+            />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+  )
+}
+const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
+  const modal = useModal()
+  const [editing, setEditing] = React.useState(false)
+  const { user } = useUser()
+  return (
+    <>
+      <TableRow
+        key={collaborator.name}
+        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        onClick={(e) => {
+          modal.handleOpen()
+        }}
+      >
+        <TableCell
+          className="flex flex-col justify-center items-center"
+          align="center"
+          component="th"
+          scope="row"
+        >
+          <Avatar src={collaborator.image} />
+          {collaborator.name}
+        </TableCell>
+        <TableCell align="center">{collaborator.rol}</TableCell>
+        <TableCell align="center">
+          {dateFormat(collaborator.birthday, 'dd/MM/yy')}
+        </TableCell>
+        <TableCell align="center" className="whitespace-nowrap">
+          {collaborator.phone}
+        </TableCell>
+        <TableCell align="center">{collaborator.email}</TableCell>
+      </TableRow>
+      <Modal {...modal} title={`Detalles de ${collaborator.name}`}>
+        {user?.isAdmin && editing ? (
+          <ClientForm
+            client={collaborator}
+            handleSubmit={(data) => {
+              console.log(data)
+              setEditing(false)
+            }}
+            editRol={user?.isAdmin}
+          />
+        ) : (
+          <UserCard
+            user={collaborator}
+            onEdit={
+              user?.isAdmin
+                ? () => {
+                    setEditing(true)
+                  }
+                : undefined
+            }
+          />
+        )}
+      </Modal>
+    </>
   )
 }
