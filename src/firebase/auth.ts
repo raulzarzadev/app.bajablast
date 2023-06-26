@@ -11,8 +11,8 @@ import { UserType } from '@/types/user'
 import { app, db } from './main'
 import { findUserByEmail, getUser, setUser } from './users'
 
-const auth = getAuth(app)
-const storage = getStorage(app)
+export const auth = getAuth(app)
+export const storage = getStorage(app)
 
 // CREATE A MAIN INSTANCE FOR USERS
 export const usersCRUD = new FirebaseCRUD('users', db, storage)

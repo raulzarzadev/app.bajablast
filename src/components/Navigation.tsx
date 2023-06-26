@@ -117,7 +117,7 @@ function Navigation() {
             >
               {pages.map((page) => (
                 <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-                  <Link href={page.href}>
+                  <Link href={page.href} passHref>
                     <Typography textAlign="center">{page.label}</Typography>
                   </Link>
                 </MenuItem>

@@ -1,7 +1,8 @@
+'use client'
 import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Container, Typography } from '@mui/material'
 import Link from 'next/link'
-
+import AddIcon from '@mui/icons-material/Add'
 const ParkActivities = ({
   onClickActivity
 }: {
@@ -16,7 +17,8 @@ const ParkActivities = ({
       >
         {activities.map((activity) => (
           <Link
-            onClick={(e) => {
+            passHref
+            onClick={() => {
               onClickActivity?.(activity?.id || activity.shortName)
             }}
             href={`/bb/${activity.id}`}
@@ -34,6 +36,15 @@ const ParkActivities = ({
             </Box>
           </Link>
         ))}
+        <Link passHref href={`/bb/new`} className="p-0">
+          <Box
+            component={'article'}
+            className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
+          >
+            <Typography component={'p'}>Nueva</Typography>
+            <AddIcon fontSize="large" />
+          </Box>
+        </Link>
       </Box>
     </Container>
   )

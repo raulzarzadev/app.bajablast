@@ -10,7 +10,12 @@ const ControllerText = ({
   const methods = useFormContext()
   const value = methods.watch(name)
   return (
-    <TextField {...methods.register(name)} value={value || ''} label={label} />
+    <TextField
+      {...methods.register(name)}
+      value={value || ''}
+      label={label}
+      {...rest}
+    />
   )
   // return (
   //   <Controller
