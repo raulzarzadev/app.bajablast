@@ -26,13 +26,13 @@ const ScheduleForm = ({
   )
 }
 
-const DaySchedule = ({ day }:{day}) => {
+const DaySchedule = ({ day }: { day }) => {
   const [schedule, setSchedule] = useState<ScheduleHours>(null)
   const [showScheduleForm, setShowScheduleForm] = useState<ScheduleHours>()
   return (
     <div className="flex">
       <div>{day}</div>
-      <button onClick={()}>{}</button>
+      <button>{}</button>
     </div>
   )
 }

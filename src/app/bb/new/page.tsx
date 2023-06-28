@@ -1,6 +1,8 @@
 'use client'
+import withAuth from '@/HOCs/withAuth'
 import ActivityForm from '@/components/ActivityForm'
 import { createActivity } from '@/firebase/activities'
+import useUser from '@/hooks/useUser'
 import { Box, Typography } from '@mui/material'
 
 const NewActivity = () => {
@@ -25,4 +27,4 @@ const NewActivity = () => {
   )
 }
 
-export default NewActivity
+export default withAuth(NewActivity, ['isAdmin', 'COORDINATOR'])

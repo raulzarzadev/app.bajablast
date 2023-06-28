@@ -6,16 +6,18 @@ import { ParkActivity } from '@/types/activities'
 import { listenActivities, listenActivity } from '@/firebase/activities'
 import CurrencySpan from './CurrencySpan'
 import AppIcon from './AppIcon'
+import useUser from '@/hooks/useUser'
 const ParkActivities = ({
   onClickActivity
 }: {
   onClickActivity?: (activityName: string) => void
 }) => {
+  const { user } = useUser()
   const [activities, setActivities] = useState<ParkActivity[]>([])
   useEffect(() => {
     listenActivities((res: ParkActivity[]) => setActivities(res))
   }, [])
-
+  const canCreteNewActivity = user?.isAdmin
   return (
     <Container component={'section'} className="max-w-md mx-auto">
       <Typography variant="h6">Actividades</Typography>
@@ -44,15 +46,17 @@ const ParkActivities = ({
             </Box>
           </Link>
         ))}
-        <Link passHref href={`/bb/new`} className="p-0">
-          <Box
-            component={'article'}
-            className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
-          >
-            <Typography component={'p'}>Nueva</Typography>
-            <AppIcon icon="add" />
-          </Box>
-        </Link>
+        {canCreteNewActivity && (
+          <Link passHref href={`/bb/new`} className="p-0">
+            <Box
+              component={'article'}
+              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
+            >
+              <Typography component={'p'}>Nueva</Typography>
+              <AppIcon icon="add" />
+            </Box>
+          </Link>
+        )}
       </Box>
     </Container>
   )
