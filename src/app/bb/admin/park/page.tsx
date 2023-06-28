@@ -1,10 +1,10 @@
 import ParkBasicConfig from '@/components/ParkBasicConfig'
-import ParkSchedule from '@/components/ParkSchedule'
+import WeekScheduleSection from '@/components/WeekScheduleSection'
 
 const Page = () => {
   return (
     <div>
-      <ParkSchedule />
+      <WeekScheduleSection />
       <ParkBasicConfig />
     </div>
   )

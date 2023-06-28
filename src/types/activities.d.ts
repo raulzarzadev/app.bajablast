@@ -9,13 +9,12 @@ export type Weekdays =
   | 'Friday'
   | 'Saturday'
   | 'Sunday'
+
 export type Schedule = {
   [key in Weekdays]: ScheduleHours
 }
-export type ScheduleHours =
-  | `${number}:${number}-${number}:${number}`
-  | '24'
-  | null
+export type ScheduleHour = `${string}:${string}`
+export type ScheduleHours = `${ScheduleHour} - ${ScheduleHour}` | '24' | null
 export interface ParkActivity extends Partial<BaseType> {
   shortName: string
   name: string
