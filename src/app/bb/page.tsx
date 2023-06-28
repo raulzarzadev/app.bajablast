@@ -2,10 +2,7 @@
 
 import ParkActivities from '@/components/ParkActivities'
 import ParkAreas from '@/components/ParkAreas'
-import UserCard from '@/components/UserCard'
 import useUser from '@/hooks/useUser'
-import { Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
 
 const BB = () => {
   const { user } = useUser()

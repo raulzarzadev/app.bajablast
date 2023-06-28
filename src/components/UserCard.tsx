@@ -1,13 +1,13 @@
 'use client'
 
 import useModal from '@/hooks/useModal'
-import { Avatar, Box, IconButton, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, IconButton, Tooltip } from '@mui/material'
 import Modal from './Modal'
 import Image from 'next/image'
 
 import { dateMx } from '@/utils/utils-date'
-import EditIcon from '@mui/icons-material/Edit'
 import { UserType } from '@/types/user'
+import AppIcon from './AppIcon'
 const UserCard = ({
   onEdit,
   user
@@ -31,7 +31,7 @@ const UserCard = ({
                   onEdit()
                 }}
               >
-                <EditIcon />
+                <AppIcon icon="edit" />
               </IconButton>
             </span>
           )}

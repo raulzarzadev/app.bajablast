@@ -1,12 +1,11 @@
 'use client'
-// import { activities } from '@/CONST/fake-activities'
-import { Box, Button, Container, Typography } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import Link from 'next/link'
-import AddIcon from '@mui/icons-material/Add'
 import { useEffect, useState } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { listenActivities, listenActivity } from '@/firebase/activities'
 import CurrencySpan from './CurrencySpan'
+import AppIcon from './AppIcon'
 const ParkActivities = ({
   onClickActivity
 }: {
@@ -51,7 +50,7 @@ const ParkActivities = ({
             className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
           >
             <Typography component={'p'}>Nueva</Typography>
-            <AddIcon fontSize="large" />
+            <AppIcon icon="add" />
           </Box>
         </Link>
       </Box>

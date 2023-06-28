@@ -1,5 +1,4 @@
 'use client'
-import { activities } from '@/CONST/fake-activities'
 import useUser from '@/hooks/useUser'
 import { ParkActivity } from '@/types/activities'
 import { Box, Container, Typography } from '@mui/material'
@@ -40,13 +39,13 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       </Container>
       <Container>
         {['COORDINATOR', 'ADMIN', 'COLLABORATOR'].includes(user?.rol || '') && (
-          <ActivityCollaboratorsSchedule />
+          <ActivityCollaboratorsSchedule collaborators={activity?.operators} />
         )}
       </Container>
 
       <Container>
         {['COORDINATOR', 'ADMIN'].includes(user?.rol || '') && (
-          <ActivityAdmin />
+          <ActivityAdmin activity={activity} />
         )}
       </Container>
     </>

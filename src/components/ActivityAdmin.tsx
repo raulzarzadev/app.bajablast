@@ -1,14 +1,13 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import ClientsChart from './ClientsChart'
-import IconEdit from './icons/edit'
 import { useState } from 'react'
 import ActivityForm from './ActivityForm'
 import { ParkActivity } from '@/types/activities'
-import { activities } from '@/CONST/fake-activities'
 import CurrencySpan from './CurrencySpan'
+import { updateActivity } from '@/firebase/activities'
+import AppIcon from './AppIcon'
 
-const ActivityAdmin = () => {
-  const activity = activities[0]
+const ActivityAdmin = ({ activity }: { activity?: ParkActivity }) => {
   return (
     <div>
       <Typography variant="h4" className="text-center">
@@ -20,18 +19,28 @@ const ActivityAdmin = () => {
   )
 }
 
-const ActivityInfo = ({ activity }: { activity: ParkActivity }) => {
+const ActivityInfo = ({ activity }: { activity?: ParkActivity }) => {
   const [editing, setEditing] = useState(false)
 
   return (
     <div>
       {editing ? (
         <>
-          <Typography>Edit</Typography>
+          <Typography className="text-center my-4">Editar actividad</Typography>
           <ActivityForm
-            onSubmit={(activity) => {
-              console.log({ activity })
+            onCancel={() => {
               setEditing(false)
+            }}
+            activity={activity}
+            onSubmit={async (activity) => {
+              try {
+                if (activity.id) {
+                  await updateActivity(activity.id, { ...activity })
+                  setEditing(false)
+                }
+              } catch (error) {
+                console.log({ error })
+              }
             }}
           />
         </>
@@ -53,7 +62,7 @@ const ActivityDetails = ({
   activity
 }: {
   onEdit?: () => void
-  activity: ParkActivity
+  activity?: ParkActivity
 }) => {
   return (
     <Box className="my-4">
@@ -63,15 +72,15 @@ const ActivityDetails = ({
             onEdit()
           }}
         >
-          <IconEdit />
+          <AppIcon icon="edit" />
         </IconButton>
       )}
       <Box>
-        <Typography>Nombre: {activity.name}</Typography>
-        <Typography>Nombre Corto: {activity.shortName}</Typography>
-        <Typography>Descripción: {activity.description}</Typography>
+        <Typography>Nombre: {activity?.name}</Typography>
+        <Typography>Nombre Corto: {activity?.shortName}</Typography>
+        <Typography>Descripción: {activity?.description}</Typography>
         <Typography>
-          Precio: <CurrencySpan quantity={activity.price} />
+          Precio: <CurrencySpan quantity={activity?.price} />
         </Typography>
       </Box>
     </Box>

@@ -46,6 +46,21 @@ export const activities: ParkActivity[] = [
       Saturday: '12:00-22:00',
       Sunday: '12:00-22:00'
     },
+    operators: [
+      {
+        name: 'luisa alvarez',
+        id: '1',
+        schedule: {
+          Monday: null,
+          Tuesday: '12:00-22:00',
+          Wednesday: '12:00-22:00',
+          Thursday: '12:00-22:00',
+          Friday: '12:00-22:00',
+          Saturday: '12:00-22:00',
+          Sunday: '12:00-22:00'
+        }
+      }
+    ],
     shortName: 'challenge',
     price: 150
   },

@@ -6,11 +6,15 @@ import ControllerText from './ControllerText'
 import { createActivity } from '@/firebase/activities'
 
 const ActivityForm = ({
-  onSubmit
+  onSubmit,
+  activity,
+  onCancel
 }: {
+  activity?: ParkActivity
   onSubmit?: (activity: ParkActivity) => void | Promise<any>
+  onCancel?: () => void
 }) => {
-  const methods = useForm()
+  const methods = useForm({ defaultValues: activity })
   const _onSubmit = (data: any) => {
     onSubmit?.(data)
   }
@@ -23,7 +27,21 @@ const ActivityForm = ({
             <ControllerText name="description" label="Descripción" />
             <ControllerText name="shortName" label="Nombre corto" />
             <ControllerText type="number" name="price" label="Precio" />
-            <Button type="submit">Guardar</Button>
+            <Box className="flex w-full justify-around ">
+              {onCancel && (
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onCancel()
+                  }}
+                  variant="outlined"
+                  color="error"
+                >
+                  Cancelar
+                </Button>
+              )}
+              <Button type="submit">Guardar</Button>
+            </Box>
           </Box>
         </form>
       </FormProvider>
