@@ -17,12 +17,13 @@ export function withAuth<P>(
   function WrappedComponent(hocProps: P) {
     const router = useRouter()
     const { user } = useContext(UserContext)
-    console.log(extraUserValidation)
     if (user === undefined) return <>Loading...</>
     if (user === null) {
+      router.replace('/')
+      return <></>
     }
     // if extra User Validation include any start whith validation
-    if (extraUserValidation.length > 0) {
+    if (extraUserValidation?.length > 0) {
       const isValid = validateUser(extraUserValidation)
       if (!isValid) {
         router.replace('/')
