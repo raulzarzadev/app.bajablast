@@ -317,7 +317,19 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
             <Box className="flex w-full justify-center flex-col items-center text-center">
               <Box className=""></Box>
               <Typography variant="h4" className="">
-                Pagado <CurrencySpan quantity={client.payment.amount} />
+                Pagado{' '}
+                <CurrencySpan
+                  quantity={
+                    asNumber(client.payment.amount) -
+                    asNumber(client.payment.amount) *
+                      (asNumber(client.payment.discount) / 100)
+                  }
+                />
+                {client.payment.discount && (
+                  <span className="text-green-600 font-bold text-sm">
+                    - %{client.payment.discount}
+                  </span>
+                )}
               </Typography>
               <Typography>
                 Fecha :{' '}
