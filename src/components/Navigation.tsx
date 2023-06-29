@@ -71,7 +71,7 @@ function Navigation() {
     <AppBar position="static" role="navigation">
       <Container maxWidth="xl">
         <Toolbar disableGutters role="logo">
-          <Link href={'/'}>
+          <Link href={'/'} passHref>
             <Box
               className="items-center"
               sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
@@ -128,7 +128,7 @@ function Navigation() {
             className={'w-full justify-center '}
             sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}
           >
-            <Link href={'/'}>
+            <Link href={'/'} passHref>
               <Image
                 //loader={imageLoader}
                 src={'/icons/Logotipo-01-512px.png'}
@@ -226,7 +226,7 @@ function Navigation() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <Link href={setting.href} key={setting.label}>
+                    <Link href={setting.href} key={setting.label} passHref>
                       <MenuItem role="listitem">
                         <Typography textAlign="center">
                           {setting.label}

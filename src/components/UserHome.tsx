@@ -11,7 +11,7 @@ const UserHome = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-start p-2 mt-16 text-center ">
       <div className="relative   aspect-[25/16] w-full max-w-md ">
-        <Link href={'/bb'}>
+        <Link href={'/bb'} passHref>
           <Image
             loader={imageLoader}
             fill

@@ -10,7 +10,6 @@ const LoadingButton = ({
   color,
   ...rest
 }: Partial<Pick<LoadingButtonProps, 'color' | 'variant'>> & {
-  color: string
   disabled?: boolean
   onClick?: () => void | Promise<void>
   label: string
