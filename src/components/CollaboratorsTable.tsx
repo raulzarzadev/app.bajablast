@@ -16,9 +16,9 @@ import ClientForm from './ClientForm'
 import useUser from '@/hooks/useUser'
 
 export default function CollaboratorsTable({
-  collaborators
+  collaborators = []
 }: {
-  collaborators: UserType[]
+  collaborators?: UserType[]
 }) {
   return (
     <TableContainer component={Paper}>

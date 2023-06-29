@@ -33,6 +33,7 @@ import { dateFormat, dateMx } from '@/utils/utils-date'
 import ShowUser from './ShowUser'
 import { PaymentMethods } from '@/CONST/paymentMethods'
 import { USD_PRICE } from '@/CONST/CURRENCY'
+import { Timestamp } from 'firebase/firestore'
 
 const ClientsTable = ({
   clients,
@@ -45,9 +46,9 @@ const ClientsTable = ({
     //* Get the total of money calculated by the activity price requested and their friends activity
     return (
       acc +
-      (client.activity?.price || 0) +
+      (parseFloat(`${client.activity?.price}`) || 0) +
       (client?.friends?.reduce((acc, friend) => {
-        return acc + (friend.activity?.price || 0)
+        return acc + (parseFloat(`${friend.activity?.price}`) || 0)
       }, 0) || 0)
     )
   }, 0)
@@ -59,17 +60,29 @@ const ClientsTable = ({
     return acc + (client?.friends?.length || 0) + 1
   }, 0)
   const clientsAlreadyPay = clients.some((client) => client.payment)
-  const sortByDate = (a, b) => {
-    if (clientsAlreadyPay) {
-      const aDate = a?.payment?.created?.at?.toMillis?.()
-      const bDate = b?.payment?.created?.at?.toMillis?.()
-      return bDate - aDate
-    } else {
-      const aDate = a.created?.at.toMillis()
-      const bDate = b.created?.at.toMillis()
-      return aDate - bDate
+  const sortByDate = (a: NewClient, b: NewClient) => {
+    const aPaidAt = a?.payment?.created?.at
+    const bPaidAt = a?.payment?.created?.at
+    const aCreatedAt = a.created?.at
+    const bCreatedAt = b.created?.at
+
+    if (
+      aCreatedAt instanceof Timestamp &&
+      bCreatedAt instanceof Timestamp &&
+      aPaidAt instanceof Timestamp &&
+      bPaidAt instanceof Timestamp
+    ) {
+      if (clientsAlreadyPay) {
+        const aDate = aPaidAt?.toMillis?.()
+        const bDate = bPaidAt?.toMillis?.()
+        return bDate - aDate
+      } else {
+        const aDate = aCreatedAt?.toMillis()
+        const bDate = bCreatedAt?.toMillis()
+        return aDate - bDate
+      }
     }
-    //a?.created?.at?.getTime?.() - b?.created?.at?.getTime?.()
+    return 0
   }
   console.log({ totalRequested })
 

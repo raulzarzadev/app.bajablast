@@ -1,8 +1,7 @@
-import { Schedule } from '@/types/activities'
+import { Schedule, Weekdays } from '@/types/activities'
 import { Box, IconButton, Typography } from '@mui/material'
 import AppIcon from './AppIcon'
 import { format, getDay } from 'date-fns'
-import { dateFormat } from '@/utils/utils-date'
 import { WEEK_DAYS } from '@/CONST/dateLabels'
 
 const WeekSchedule = ({
@@ -12,7 +11,7 @@ const WeekSchedule = ({
   schedule?: Schedule
   onEdit?: () => void
 }) => {
-  const isFocused = (day) => {
+  const isFocused = (day: string) => {
     const todayDay = format(new Date(), 'EEEE')
     return todayDay === day
   }
@@ -35,7 +34,7 @@ const WeekSchedule = ({
                 isFocused(key) && ' font-bold '
               }`}
             >
-              <span>{WEEK_DAYS[key]}</span>
+              <span>{WEEK_DAYS[key as Weekdays]}</span>
               <div className="flex flex-col">
                 {value?.split('-').map((h) => <span key={h}>{h}</span>) ||
                   'Cerrado'}

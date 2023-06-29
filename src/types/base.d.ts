@@ -1,17 +1,18 @@
+import { Timestamp } from 'firebase/firestore'
 import { UserType } from './user'
 
 export type BaseType = {
   id: string
   created: {
-    at: Date
+    at: Date | Timestamp
     by: string
   }
   updated: {
-    at: Date
+    at: Date | Timestamp
     by: string
   }
   deleted: {
-    at: Date
+    at: Date | Timestamp
     by: string
     isDeleted: boolean
   }

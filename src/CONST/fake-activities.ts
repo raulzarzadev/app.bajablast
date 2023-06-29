@@ -7,12 +7,12 @@ export const activities: ParkActivity[] = [
     description: 'Challenge + tirolesa',
     schedule: {
       Monday: null,
-      Tuesday: '12:00-22:00',
-      Wednesday: '12:00-22:00',
-      Thursday: '12:00-22:00',
-      Friday: '12:00-22:00',
-      Saturday: '12:00-22:00',
-      Sunday: '12:00-22:00'
+      Tuesday: '12:00 - 22:00',
+      Wednesday: '12:00 - 22:00',
+      Thursday: '12:00 - 22:00',
+      Friday: '12:00 - 22:00',
+      Saturday: '12:00 - 22:00',
+      Sunday: '12:00 - 22:00'
     },
     shortName: 'tirolesa',
     price: 250
@@ -23,12 +23,12 @@ export const activities: ParkActivity[] = [
     description: 'Crays Jump',
     schedule: {
       Monday: null,
-      Tuesday: '12:00-22:00',
-      Wednesday: '12:00-22:00',
-      Thursday: '12:00-22:00',
-      Friday: '12:00-22:00',
-      Saturday: '12:00-22:00',
-      Sunday: '12:00-22:00'
+      Tuesday: '12:00 - 22:00',
+      Wednesday: '12:00 - 22:00',
+      Thursday: '12:00 - 22:00',
+      Friday: '12:00 - 22:00',
+      Saturday: '12:00 - 22:00',
+      Sunday: '12:00 - 22:00'
     },
     shortName: 'jump',
     price: 250
@@ -39,12 +39,12 @@ export const activities: ParkActivity[] = [
     description: 'Just Challenge',
     schedule: {
       Monday: null,
-      Tuesday: '12:00-22:00',
-      Wednesday: '12:00-22:00',
-      Thursday: '12:00-22:00',
-      Friday: '12:00-22:00',
-      Saturday: '12:00-22:00',
-      Sunday: '12:00-22:00'
+      Tuesday: '12:00 - 22:00',
+      Wednesday: '12:00 - 22:00',
+      Thursday: '12:00 - 22:00',
+      Friday: '12:00 - 22:00',
+      Saturday: '12:00 - 22:00',
+      Sunday: '12:00 - 22:00'
     },
     operators: [
       {
@@ -52,12 +52,12 @@ export const activities: ParkActivity[] = [
         id: '1',
         schedule: {
           Monday: null,
-          Tuesday: '12:00-22:00',
-          Wednesday: '12:00-22:00',
-          Thursday: '12:00-22:00',
-          Friday: '12:00-22:00',
-          Saturday: '12:00-22:00',
-          Sunday: '12:00-22:00'
+          Tuesday: '12:00 - 22:00',
+          Wednesday: '12:00 - 22:00',
+          Thursday: '12:00 - 22:00',
+          Friday: '12:00 - 22:00',
+          Saturday: '12:00 - 22:00',
+          Sunday: '12:00 - 22:00'
         }
       }
     ],
@@ -70,12 +70,12 @@ export const activities: ParkActivity[] = [
     description: 'Todo incluido',
     schedule: {
       Monday: null,
-      Tuesday: '12:00-22:00',
-      Wednesday: '12:00-22:00',
-      Thursday: '12:00-22:00',
-      Friday: '12:00-22:00',
-      Saturday: '12:00-22:00',
-      Sunday: '12:00-22:00'
+      Tuesday: '12:00 - 22:00',
+      Wednesday: '12:00 - 22:00',
+      Thursday: '12:00 - 22:00',
+      Friday: '12:00 - 22:00',
+      Saturday: '12:00 - 22:00',
+      Sunday: '12:00 - 22:00'
     },
     shortName: 'full',
     price: 450

@@ -3,6 +3,7 @@ import { ClientActivity } from './activities'
 import { BaseType } from './base'
 import { roles } from '@/CONST/user'
 import { PaymentMethods } from '@/CONST/paymentMethods'
+import { Timestamp } from 'firebase/firestore'
 
 export type Rol = (typeof roles)[number]['key']
 export interface UserType extends Partial<BaseType> {
@@ -34,10 +35,10 @@ export interface NewClient extends UserType {
 
 export type Payment = {
   method: PaymentMethods
-  date: Date
+  date: Date | Timestamp
   amount: number
   created: {
-    at: Date
+    at: Date | Timestamp
     by: UserType['id']
   }
 }
