@@ -4,11 +4,14 @@ import ActivityForm from '@/components/ActivityForm'
 import { createActivity } from '@/firebase/activities'
 import useUser from '@/hooks/useUser'
 import { Box, Typography } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
 const NewActivity = () => {
+  const router = useRouter()
   const onSubmit = async (data: any) => {
     try {
       await createActivity({ ...data }).then((res) => console.log(res))
+      router.push('/bb')
     } catch (error) {
       console.error({ error })
     }

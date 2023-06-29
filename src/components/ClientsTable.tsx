@@ -422,7 +422,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   </RadioGroup>
                 </FormControl>
               </Box>
-              <Box className="flex w-full justify-evenly">
+              <Box className="flex w-full justify-evenly items-center my-4">
                 <TextField
                   inputProps={{
                     inputMode: 'numeric',
@@ -445,6 +445,8 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 />
                 <LoadingButton
                   disabled={amount < total}
+                  variant="contained"
+                  color="success"
                   onClick={() => {
                     return handlePay({
                       amount: subtotal,

@@ -1,4 +1,4 @@
-import LoadingButtonMUI from '@mui/lab/LoadingButton'
+import LoadingButtonMUI, { LoadingButtonProps } from '@mui/lab/LoadingButton'
 import SaveIcon from '@mui/icons-material/Save'
 import useLoading from '@/hooks/useLoading'
 
@@ -6,8 +6,11 @@ const LoadingButton = ({
   onClick,
   label = 'Save',
   icon = <SaveIcon />,
-  disabled
-}: {
+  disabled,
+  color,
+  ...rest
+}: Partial<Pick<LoadingButtonProps, 'color' | 'variant'>> & {
+  color: string
   disabled?: boolean
   onClick?: () => void | Promise<void>
   label: string
@@ -17,6 +20,7 @@ const LoadingButton = ({
 
   return (
     <LoadingButtonMUI
+      className={`${color === 'success' && 'bg-green-600'}`}
       disabled={disabled}
       onClick={async () => {
         try {
@@ -31,6 +35,7 @@ const LoadingButton = ({
       loading={loading}
       loadingPosition="start"
       startIcon={icon}
+      {...rest}
     >
       {label}
     </LoadingButtonMUI>
