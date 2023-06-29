@@ -12,7 +12,7 @@ const CurrencySpan = ({
       {new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-      }).format(parseInt(`${quantity}`))}{' '}
+      }).format(parseFloat(`${quantity}`))}{' '}
     </span>
   )
 }

@@ -5,8 +5,10 @@ import useLoading from '@/hooks/useLoading'
 const LoadingButton = ({
   onClick,
   label = 'Save',
-  icon = <SaveIcon />
+  icon = <SaveIcon />,
+  disabled
 }: {
+  disabled?: boolean
   onClick?: () => void | Promise<void>
   label: string
   icon?: JSX.Element
@@ -15,6 +17,7 @@ const LoadingButton = ({
 
   return (
     <LoadingButtonMUI
+      disabled={disabled}
       onClick={async () => {
         try {
           setLoading(true)

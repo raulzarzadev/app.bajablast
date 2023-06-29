@@ -240,12 +240,11 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
   const clientAmount = asNumber(client.activity?.price)
 
-  const total =
+  const subtotal =
     client?.friends?.reduce((acc, friend) => {
       const friendAmount = asNumber(friend?.activity?.price)
       return acc + friendAmount
     }, clientAmount) || 0
-
   const handlePay = async (payment: NewClient['payment']) => {
     const clientId = client.id || ''
     const res = await updateUser(clientId, { payment })
@@ -254,7 +253,9 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>('cash')
   const [discount, setDiscount] = useState(0)
+  const [amount, setAmount] = useState(0)
   const modalDetails = useModal()
+  const total = subtotal - subtotal * (discount / 100)
   return (
     <>
       <Button
@@ -337,7 +338,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
               {/*//* ******************************************* AMOUNT IN MXN */}
               <Box className="flex w-full justify-end items-baseline">
                 <Typography>MXN: </Typography>
-                <CurrencySpan quantity={total} />
+                <CurrencySpan quantity={subtotal} />
               </Box>
 
               {/*//* ******************************************* AMOUNT IN USD */}
@@ -348,7 +349,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   )}mxn`}</span>{' '}
                   USD:
                 </Typography>
-                <CurrencySpan quantity={total / USD_PRICE} />
+                <CurrencySpan quantity={subtotal / USD_PRICE} />
               </Box>
               {/*//* ******************************************* DISCOUNT */}
               <Box className="flex w-full justify-end items-baseline my-2">
@@ -373,8 +374,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
               </Box>
               <Box>
                 <Typography variant="h5" className="text-center">
-                  Total:{' '}
-                  <CurrencySpan quantity={total - (discount / 100) * total} />
+                  Total: <CurrencySpan quantity={total} />
                 </Typography>
               </Box>
 
@@ -411,10 +411,31 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 </FormControl>
               </Box>
               <Box className="flex w-full justify-evenly">
+                <TextField
+                  inputProps={{
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                    min: 0
+                  }}
+                  className=" "
+                  name="amount"
+                  label="Recibido"
+                  type="number"
+                  value={asNumber(amount)}
+                  onChange={(e) => {
+                    setAmount(asNumber(e.target.value))
+                  }}
+                  helperText={
+                    amount < total
+                      ? `Faltan $${asNumber(total - amount).toFixed(2)}`
+                      : `Sobran $${asNumber(amount - total).toFixed(2)}`
+                  }
+                />
                 <LoadingButton
+                  disabled={amount < total}
                   onClick={() => {
                     return handlePay({
-                      amount: total,
+                      amount: subtotal,
                       date: new Date(),
                       method: paymentMethod,
                       discount,
