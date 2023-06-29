@@ -1,5 +1,4 @@
 import ClientOptions from '@/components/ClientOptions'
-import UserCard from '@/components/UserCard'
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 

@@ -2,7 +2,7 @@ import PrincipalPage from '@/components/PrincipalPage'
 
 export default function Home() {
   return (
-    <main>
+    <main data-test-id="home">
       <PrincipalPage />
     </main>
   )

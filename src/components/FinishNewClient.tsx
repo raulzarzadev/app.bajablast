@@ -11,7 +11,7 @@ const FinishNewClient = ({
   handleFinish?: () => void | Promise<void>
 }) => {
   const total = clients?.reduce(
-    (acc, client) => acc + (client?.activity?.price || 0),
+    (acc, client) => acc + (parseFloat(`${client?.activity?.price}`) || 0),
     0
   )
 

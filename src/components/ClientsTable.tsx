@@ -18,6 +18,7 @@ import {
   TableFooter,
   TableHead,
   TableRow,
+  TextField,
   Typography
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
@@ -34,6 +35,7 @@ import ShowUser from './ShowUser'
 import { PaymentMethods } from '@/CONST/paymentMethods'
 import { USD_PRICE } from '@/CONST/CURRENCY'
 import { Timestamp } from 'firebase/firestore'
+import asNumber from '@/utils/asNumber'
 
 const ClientsTable = ({
   clients,
@@ -44,17 +46,21 @@ const ClientsTable = ({
 }) => {
   const totalRequested = clients.reduce((acc, client) => {
     //* Get the total of money calculated by the activity price requested and their friends activity
+    const clientActivityPrice = asNumber(client.activity?.price)
     return (
       acc +
-      (parseFloat(`${client.activity?.price}`) || 0) +
+      clientActivityPrice +
       (client?.friends?.reduce((acc, friend) => {
-        return acc + (parseFloat(`${friend.activity?.price}`) || 0)
+        const friendActivityPrice = asNumber(friend.activity?.price)
+        return acc + friendActivityPrice
       }, 0) || 0)
     )
   }, 0)
 
   const totalPayments = clients.reduce((acc, client) => {
-    return acc + (client?.payment?.amount || 0)
+    const clientAmount = parseFloat(`${client?.payment?.amount || 0}`)
+    const clientDiscount = parseFloat(`${client?.payment?.discount || 0}`)
+    return acc + clientAmount - clientAmount * (clientDiscount / 100)
   }, 0)
   const clientsTotal = clients.reduce((acc, client) => {
     return acc + (client?.friends?.length || 0) + 1
@@ -84,7 +90,6 @@ const ClientsTable = ({
     }
     return 0
   }
-  console.log({ totalRequested })
 
   return (
     <TableContainer component={Paper}>
@@ -136,11 +141,25 @@ const ClientsRow = ({
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
   const modalDetails = useModal()
+  const clientAlreadyPaid = !!client.payment
 
-  const total =
-    (client?.friends?.reduce((acc, friend) => {
-      return acc + (friend?.activity?.price || 0)
-    }, 0) || 0) + (client?.activity?.price || 0)
+  const total = (): number => {
+    const clientActivityAmount = asNumber(client?.activity?.price)
+    if (clientAlreadyPaid) {
+      const discount = asNumber(client.payment?.discount)
+      const amount = asNumber(client.payment?.amount)
+      if (!discount) return amount
+      return amount - amount * (discount / 100)
+    } else {
+      return (
+        client?.friends?.reduce((acc, friend) => {
+          const friendActivityAmount = asNumber(friend?.activity?.price)
+          return acc + friendActivityAmount
+        }, clientActivityAmount) || 0
+      )
+    }
+  }
+
   const createdAt = client?.created?.at
   const paymentAt = client?.payment?.created?.at || client?.payment?.date
   return (
@@ -179,7 +198,12 @@ const ClientsRow = ({
       <TableCell>{client.name}</TableCell>
       <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
       <TableCell align="right">
-        <CurrencySpan quantity={total} />
+        {client.payment?.discount && (
+          <span className="text-green-600 font-bold">
+            -{client.payment.discount}%
+          </span>
+        )}
+        <CurrencySpan quantity={total()} />{' '}
       </TableCell>
 
       <TableCell>
@@ -214,10 +238,13 @@ const ModalEditClient = ({ client }: { client: NewClient }) => {
 }
 const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
+  const clientAmount = asNumber(client.activity?.price)
+
   const total =
-    (client?.friends?.reduce((acc, friend) => {
-      return acc + (friend?.activity?.price || 0)
-    }, 0) || 0) + (client?.activity?.price || 0)
+    client?.friends?.reduce((acc, friend) => {
+      const friendAmount = asNumber(friend?.activity?.price)
+      return acc + friendAmount
+    }, clientAmount) || 0
 
   const handlePay = async (payment: NewClient['payment']) => {
     const clientId = client.id || ''
@@ -226,7 +253,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   }
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>('cash')
-
+  const [discount, setDiscount] = useState(0)
   const modalDetails = useModal()
   return (
     <>
@@ -324,15 +351,33 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 <CurrencySpan quantity={total / USD_PRICE} />
               </Box>
               {/*//* ******************************************* DISCOUNT */}
-              <Box className="flex w-full justify-end items-baseline">
-                <Typography>
-                  <span className="text-xs">{`$${USD_PRICE.toFixed(
-                    2
-                  )}mxn`}</span>{' '}
-                  USD:
-                </Typography>
-                <CurrencySpan quantity={total / USD_PRICE} />
+              <Box className="flex w-full justify-end items-baseline my-2">
+                <TextField
+                  inputProps={{
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                    min: 0,
+                    max: 100,
+                    step: 5
+                  }}
+                  className="w-24 "
+                  name="discount"
+                  label="Descuento"
+                  size="small"
+                  type="number"
+                  value={discount}
+                  onChange={(e) => {
+                    setDiscount(asNumber(e.target.value))
+                  }}
+                />
               </Box>
+              <Box>
+                <Typography variant="h5" className="text-center">
+                  Total:{' '}
+                  <CurrencySpan quantity={total - (discount / 100) * total} />
+                </Typography>
+              </Box>
+
               <Box className="flex w-full justify-center">
                 <FormControl className="">
                   <FormLabel id="demo-row-radio-buttons-group-label">
@@ -372,6 +417,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                       amount: total,
                       date: new Date(),
                       method: paymentMethod,
+                      discount,
                       created: {
                         by: user?.id,
                         at: new Date()
