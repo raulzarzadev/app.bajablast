@@ -51,13 +51,28 @@ const ClientsTable = ({
       }, 0) || 0)
     )
   }, 0)
+
   const totalPayments = clients.reduce((acc, client) => {
     return acc + (client?.payment?.amount || 0)
   }, 0)
   const clientsTotal = clients.reduce((acc, client) => {
     return acc + (client?.friends?.length || 0) + 1
   }, 0)
-  const awaitingClientTable = clients.some((client) => !client.payment)
+  const clientsAlreadyPay = clients.some((client) => client.payment)
+  const sortByDate = (a, b) => {
+    if (clientsAlreadyPay) {
+      const aDate = a?.payment?.created?.at?.toMillis?.()
+      const bDate = b?.payment?.created?.at?.toMillis?.()
+      return bDate - aDate
+    } else {
+      const aDate = a.created?.at.toMillis()
+      const bDate = b.created?.at.toMillis()
+      return aDate - bDate
+    }
+    //a?.created?.at?.getTime?.() - b?.created?.at?.getTime?.()
+  }
+  console.log({ totalRequested })
+
   return (
     <TableContainer component={Paper}>
       <Table
@@ -76,7 +91,7 @@ const ClientsTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {clients.map((client) => (
+          {clients.sort(sortByDate).map((client) => (
             <ClientsRow
               client={client}
               handleRemove={handleRemove}
@@ -91,7 +106,7 @@ const ClientsTable = ({
           <TableCell align="center">{clientsTotal}</TableCell>
           <TableCell align="right">
             <CurrencySpan
-              quantity={awaitingClientTable ? totalRequested : totalPayments}
+              quantity={clientsAlreadyPay ? totalPayments : totalRequested}
             />
           </TableCell>
         </TableFooter>
@@ -134,16 +149,16 @@ const ClientsRow = ({
         </TableCell>
       )}
       <TableCell align="center">
-        {createdAt && (
-          <div className="whitespace-nowrap text-xs">
-            <span>Creado: </span>
-            <span>{dateFormat(createdAt, 'HH:mm dd-MMM')}</span>
-          </div>
-        )}
         {paymentAt && (
           <div className="whitespace-nowrap text-xs">
             <span>Pagado: </span>
-            <span>{dateFormat(paymentAt, 'HH:mm dd-MMM')}</span>
+            <span>{dateFormat(paymentAt, 'dd/MMM HH:mm')}</span>
+          </div>
+        )}
+        {createdAt && (
+          <div className="whitespace-nowrap text-xs">
+            <span>Creado: </span>
+            <span>{dateFormat(createdAt, 'dd/MMM HH:mm')}</span>
           </div>
         )}
       </TableCell>
