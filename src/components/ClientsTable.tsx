@@ -226,7 +226,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       >
         {client.payment ? 'Detalles' : 'Pagar'}
       </Button>
-      <Modal {...modalDetails} title={`Detalle de cliente ${client.name}`}>
+      <Modal {...modalDetails} title={`Detalle de cliente: ${client.name}`}>
         <Box className="my-4">
           <table className="w-full text-center">
             <tbody>
@@ -264,7 +264,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
           <Typography>
             Creado:{' '}
             {client?.created?.at &&
-              dateFormat(client?.created?.at, 'HH:mm dd/MM/yy ')}{' '}
+              dateFormat(client?.created?.at, 'dd/MMM HH:mm ')}{' '}
           </Typography>
           <Typography className="whitespace-nowrap">
             Por: <ShowUser userId={client.created?.by} />
@@ -282,12 +282,15 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 Fecha :{' '}
                 {dateFormat(
                   client?.payment?.created?.at || client?.payment.date,
-                  'HH:mm - dd/MM/yy'
+                  'dd/MMM HH:mm'
                 )}
               </Typography>
               <Typography className="">
                 Cobrado por : <ShowUser userId={client?.payment?.created?.by} />
               </Typography>
+              <Box>
+                <Button>Cancel</Button>
+              </Box>
             </Box>
           ) : (
             <>

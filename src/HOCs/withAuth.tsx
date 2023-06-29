@@ -12,7 +12,7 @@ type WithAuthComponentType<P = {}> = NextComponentType<P & WithAuthProps>
 type ExtraValidation = (UserType['rol'] | 'isAdmin')[]
 export function withAuth<P>(
   Component: WithAuthComponentType<P>,
-  extraUserValidation: ExtraValidation
+  extraUserValidation?: ExtraValidation
 ) {
   function WrappedComponent(hocProps: P) {
     const router = useRouter()
@@ -23,7 +23,7 @@ export function withAuth<P>(
       return <></>
     }
     // if extra User Validation include any start whith validation
-    if (extraUserValidation?.length > 0) {
+    if (extraUserValidation && extraUserValidation?.length > 0) {
       const isValid = validateUser(extraUserValidation)
       if (!isValid) {
         router.replace('/')
