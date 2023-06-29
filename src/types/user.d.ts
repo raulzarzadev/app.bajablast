@@ -19,14 +19,14 @@ export interface UserType extends Partial<BaseType> {
 }
 
 export interface Friend extends Partial<UserType> {
-  activity?: ClientActivity
+  activity?: ClientActivity | null
   id?: string
 }
 
 export interface NewClient extends UserType {
   termsAccepted?: boolean
   medicalInfoUpdated?: boolean
-  activity?: ClientActivity
+  activity?: ClientActivity | null
   signature?: string | null
   friends?: Friend[]
   payment?: Payment

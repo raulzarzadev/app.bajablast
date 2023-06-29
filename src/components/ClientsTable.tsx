@@ -294,10 +294,23 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
             </Box>
           ) : (
             <>
+              {/*//* ******************************************* AMOUNT IN MXN */}
               <Box className="flex w-full justify-end items-baseline">
                 <Typography>MXN: </Typography>
                 <CurrencySpan quantity={total} />
               </Box>
+
+              {/*//* ******************************************* AMOUNT IN USD */}
+              <Box className="flex w-full justify-end items-baseline">
+                <Typography>
+                  <span className="text-xs">{`$${USD_PRICE.toFixed(
+                    2
+                  )}mxn`}</span>{' '}
+                  USD:
+                </Typography>
+                <CurrencySpan quantity={total / USD_PRICE} />
+              </Box>
+              {/*//* ******************************************* DISCOUNT */}
               <Box className="flex w-full justify-end items-baseline">
                 <Typography>
                   <span className="text-xs">{`$${USD_PRICE.toFixed(

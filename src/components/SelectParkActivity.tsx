@@ -1,10 +1,10 @@
-import { activities } from '@/CONST/fake-activities'
 import { Box, Button, Typography } from '@mui/material'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ParkActivity } from '@/types/activities'
 import { NewClientContext } from '@/context/new-client'
 import { Friend, NewClient } from '@/types/user'
 import CurrencySpan from './CurrencySpan'
+import { listenActivities } from '@/firebase/activities'
 
 const SelectParkActivity = ({
   clients,
@@ -20,6 +20,12 @@ const SelectParkActivity = ({
   const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
     return clients?.every((client) => !!client?.activity?.name)
   }
+
+  useEffect(() => {
+    listenActivities(setActivities)
+  }, [])
+
+  const [activities, setActivities] = useState([])
   return (
     <Box>
       <div>
@@ -35,14 +41,22 @@ const SelectParkActivity = ({
                   activities={activities}
                   onSelectedActivity={(activity) => {
                     const aux = [...clients]
-                    aux.splice(i, 1, {
-                      ...client,
-                      activity: {
-                        name: activity.name,
-                        price: activity.price
-                      }
-                    })
-                    setClients?.(aux)
+                    if (activity === null) {
+                      aux.splice(i, 1, {
+                        ...client,
+                        activity: null
+                      })
+                      setClients?.(aux)
+                    } else {
+                      aux.splice(i, 1, {
+                        ...client,
+                        activity: {
+                          name: activity.name,
+                          price: activity.price
+                        }
+                      })
+                      setClients?.(aux)
+                    }
                   }}
                 />
               </div>
@@ -61,7 +75,6 @@ const SelectParkActivity = ({
               })
             }
             const cleanClients = clearClientsActivity(clients || [])
-            console.log({ cleanClients })
             setClients?.(cleanClients)
           }}
         >
@@ -86,25 +99,27 @@ const SelectActivity = ({
   selected = ''
 }: {
   activities: ParkActivity[]
-  onSelectedActivity: (activity: ParkActivity) => void
+  onSelectedActivity: (activity: ParkActivity | null) => void
   selected?: string
 }) => (
   <>
     {activities.map((activity) => (
-      <Button
-        className=" w-22 aspect-video text-center flex flex-col items-center justify-center m-1 mt-0"
+      <button
+        className={` 
+        w-28 aspect-video  m-1 mt-0 rounded-md shadow-md 
+        ${selected === activity.name && 'bg-blue-300 text-white'}`}
         key={activity.name}
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          onSelectedActivity(activity)
+          if (selected) {
+            onSelectedActivity(null)
+          } else {
+            onSelectedActivity(activity)
+          }
         }}
       >
-        <div
-          className={`rounded-md shadow-md ${
-            selected === activity.name && 'bg-blue-300 text-white'
-          }`}
-        >
+        <div className="text-center flex flex-col items-center justify-center">
           <Typography variant="caption" component={'p'}>
             {activity.name}
           </Typography>
@@ -112,7 +127,7 @@ const SelectActivity = ({
             <CurrencySpan quantity={activity.price} />
           </Typography>
         </div>
-      </Button>
+      </button>
     ))}
   </>
 )
