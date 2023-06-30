@@ -12,7 +12,6 @@ const asDate = (
     const newDate = new Date(date)
     if (newDate.getTime()) return newDate
   }
-
   console.error('not a valid date', date)
   return null
 }
