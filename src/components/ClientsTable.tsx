@@ -1,39 +1,22 @@
 import useModal from '@/hooks/useModal'
 import { NewClient } from '@/types/user'
 import {
-  Box,
   Button,
-  Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
   Paper,
-  Radio,
-  RadioGroup,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableFooter,
   TableHead,
-  TableRow,
-  TextField,
-  Typography
+  TableRow
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { useState } from 'react'
 import Modal from './Modal'
-import LoadingButton from './LoadingButton'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import StepperNewClientContext from './StepperNewClient'
 import CurrencySpan from './CurrencySpan'
-import { updateUser } from '@/firebase/users'
-import useUser from '@/hooks/useUser'
-import { dateFormat, dateMx } from '@/utils/utils-date'
-import ShowUser from './ShowUser'
-import { PaymentMethods } from '@/CONST/paymentMethods'
-import { USD_PRICE } from '@/CONST/CURRENCY'
+import { dateFormat } from '@/utils/utils-date'
 import { Timestamp } from 'firebase/firestore'
 import asNumber from '@/utils/asNumber'
 import ModalPayment from './ModalPayment'
