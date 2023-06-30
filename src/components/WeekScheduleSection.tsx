@@ -15,7 +15,7 @@ const WeekScheduleSection = ({
   const [editing, setEditing] = useState(false)
 
   return (
-    <Container>
+    <div>
       {editing ? (
         <ScheduleForm
           schedule={schedule}
@@ -27,7 +27,7 @@ const WeekScheduleSection = ({
       ) : (
         <WeekSchedule onEdit={() => setEditing(true)} schedule={schedule} />
       )}
-    </Container>
+    </div>
   )
 }
 

@@ -99,7 +99,7 @@ const DaySchedule = ({
     0
   )
   return (
-    <div className="grid grid-cols-4 gap-4 place-items-center m-4">
+    <div className="grid grid-cols-4 gap-2 place-items-center my-2">
       <Typography className="w-full text-end">{day}: </Typography>
       {showSchedule ? (
         <>
@@ -121,6 +121,7 @@ const DaySchedule = ({
           />
           <Box>
             <IconButton
+              size="small"
               onClick={(e) => {
                 e.preventDefault()
                 setShowSchedule(false)
@@ -132,8 +133,9 @@ const DaySchedule = ({
         </>
       ) : (
         <>
-          <div>Cerrado</div>
+          <div className="col-span-2">Cerrado</div>
           <IconButton
+            size="small"
             onClick={(e) => {
               setShowSchedule(true)
             }}
