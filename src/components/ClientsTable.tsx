@@ -20,6 +20,7 @@ import { dateFormat } from '@/utils/utils-date'
 import { Timestamp } from 'firebase/firestore'
 import asNumber from '@/utils/asNumber'
 import ModalPayment from './ModalPayment'
+import asDate from '@/utils/asDate'
 
 const ClientsTable = ({
   clients,
@@ -50,29 +51,21 @@ const ClientsTable = ({
     return acc + (client?.friends?.length || 0) + 1
   }, 0)
   const clientsAlreadyPay = clients.some((client) => client.payment)
-  const sortByDate = (a: NewClient, b: NewClient) => {
-    const aPaidAt = a?.payment?.created?.at
-    const bPaidAt = a?.payment?.created?.at
-    const aCreatedAt = a.created?.at
-    const bCreatedAt = b.created?.at
 
-    if (
-      aCreatedAt instanceof Timestamp &&
-      bCreatedAt instanceof Timestamp &&
-      aPaidAt instanceof Timestamp &&
-      bPaidAt instanceof Timestamp
-    ) {
-      if (clientsAlreadyPay) {
-        const aDate = aPaidAt?.toMillis?.()
-        const bDate = bPaidAt?.toMillis?.()
-        return bDate - aDate
-      } else {
-        const aDate = aCreatedAt?.toMillis()
-        const bDate = bCreatedAt?.toMillis()
-        return aDate - bDate
-      }
+  const sortByDate = (a: NewClient, b: NewClient) => {
+    if (clientsAlreadyPay) {
+      const aPaidAt = asDate(a?.payment?.created?.at)
+      const bPaidAt = asDate(b?.payment?.created?.at)
+      const aDate = aPaidAt?.getTime() || 0
+      const bDate = bPaidAt?.getTime() || 0
+      return bDate - aDate
+    } else {
+      const aCreatedAt = asDate(a.created?.at)
+      const bCreatedAt = asDate(b.created?.at)
+      const aDate = aCreatedAt?.getTime() || 0
+      const bDate = bCreatedAt?.getTime() || 0
+      return bDate - aDate
     }
-    return 0
   }
 
   return (
@@ -102,15 +95,17 @@ const ClientsTable = ({
           ))}
         </TableBody>
         <TableFooter>
-          <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
-            Total:
-          </TableCell>
-          <TableCell align="center">{clientsTotal}</TableCell>
-          <TableCell align="right">
-            <CurrencySpan
-              quantity={clientsAlreadyPay ? totalPayments : totalRequested}
-            />
-          </TableCell>
+          <TableRow>
+            <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
+              Total:
+            </TableCell>
+            <TableCell align="center">{clientsTotal}</TableCell>
+            <TableCell align="right">
+              <CurrencySpan
+                quantity={clientsAlreadyPay ? totalPayments : totalRequested}
+              />
+            </TableCell>
+          </TableRow>
         </TableFooter>
       </Table>
     </TableContainer>
