@@ -1,3 +1,4 @@
+'use client'
 import { PaymentMethods } from '@/CONST/paymentMethods'
 import { updateUser } from '@/firebase/users'
 import useModal from '@/hooks/useModal'
@@ -44,6 +45,12 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const [amount, setAmount] = useState(0)
   const modalDetails = useModal()
   const total = subtotal - subtotal * (discount / 100)
+  const showDiscountInput = user?.isAdmin || user?.rol === 'COORDINATOR'
+  const canEditPayment = user?.isAdmin || user?.rol === 'COORDINATOR'
+  const modalEdit = useModal()
+  const handleOpenEdit = () => {
+    modalEdit.handleOpen()
+  }
   return (
     <>
       <Button
@@ -130,7 +137,149 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 Cobrado por : <ShowUser userId={client?.payment?.created?.by} />
               </Typography>
               <Box>
-                <Button>Cancel</Button>
+                {canEditPayment && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleOpenEdit()
+                      }}
+                    >
+                      Editar
+                    </Button>
+                    <Modal {...modalEdit} title="Editar pago">
+                      <Typography>Editar Pago</Typography>
+                      <>
+                        {/*//* ******************************************* AMOUNT IN MXN */}
+                        <Box className="flex w-full justify-end items-baseline">
+                          <Typography>MXN: </Typography>
+                          <CurrencySpan quantity={subtotal} />
+                        </Box>
+
+                        {/*//* ******************************************* AMOUNT IN USD */}
+                        <Box className="flex w-full justify-end items-baseline">
+                          <Typography>
+                            <span className="text-xs">{`$${USD_PRICE.toFixed(
+                              2
+                            )}mxn`}</span>{' '}
+                            USD:
+                          </Typography>
+                          <CurrencySpan quantity={subtotal / USD_PRICE} />
+                        </Box>
+                        {/*//* ******************************************* DISCOUNT */}
+                        {showDiscountInput && (
+                          <Box className="flex w-full justify-end items-baseline my-2">
+                            <TextField
+                              inputProps={{
+                                inputMode: 'numeric',
+                                pattern: '[0-9]*',
+                                min: 0,
+                                max: 100,
+                                step: 5
+                              }}
+                              className="w-24 "
+                              name="discount"
+                              label="Descuento"
+                              size="small"
+                              type="number"
+                              value={discount}
+                              onChange={(e) => {
+                                setDiscount(asNumber(e.target.value))
+                              }}
+                            />
+                          </Box>
+                        )}
+                        <Box>
+                          <Typography variant="h5" className="text-center">
+                            Total: <CurrencySpan quantity={total} />
+                          </Typography>
+                        </Box>
+
+                        <Box className="flex w-full justify-center">
+                          <FormControl className="">
+                            <FormLabel id="demo-row-radio-buttons-group-label">
+                              Metodo de pago
+                            </FormLabel>
+                            <RadioGroup
+                              value={paymentMethod}
+                              onChange={(e) => {
+                                setPaymentMethod(
+                                  e.target.value as PaymentMethods
+                                )
+                              }}
+                              row
+                              aria-labelledby="demo-row-radio-buttons-group-label"
+                              name="row-radio-buttons-group"
+                            >
+                              <FormControlLabel
+                                value="cash"
+                                control={<Radio />}
+                                label="Efectivo"
+                              />
+                              <FormControlLabel
+                                value="card"
+                                control={<Radio />}
+                                label="Tarjeta"
+                              />
+                              <FormControlLabel
+                                value="usd"
+                                control={<Radio />}
+                                label="Dolares"
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </Box>
+                        <Box className="flex w-full justify-evenly items-center my-4">
+                          <TextField
+                            inputProps={{
+                              inputMode: 'numeric',
+                              pattern: '[0-9]*',
+                              min: 0
+                            }}
+                            className=" "
+                            name="amount"
+                            label="Recibido"
+                            type="number"
+                            value={asNumber(amount)}
+                            onChange={(e) => {
+                              setAmount(asNumber(e.target.value))
+                            }}
+                            helperText={
+                              amount < total
+                                ? `Faltan $${asNumber(total - amount).toFixed(
+                                    2
+                                  )}`
+                                : `Sobran $${asNumber(amount - total).toFixed(
+                                    2
+                                  )}`
+                            }
+                          />
+                          <LoadingButton
+                            disabled={amount < total}
+                            variant="contained"
+                            color="success"
+                            onClick={() => {
+                              return handlePay({
+                                amount: subtotal,
+                                date: new Date(),
+                                method: paymentMethod,
+                                discount,
+                                created: {
+                                  by: user?.id,
+                                  at: new Date()
+                                }
+                              })
+                            }}
+                            label="Pagar"
+                            icon={<AppIcon icon="money" />}
+                          />
+                        </Box>
+                      </>
+                    </Modal>
+                  </>
+                )}
               </Box>
             </Box>
           ) : (
@@ -152,26 +301,28 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 <CurrencySpan quantity={subtotal / USD_PRICE} />
               </Box>
               {/*//* ******************************************* DISCOUNT */}
-              <Box className="flex w-full justify-end items-baseline my-2">
-                <TextField
-                  inputProps={{
-                    inputMode: 'numeric',
-                    pattern: '[0-9]*',
-                    min: 0,
-                    max: 100,
-                    step: 5
-                  }}
-                  className="w-24 "
-                  name="discount"
-                  label="Descuento"
-                  size="small"
-                  type="number"
-                  value={discount}
-                  onChange={(e) => {
-                    setDiscount(asNumber(e.target.value))
-                  }}
-                />
-              </Box>
+              {showDiscountInput && (
+                <Box className="flex w-full justify-end items-baseline my-2">
+                  <TextField
+                    inputProps={{
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                      min: 0,
+                      max: 100,
+                      step: 5
+                    }}
+                    className="w-24 "
+                    name="discount"
+                    label="Descuento"
+                    size="small"
+                    type="number"
+                    value={discount}
+                    onChange={(e) => {
+                      setDiscount(asNumber(e.target.value))
+                    }}
+                  />
+                </Box>
+              )}
               <Box>
                 <Typography variant="h5" className="text-center">
                   Total: <CurrencySpan quantity={total} />

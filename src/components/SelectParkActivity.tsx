@@ -112,7 +112,7 @@ const SelectActivity = ({
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          if (selected) {
+          if (selected === activity.name) {
             onSelectedActivity(null)
           } else {
             onSelectedActivity(activity)
