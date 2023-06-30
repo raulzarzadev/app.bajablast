@@ -21,6 +21,7 @@ import { Timestamp } from 'firebase/firestore'
 import asNumber from '@/utils/asNumber'
 import ModalPayment from './ModalPayment'
 import asDate from '@/utils/asDate'
+import addDiscount from '@/utils/addDiscount'
 
 const ClientsTable = ({
   clients,
@@ -128,7 +129,7 @@ const ClientsRow = ({
       const discount = asNumber(client.payment?.discount)
       const amount = asNumber(client.payment?.amount)
       if (!discount) return amount
-      return amount - amount * (discount / 100)
+      return addDiscount(amount, discount)
     } else {
       return (
         client?.friends?.reduce((acc, friend) => {
@@ -177,7 +178,7 @@ const ClientsRow = ({
       <TableCell>{client.name}</TableCell>
       <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
       <TableCell align="right">
-        {client.payment?.discount && (
+        {!!client.payment?.discount && (
           <span className="text-green-600 font-bold">
             -{client.payment.discount}%
           </span>

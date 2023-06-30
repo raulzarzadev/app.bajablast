@@ -38,6 +38,7 @@ export type Payment = {
   date: Date | Timestamp
   amount: number
   discount: number
+  dollarPrice: number
   created: {
     at: Date | Timestamp
     by: UserType['id']

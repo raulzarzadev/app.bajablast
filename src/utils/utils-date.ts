@@ -18,11 +18,12 @@ export const dateMx = (date?: Date | Timestamp) => {
 }
 
 export const dateFormat = (
-  date: number | Date | Timestamp,
-  strFormat: string
+  date?: number | Date | Timestamp | null,
+  strFormat?: string
 ): string => {
+  if (!date) return '-'
   const value = date instanceof Timestamp ? date.toDate() : date
-  const res = fnsFormat(value, strFormat, {
+  const res = fnsFormat(value, strFormat || 'dd/MMM/yy', {
     locale: es
   })
   return res
