@@ -3,7 +3,16 @@ import { Box, IconButton, Typography } from '@mui/material'
 import AppIcon from './AppIcon'
 import { format, getDay } from 'date-fns'
 import { WEEK_DAYS } from '@/CONST/dateLabels'
-
+type Days = keyof typeof WEEK_DAYS
+const weekDays: Days[] = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday'
+]
 const WeekSchedule = ({
   schedule,
   onEdit
@@ -25,19 +34,26 @@ const WeekSchedule = ({
           </IconButton>
         )}
       </Box>
-      <Box className="flex w-full justify-between items-center flex-col  gap-4 sm:flex-row sm:items-stretch">
-        {Object?.entries(schedule || {}).map(([key, value]) => {
+      <Box className="flex overflow-x-auto snap-x ">
+        {Object.values(weekDays).map((day) => {
           return (
             <Box
-              key={key}
-              className={`flex flex-col text-center ${
-                isFocused(key) && ' font-bold '
+              key={day}
+              className={`flex flex-col text-center text-xs m-2 snap-center ${
+                isFocused(day) && ' font-bold text-xl '
               }`}
             >
-              <span>{WEEK_DAYS[key as Weekdays]}</span>
-              <div className="flex flex-col">
-                {value?.split('-').map((h) => <span key={h}>{h}</span>) ||
-                  'Cerrado'}
+              <Typography
+                className={`text-center text-xs ${
+                  isFocused(day) && ' font-bold text-xl '
+                }`}
+              >
+                {WEEK_DAYS[day]}
+              </Typography>
+              <div className="flex flex-col text-center">
+                {schedule?.[day]
+                  ?.split('-')
+                  .map((h) => <span key={h}>{h}</span>) || 'Cerrado'}
               </div>
             </Box>
           )
