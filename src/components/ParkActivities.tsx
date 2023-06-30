@@ -23,7 +23,7 @@ const ParkActivities = ({
       <Typography variant="h6">Actividades</Typography>
       <Box
         component={'div'}
-        className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center  "
+        className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center "
       >
         {activities.map((activity) => (
           <Link
@@ -33,7 +33,7 @@ const ParkActivities = ({
             }}
             href={`/bb/${activity.id}`}
             key={activity.name}
-            className="p-0"
+            className="p-0 mx-auto"
           >
             <Box
               component={'article'}
@@ -47,7 +47,7 @@ const ParkActivities = ({
           </Link>
         ))}
         {canCreteNewActivity && (
-          <Link passHref href={`/bb/new`} className="p-0">
+          <Link passHref href={`/bb/new`} className="p-0 mx-auto">
             <Box
               component={'article'}
               className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "

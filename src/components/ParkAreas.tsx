@@ -13,7 +13,12 @@ const ParkAreas = () => {
         className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center "
       >
         {parkAreas.map((area) => (
-          <Link href={`${area.href}`} key={area.name} passHref>
+          <Link
+            href={`${area.href}`}
+            key={area.name}
+            passHref
+            className="mx-auto"
+          >
             <Box
               component={'article'}
               className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
