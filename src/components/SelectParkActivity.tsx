@@ -51,6 +51,7 @@ const SelectParkActivity = ({
                       aux.splice(i, 1, {
                         ...client,
                         activity: {
+                          id: activity.id,
                           name: activity.name,
                           price: activity.price
                         }

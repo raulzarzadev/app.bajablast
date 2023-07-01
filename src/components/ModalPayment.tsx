@@ -38,7 +38,8 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
     }, clientAmount) || 0
   const handlePay = async (payment: NewClient['payment']) => {
     const clientId = client.id || ''
-    const res = await updateUser(clientId, { payment })
+    //const res = await updateUser(clientId, { payment })
+
     return
   }
 

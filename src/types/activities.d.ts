@@ -31,6 +31,7 @@ export type ActivityOperator = {
 }
 
 export type ClientActivity = {
-  price: number
-  name: string
+  id: ParkActivity['id']
+  price: ParkActivity['price']
+  name: ParkActivity['name']
 }
