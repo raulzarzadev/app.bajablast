@@ -72,7 +72,9 @@ const ActivityForm = ({
                   Cancelar
                 </Button>
               )}
-              <Button type="submit">Guardar</Button>
+              <Button variant="outlined" type="submit">
+                Guardar
+              </Button>
             </Box>
           </Box>
         </form>

@@ -7,6 +7,7 @@ import { listenActivities, listenActivity } from '@/firebase/activities'
 import CurrencySpan from './CurrencySpan'
 import AppIcon from './AppIcon'
 import useUser from '@/hooks/useUser'
+import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 const ParkActivities = ({
   onClickActivity
 }: {
@@ -19,7 +20,7 @@ const ParkActivities = ({
   }, [])
   const canCreteNewActivity = user?.isAdmin
   return (
-    <Container component={'section'} className="max-w-md mx-auto">
+    <Container component={'section'} className="max-w-2xl mx-auto">
       <Typography variant="h6">Actividades</Typography>
       <Box
         component={'div'}
@@ -33,21 +34,57 @@ const ParkActivities = ({
             }}
             href={`/bb/${activity.id}`}
             key={activity.name}
-            className="p-0 mx-auto"
+            className={`p-0 mx-auto 
+            ${
+              activity.status === 'HIDDEN' &&
+              !(user?.isAdmin || user?.rol === 'COORDINATOR') &&
+              'hidden'
+            }
+            ${activity.status === 'CLOSED' && 'opacity-40'}
+            bg-pink-400 
+            rounded-md 
+            shadow-md
+             `}
           >
             <Box
               component={'article'}
-              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "
+              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center  text-white  w-[200px] aspect-square "
             >
-              <Typography component={'p'}>{activity.name}</Typography>
-              <Typography component={'p'}>
-                <CurrencySpan quantity={activity.price} />
+              <Typography component={'p'} variant="h5">
+                {activity.name}
               </Typography>
+              {activity.status === 'OPEN' ? (
+                <>
+                  <Typography component={'p'} variant="h5">
+                    <CurrencySpan quantity={activity.price} />
+                  </Typography>
+                  {user?.isAdmin && (
+                    <Typography>
+                      {ACTIVITY_STATUS[activity.status || 'UPCOMING']?.label}
+                    </Typography>
+                  )}
+                </>
+              ) : (
+                <>
+                  {user?.isAdmin && (
+                    <Typography component={'p'} variant="h5">
+                      <CurrencySpan quantity={activity.price} />
+                    </Typography>
+                  )}
+                  <Typography>
+                    {ACTIVITY_STATUS[activity.status || 'UPCOMING']?.label}
+                  </Typography>
+                </>
+              )}
             </Box>
           </Link>
         ))}
         {canCreteNewActivity && (
-          <Link passHref href={`/bb/new`} className="p-0 mx-auto">
+          <Link
+            passHref
+            href={`/bb/new`}
+            className="p-0 mx-auto flex items-center"
+          >
             <Box
               component={'article'}
               className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center bg-slate-200 w-[120px] aspect-square rounded-md shadow-md "

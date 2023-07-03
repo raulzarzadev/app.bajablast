@@ -28,33 +28,35 @@ const ActivityInfo = ({ activity }: { activity?: ParkActivity }) => {
       {editing ? (
         <>
           <Typography className="text-center my-4">Editar actividad</Typography>
-          <ActivityForm
-            onCancel={() => {
-              setEditing(false)
-            }}
-            activity={activity}
-            onSubmit={async (activity) => {
-              console.log({ activity })
-              try {
-                if (activity.id) {
-                  await updateActivity(activity.id, { ...activity })
-                  setEditing(false)
+          <div className="max-w-md mx-auto">
+            <ActivityForm
+              onCancel={() => {
+                setEditing(false)
+              }}
+              activity={activity}
+              onSubmit={async (activity) => {
+                console.log({ activity })
+                try {
+                  if (activity.id) {
+                    await updateActivity(activity.id, { ...activity })
+                    setEditing(false)
+                  }
+                } catch (error) {
+                  console.log({ error })
                 }
-              } catch (error) {
-                console.log({ error })
-              }
-            }}
-          />
+              }}
+            />
+          </div>
         </>
       ) : (
-        <>
+        <div className="flex w-full justify-center">
           <ActivityDetails
             activity={activity}
             onEdit={() => {
               setEditing(true)
             }}
           />
-        </>
+        </div>
       )}
     </div>
   )
@@ -85,7 +87,7 @@ const ActivityDetails = ({
           Precio: <CurrencySpan quantity={activity?.price} />
         </Typography>
         <Typography>
-          Estado actual: {ACTIVITY_STATUS[activity?.status || 'HIDDEN'].label}
+          Estado actual: {ACTIVITY_STATUS[activity?.status || 'UPCOMING'].label}
         </Typography>
       </Box>
     </Box>
