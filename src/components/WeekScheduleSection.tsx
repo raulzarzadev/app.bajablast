@@ -4,6 +4,7 @@ import { useState } from 'react'
 import WeekSchedule from './WeekSchedule'
 import ScheduleForm from './ScheduleForm'
 import { Schedule } from '@/types/activities'
+import useUser from '@/hooks/useUser'
 
 const WeekScheduleSection = ({
   schedule,
@@ -13,7 +14,6 @@ const WeekScheduleSection = ({
   setSchedule?: (newSchedule: Schedule) => void
 }) => {
   const [editing, setEditing] = useState(false)
-
   return (
     <div>
       {editing ? (

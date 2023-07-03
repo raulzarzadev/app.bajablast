@@ -65,7 +65,7 @@ const ActivityDetails = ({
   activity?: ParkActivity
 }) => {
   return (
-    <Box className="my-4">
+    <Box className="my-4 flex items-start">
       {onEdit && (
         <IconButton
           onClick={(e) => {

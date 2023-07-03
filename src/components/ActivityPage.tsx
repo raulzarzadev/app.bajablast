@@ -31,8 +31,14 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   return (
     <>
       <Container>
-        <Typography variant="h4">{activity?.name}</Typography>
-        <Typography variant="body1" className="py-4" component={'p'}>
+        <Typography variant="h4" className="text-center">
+          {activity?.name}
+        </Typography>
+        <Typography
+          variant="body1"
+          className="py-4 text-center"
+          component={'p'}
+        >
           {activity?.description}
         </Typography>
       </Container>
