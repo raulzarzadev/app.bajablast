@@ -36,7 +36,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
           {activity?.name}
         </Typography>
         <Typography variant="h6" className="text-center ">
-          {ACTIVITY_STATUS[activity?.status].label}
+          {ACTIVITY_STATUS[activity?.status]?.label}
         </Typography>
         <Typography
           variant="body1"
