@@ -1,11 +1,10 @@
 import { BloodType } from '@/CONST/bloodTypes'
 import { ClientActivity } from './activities'
 import { BaseType } from './base'
-import { roles } from '@/CONST/user'
+import { Rol, roles } from '@/CONST/user'
 import { PaymentMethods } from '@/CONST/paymentMethods'
 import { Timestamp } from 'firebase/firestore'
 
-export type Rol = (typeof roles)[number]['key']
 export interface UserType extends Partial<BaseType> {
   name: string
   email: string

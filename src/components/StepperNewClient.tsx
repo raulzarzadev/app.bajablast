@@ -7,7 +7,7 @@ import FinishNewClient from './FinishNewClient'
 import { NewClientContext, NewClientProvider } from '@/context/new-client'
 import { NewClient } from '@/types/user'
 import { useRouter } from 'next/navigation'
-import { createClient, updateUser } from '@/firebase/users'
+import { createClient, updateClient } from '@/firebase/clients'
 
 export type StepperContextType = {
   step: number
@@ -30,11 +30,15 @@ function StepperNewClient() {
         friends
       }
       if (client?.id) {
-        const res = await updateUser(client.id, { ...newUser })
+        const res = await updateClient(client.id, { ...newUser }).catch((err) =>
+          console.error(err)
+        )
         console.log({ res })
         return res
       } else {
-        const userResponse = await createClient(newUser)
+        const userResponse = await createClient(newUser).catch((err) =>
+          console.error(err)
+        )
         delete newUser.id
         const createdClient: NewClient = {
           name: '',

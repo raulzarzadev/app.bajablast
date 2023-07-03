@@ -20,6 +20,7 @@ import { googleLogin, logout } from '@/firebase/auth'
 import useAuth from '@/hooks/useAuth'
 import useUser from '@/hooks/useUser'
 import useClients from '@/hooks/useClients'
+import { useRouter } from 'next/navigation'
 
 const pages = [
   //'Products', 'Pricing', 'Blog'
@@ -36,8 +37,8 @@ function Navigation() {
   //* This are checking the login status
   useAuth()
   useClients()
-
   const { user } = useUser()
+  const router = useRouter()
 
   const [anchorElSignIn, setAnchorElSignIn] =
     React.useState<null | HTMLElement>(null)
@@ -188,6 +189,7 @@ function Navigation() {
                       onClick={async (e) => {
                         const res = await googleLogin()
                         if (!!res) console.log('logged')
+                        router.push('/')
                         handleCloseUserMenu()
                       }}
                     >

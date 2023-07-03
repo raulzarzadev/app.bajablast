@@ -1,5 +1,5 @@
 import { ClientsContext } from '@/context/clients'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 
 const useClients = () => {
   const { clients } = useContext(ClientsContext)

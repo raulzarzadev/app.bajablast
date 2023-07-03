@@ -13,9 +13,6 @@ export const createUser = async (
   newUser: Pick<UserType, 'email' | 'name' | 'image' | 'rol'>
 ) => await usersCRUD.createItem({ ...newUser })
 
-export const createClient = async (newUser: Partial<NewClient>) =>
-  await usersCRUD.createItem({ ...newUser })
-
 export const updateUser = async (
   userId: string,
   updates: Partial<UserType> | Partial<NewClient>
@@ -32,8 +29,6 @@ export const listenUser = async (
   cb: CallableFunction
 ) => await usersCRUD.listenItem(userId, cb)
 
-export const listenClients = async (cb: CallableFunction) =>
-  await usersCRUD.listenItems([where('rol', '==', roles[0].key)], cb)
 export const listenCollaborators = async (cb: CallableFunction) =>
   await usersCRUD.listenItems(
     [where('rol', 'in', [roles[1].key, roles[2].key])],

@@ -1,5 +1,13 @@
+export const ROLES = {
+  client: 'CLIENT',
+  collaborator: 'COLLABORATOR',
+  coordinator: 'COORDINATOR'
+} as const
+
+export type Rol = (typeof ROLES)[keyof typeof ROLES]
+
 export const roles = [
-  { key: 'CLIENT', label: 'Cliente' },
-  { key: 'COLLABORATOR', label: 'Colaborador' },
-  { key: 'COORDINATOR', label: 'Coordinador' }
-] as const
+  { key: ROLES.client, label: 'Cliente' },
+  { key: ROLES.collaborator, label: 'Colaborador' },
+  { key: ROLES.coordinator, label: 'Coordinador' }
+]

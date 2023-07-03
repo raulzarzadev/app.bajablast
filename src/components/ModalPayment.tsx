@@ -36,8 +36,20 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       const friendAmount = asNumber(friend?.activity?.price)
       return acc + friendAmount
     }, clientAmount) || 0
-  const handlePay = async (payment: NewClient['payment']) => {
+  const handlePay = async () => {
     const clientId = client.id || ''
+    const payment: NewClient['payment'] = {
+      amount: subtotal,
+      date: new Date(),
+      method: paymentMethod,
+      discount,
+      created: {
+        by: user?.id,
+        at: new Date()
+      },
+      dollarPrice: USD_PRICE
+    }
+    console.log({ payment })
     //const res = await updateUser(clientId, { payment })
 
     return
@@ -164,16 +176,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   variant="contained"
                   color="success"
                   onClick={() => {
-                    return handlePay({
-                      amount: subtotal,
-                      date: new Date(),
-                      method: paymentMethod,
-                      discount,
-                      created: {
-                        by: user?.id,
-                        at: new Date()
-                      }
-                    })
+                    return handlePay()
                   }}
                   label="Pagar"
                   icon={<AppIcon icon="money" />}

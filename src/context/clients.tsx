@@ -1,5 +1,5 @@
 'use client'
-import { listenClients } from '@/firebase/users'
+import { listenClients } from '@/firebase/clients'
 import { Client } from '@/types/user'
 import { ReactNode, createContext, useEffect, useState } from 'react'
 
