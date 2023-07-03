@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
 import { listenActivity, updateActivity } from '@/firebase/activities'
 import WeekScheduleSection from './WeekScheduleSection'
+import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -33,6 +34,9 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       <Container>
         <Typography variant="h4" className="text-center">
           {activity?.name}
+        </Typography>
+        <Typography variant="h6" className="text-center ">
+          {ACTIVITY_STATUS[activity?.status].label}
         </Typography>
         <Typography
           variant="body1"

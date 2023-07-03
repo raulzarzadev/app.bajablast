@@ -2,6 +2,7 @@ import { ParkActivity } from '@/types/activities'
 
 export const activities: ParkActivity[] = [
   {
+    status: 'OPEN',
     id: '1',
     name: 'Challenge + tirolesa',
     description: 'Challenge + tirolesa',
@@ -18,6 +19,7 @@ export const activities: ParkActivity[] = [
     price: 250
   },
   {
+    status: 'OPEN',
     id: '2',
     name: 'Crays Jump',
     description: 'Crays Jump',
@@ -34,6 +36,7 @@ export const activities: ParkActivity[] = [
     price: 250
   },
   {
+    status: 'CLOSED',
     id: '3',
     name: 'Just Challenge',
     description: 'Just Challenge',
@@ -65,6 +68,7 @@ export const activities: ParkActivity[] = [
     price: 150
   },
   {
+    status: 'HIDDEN',
     id: '4',
     name: 'Todo incluido',
     description: 'Todo incluido',
