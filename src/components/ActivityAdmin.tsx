@@ -6,6 +6,7 @@ import { ParkActivity } from '@/types/activities'
 import CurrencySpan from './CurrencySpan'
 import { updateActivity } from '@/firebase/activities'
 import AppIcon from './AppIcon'
+import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 
 const ActivityAdmin = ({ activity }: { activity?: ParkActivity }) => {
   return (
@@ -33,6 +34,7 @@ const ActivityInfo = ({ activity }: { activity?: ParkActivity }) => {
             }}
             activity={activity}
             onSubmit={async (activity) => {
+              console.log({ activity })
               try {
                 if (activity.id) {
                   await updateActivity(activity.id, { ...activity })
@@ -81,6 +83,9 @@ const ActivityDetails = ({
         <Typography>Descripción: {activity?.description}</Typography>
         <Typography>
           Precio: <CurrencySpan quantity={activity?.price} />
+        </Typography>
+        <Typography>
+          Estado actual: {ACTIVITY_STATUS[activity?.status || 'HIDDEN'].label}
         </Typography>
       </Box>
     </Box>

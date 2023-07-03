@@ -1,5 +1,3 @@
-import { Typography } from '@mui/material'
-
 const CurrencySpan = ({
   quantity = 0,
   ...rest
