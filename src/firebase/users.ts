@@ -2,7 +2,7 @@ import { NewClient, UserType } from '@/types/user'
 import { usersCRUD } from './auth'
 import { where } from 'firebase/firestore'
 import { BaseType } from '@/types/base'
-import { roles } from '@/CONST/user'
+import { USER_ROL } from '@/CONST/user'
 
 export const setUser = async (
   userId: BaseType['id'],
@@ -31,7 +31,7 @@ export const listenUser = async (
 
 export const listenCollaborators = async (cb: CallableFunction) =>
   await usersCRUD.listenItems(
-    [where('rol', 'in', [roles[1].key, roles[2].key])],
+    [where('rol', 'in', [USER_ROL.COLLABORATOR, USER_ROL.COORDINATOR])],
     cb
   )
 
