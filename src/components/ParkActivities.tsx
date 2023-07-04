@@ -8,6 +8,7 @@ import CurrencySpan from './CurrencySpan'
 import AppIcon from './AppIcon'
 import useUser from '@/hooks/useUser'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
+import { USER_ROL } from '@/CONST/user'
 const ParkActivities = ({
   onClickActivity
 }: {
@@ -37,7 +38,7 @@ const ParkActivities = ({
             className={`p-0 mx-auto 
             ${
               activity.status === 'HIDDEN' &&
-              !(user?.isAdmin || user?.rol === 'COORDINATOR') &&
+              !(user?.isAdmin || user?.rol === USER_ROL.COORDINATOR) &&
               'hidden'
             }
             ${activity.status === 'CLOSED' && 'opacity-40'}

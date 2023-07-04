@@ -4,6 +4,7 @@ import AppIcon from './AppIcon'
 import { format, getDay } from 'date-fns'
 import { WEEK_DAYS } from '@/CONST/dateLabels'
 import useUser from '@/hooks/useUser'
+import { USER_ROL } from '@/CONST/user'
 type Days = keyof typeof WEEK_DAYS
 const weekDays: Days[] = [
   'Sunday',
@@ -26,7 +27,7 @@ const WeekSchedule = ({
     const todayDay = format(new Date(), 'EEEE')
     return todayDay === day
   }
-  const canEdit = user?.rol === 'COORDINATOR' || user?.isAdmin
+  const canEdit = user?.rol === USER_ROL.COORDINATOR || user?.isAdmin
   return (
     <Box>
       <Box className="flex justify-center w-full items-center">

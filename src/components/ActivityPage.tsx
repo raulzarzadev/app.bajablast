@@ -7,6 +7,7 @@ import ActivityAdmin from './ActivityAdmin'
 import { listenActivity, updateActivity } from '@/firebase/activities'
 import WeekScheduleSection from './WeekScheduleSection'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
+import { USER_ROL } from '@/CONST/user'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -63,7 +64,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
          */}
 
       <Container>
-        {['COORDINATOR', 'ADMIN'].includes(user?.rol || '') && (
+        {[USER_ROL.COORDINATOR].includes(user?.rol as USER_ROL) && (
           <ActivityAdmin activity={activity} />
         )}
       </Container>

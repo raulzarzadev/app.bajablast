@@ -1,7 +1,7 @@
 import { BloodType } from '@/CONST/bloodTypes'
 import { ClientActivity } from './activities'
 import { BaseType } from './base'
-import { Rol, roles } from '@/CONST/user'
+import { UserRol } from '@/CONST/user'
 import { PaymentMethods } from '@/CONST/paymentMethods'
 import { Timestamp } from 'firebase/firestore'
 
@@ -10,7 +10,7 @@ export interface UserType extends Partial<BaseType> {
   email: string
   phone: string
   birthday: Date
-  rol: Rol
+  rol: UserRol
   emergencyPhone: string
   bloodType: BloodType
   medicalInfo: string

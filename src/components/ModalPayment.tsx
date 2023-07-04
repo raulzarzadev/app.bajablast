@@ -1,6 +1,5 @@
 'use client'
 import { PaymentMethods } from '@/CONST/paymentMethods'
-import { updateUser } from '@/firebase/users'
 import useModal from '@/hooks/useModal'
 import useUser from '@/hooks/useUser'
 import { NewClient } from '@/types/user'
@@ -19,13 +18,14 @@ import {
 import { useState } from 'react'
 import Modal from './Modal'
 import CurrencySpan from './CurrencySpan'
-import ShowUser from './ShowUser'
 import { dateFormat } from '@/utils/utils-date'
 import { USD_PRICE } from '@/CONST/CURRENCY'
 import LoadingButton from './LoadingButton'
 import AppIcon from './AppIcon'
 import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
+import { updateClient } from '@/firebase/clients'
+import { USER_ROL } from '@/CONST/user'
 
 const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
@@ -50,7 +50,12 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       dollarPrice: USD_PRICE
     }
     console.log({ payment })
-    //const res = await updateUser(clientId, { payment })
+    try {
+      const res = await updateClient(clientId, { payment })
+      console.log({ res })
+    } catch (error) {
+      console.error(error)
+    }
 
     return
   }
@@ -60,7 +65,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const [amount, setAmount] = useState(0)
   const modalDetails = useModal()
   const total = subtotal - subtotal * (discount / 100)
-  const showDiscountInput = user?.isAdmin || user?.rol === 'COORDINATOR'
+  const showDiscountInput = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
 
   return (
     <>
@@ -299,7 +304,7 @@ const AmountInfo = ({
 
 const ModalEditPayment = ({ payment }: { payment: NewClient['payment'] }) => {
   const { user } = useUser()
-  const showDiscountInput = user?.isAdmin || user?.rol === 'COORDINATOR'
+  const showDiscountInput = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
 
   const modalEdit = useModal()
   const handleOpenEdit = () => {

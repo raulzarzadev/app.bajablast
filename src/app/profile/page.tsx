@@ -1,4 +1,5 @@
 'use client'
+import { USER_ROL } from '@/CONST/user'
 import ClientOptions from '@/components/ClientOptions'
 import CollaboratorOptions from '@/components/CollaboratorOptions'
 import CoordinatorOptions from '@/components/CoordinatorOptions'
@@ -22,11 +23,13 @@ const Profile = () => {
           }}
         />
       )}
-      {(user?.isAdmin || user?.rol === 'CLIENT') && <ClientOptions />}
-      {(user?.isAdmin || user?.rol === 'COLLABORATOR') && (
+      {(user?.isAdmin || user?.rol === USER_ROL.CLIENT) && <ClientOptions />}
+      {(user?.isAdmin || user?.rol === USER_ROL.COLLABORATOR) && (
         <CollaboratorOptions />
       )}
-      {(user?.isAdmin || user?.rol === 'COORDINATOR') && <CoordinatorOptions />}
+      {(user?.isAdmin || user?.rol === USER_ROL.COORDINATOR) && (
+        <CoordinatorOptions />
+      )}
     </main>
   )
 }

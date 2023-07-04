@@ -1,8 +1,9 @@
+import { USER_ROL } from '@/CONST/user'
 import { UserContext } from '@/context/user'
 import { UserType } from '@/types/user'
 import { NextComponentType } from 'next'
 import { useRouter } from 'next/navigation'
-import { ReactNode, useContext } from 'react'
+import { useContext } from 'react'
 
 type WithAuthProps = {
   // Definir aquí las props adicionales que el HOC acepta y pasa al componente envuelto
@@ -35,13 +36,13 @@ export function withAuth<P>(
       if (permissionsNecessaries.includes('isAdmin') && !user?.isAdmin)
         return false
       if (
-        permissionsNecessaries.includes('COORDINATOR') &&
-        !(user?.rol === 'COORDINATOR')
+        permissionsNecessaries.includes(USER_ROL.COORDINATOR) &&
+        !(user?.rol === USER_ROL.COORDINATOR)
       )
         return false
       if (
-        permissionsNecessaries.includes('COLLABORATOR') &&
-        !(user?.rol === 'COLLABORATOR')
+        permissionsNecessaries.includes(USER_ROL.COLLABORATOR) &&
+        !(user?.rol === USER_ROL.COLLABORATOR)
       )
         return false
 

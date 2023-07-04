@@ -8,6 +8,7 @@ import { deleteUser } from '@/firebase/users'
 import withAuth from '@/HOCs/withAuth'
 import useClients from '@/hooks/useClients'
 import LinkApp from '@/components/LinkApp'
+import { USER_ROL } from '@/CONST/user'
 
 const Clients = () => {
   const { user } = useContext(UserContext)
@@ -41,7 +42,7 @@ const Clients = () => {
         <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
       )}
 
-      {user?.rol === 'COORDINATOR' && (
+      {user?.rol === USER_ROL.COORDINATOR && (
         <>
           <Typography
             component={'h6'}

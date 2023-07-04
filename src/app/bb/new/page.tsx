@@ -1,4 +1,5 @@
 'use client'
+import { USER_ROL } from '@/CONST/user'
 import withAuth from '@/HOCs/withAuth'
 import ActivityForm from '@/components/ActivityForm'
 import { createActivity } from '@/firebase/activities'
@@ -30,4 +31,4 @@ const NewActivity = () => {
   )
 }
 
-export default withAuth(NewActivity, ['isAdmin', 'COORDINATOR'])
+export default withAuth(NewActivity, ['isAdmin', USER_ROL.COORDINATOR])

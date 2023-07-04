@@ -1,13 +1,12 @@
-export const ROLES = {
-  client: 'CLIENT',
-  collaborator: 'COLLABORATOR',
-  coordinator: 'COORDINATOR'
+export enum USER_ROL {
+  CLIENT,
+  COLLABORATOR,
+  COORDINATOR
+}
+export const USER_ROLES: Record<USER_ROL, { label: string }> = {
+  [USER_ROL.CLIENT]: { label: 'Cliente' },
+  [USER_ROL.COLLABORATOR]: { label: 'Colaborador' },
+  [USER_ROL.COORDINATOR]: { label: 'Coordinador' }
 } as const
 
-export type Rol = (typeof ROLES)[keyof typeof ROLES]
-
-export const roles = [
-  { key: ROLES.client, label: 'Cliente' },
-  { key: ROLES.collaborator, label: 'Colaborador' },
-  { key: ROLES.coordinator, label: 'Coordinador' }
-]
+export type UserRol = keyof typeof USER_ROLES
