@@ -15,7 +15,7 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Modal from './Modal'
 import CurrencySpan from './CurrencySpan'
 import { dateFormat } from '@/utils/utils-date'
@@ -66,13 +66,15 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const modalDetails = useModal()
   const total = subtotal - subtotal * (discount / 100)
   const showDiscountInput = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
-
+  const handleOpenEdit = () => {
+    modalDetails.handleOpen()
+  }
   return (
     <>
       <Button
         onClick={(e) => {
           e.preventDefault()
-          modalDetails.handleOpen()
+          handleOpenEdit()
         }}
         size="small"
       >
