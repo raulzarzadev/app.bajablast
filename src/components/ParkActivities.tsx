@@ -25,7 +25,7 @@ const ParkActivities = ({
       <Typography variant="h6">Actividades</Typography>
       <Box
         component={'div'}
-        className="grid grid-cols-2 sm:grid-cols-3 gap-2 place-content-center "
+        className="grid  sm:grid-cols-3 gap-2 sm:place-content-center "
       >
         {activities.map((activity) => (
           <Link
@@ -45,11 +45,14 @@ const ParkActivities = ({
             bg-pink-400 
             rounded-md 
             shadow-md
+            w-full 
+            sm:w-[190px]
+            sm:aspect-video
              `}
           >
             <Box
               component={'article'}
-              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center  text-white  w-[200px] aspect-square "
+              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center  text-white w-full  "
             >
               <Typography component={'p'} variant="h5">
                 {activity.name}

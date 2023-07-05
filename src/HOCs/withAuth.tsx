@@ -1,4 +1,4 @@
-import { USER_ROL } from '@/CONST/user'
+import { UserRol } from '@/CONST/user'
 import { UserContext } from '@/context/user'
 import { UserType } from '@/types/user'
 import { NextComponentType } from 'next'
@@ -10,7 +10,8 @@ type WithAuthProps = {
 }
 
 type WithAuthComponentType<P = {}> = NextComponentType<P & WithAuthProps>
-type ExtraValidation = (UserType['rol'] | 'isAdmin')[]
+export type ExtraValidation = UserRol[]
+const a: ExtraValidation = []
 export function withAuth<P>(
   Component: WithAuthComponentType<P>,
   extraUserValidation?: ExtraValidation
@@ -20,33 +21,17 @@ export function withAuth<P>(
     const { user } = useContext(UserContext)
     if (user === undefined) return <>Loading...</>
     if (user === null) {
-      router.replace('/')
-      return <></>
+      // router.replace('/')
+      return <>You should be logged</>
     }
     // if extra User Validation include any start whith validation
     if (extraUserValidation && extraUserValidation?.length > 0) {
-      const isValid = validateUser(extraUserValidation)
+      const isValid = validateUser(user.rol, extraUserValidation)
       if (!isValid) {
+        //
         router.replace('/')
-        return <></>
+        return <>Not enough permissions </>
       }
-    }
-
-    function validateUser(permissionsNecessaries: ExtraValidation): boolean {
-      if (permissionsNecessaries.includes('isAdmin') && !user?.isAdmin)
-        return false
-      if (
-        permissionsNecessaries.includes(USER_ROL.COORDINATOR) &&
-        !(user?.rol === USER_ROL.COORDINATOR)
-      )
-        return false
-      if (
-        permissionsNecessaries.includes(USER_ROL.COLLABORATOR) &&
-        !(user?.rol === USER_ROL.COLLABORATOR)
-      )
-        return false
-
-      return true
     }
 
     //@ts-ignore
@@ -55,5 +40,34 @@ export function withAuth<P>(
 
   return WrappedComponent
 }
+export function validateUser(
+  userRol: UserType['rol'],
+  permissions?: ExtraValidation,
+  ops?: { admin?: boolean }
+): boolean {
+  const isClient = userRol === 'CLIENT'
+  const isCollaborator = userRol === 'COLLABORATOR'
+  const isCoordinator = userRol === 'COORDINATOR'
+  const isAdmin = userRol === 'ADMIN' || ops?.admin
 
+  //* Should return true if  user is admin or permissions ar empty or undefined
+  if (isAdmin) return true
+  if (!permissions) return true
+  if (permissions?.length === 0) return true
+
+  //* Should return true if  user is client and permissions are client
+  if (permissions?.includes('CLIENT') && isClient) return true
+
+  //* Should return true if  user is collaborator  and permissions are collaborator
+  if (
+    permissions?.includes('COLLABORATOR') &&
+    (isCollaborator || isCoordinator || isAdmin)
+  )
+    return true
+  if (permissions?.includes('COORDINATOR') && (isCoordinator || isAdmin))
+    return true
+  if (permissions?.includes('ADMIN') && isAdmin) return true
+
+  return false
+}
 export default withAuth

@@ -15,7 +15,7 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import Modal from './Modal'
 import CurrencySpan from './CurrencySpan'
 import { dateFormat } from '@/utils/utils-date'
@@ -36,6 +36,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       const friendAmount = asNumber(friend?.activity?.price)
       return acc + friendAmount
     }, clientAmount) || 0
+
   const handlePay = async () => {
     const clientId = client.id || ''
     const payment: NewClient['payment'] = {
@@ -49,10 +50,8 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       },
       dollarPrice: USD_PRICE
     }
-    console.log({ payment })
     try {
       const res = await updateClient(clientId, { payment })
-      console.log({ res })
     } catch (error) {
       console.error(error)
     }
