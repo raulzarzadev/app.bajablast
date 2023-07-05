@@ -23,13 +23,13 @@ const Profile = () => {
           }}
         />
       )}
-      {(user?.isAdmin || user?.rol === USER_ROL.CLIENT) && <ClientOptions />}
-      {(user?.isAdmin || user?.rol === USER_ROL.COLLABORATOR) && (
+      {/* {(user?.isAdmin || user?.rol === USER_ROL.CLIENT) && <ClientOptions />} */}
+      {/* {(user?.isAdmin || user?.rol === USER_ROL.COLLABORATOR) && (
         <CollaboratorOptions />
-      )}
-      {(user?.isAdmin || user?.rol === USER_ROL.COORDINATOR) && (
+      )} */}
+      {/* {(user?.isAdmin || user?.rol === USER_ROL.COORDINATOR) && (
         <CoordinatorOptions />
-      )}
+      )} */}
     </main>
   )
 }

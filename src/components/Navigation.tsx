@@ -28,9 +28,9 @@ const pages = [
 ]
 const settings = [
   //'Profile', 'Account', 'Dashboard', 'Logout'
-  { label: 'Perfil', href: '/profile' },
   { label: 'Home', href: '/' },
-  { label: 'Parque', href: '/bb' }
+  { label: 'Perfil', href: '/profile' },
+  { label: 'Dashboard', href: '/bb/admin' }
 ]
 
 function Navigation() {
