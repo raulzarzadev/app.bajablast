@@ -20,7 +20,7 @@ import ControllerCheckbox from './ControllerCheckbox'
 import Image from 'next/image'
 import ModalMedicInfo from './ModalMedicInfo'
 import { NewClient, UserType } from '@/types/user'
-import { roles } from '@/CONST/user'
+import { USER_ROLES } from '@/CONST/user'
 
 const ClientForm = ({
   client,
@@ -85,7 +85,7 @@ const ClientForm = ({
                 )
               }
             >
-              {roles.map(({ key, label }) => (
+              {Object.entries(USER_ROLES).map(([key, { label }]) => (
                 <FormControlLabel
                   key={key}
                   value={key}
