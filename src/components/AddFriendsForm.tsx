@@ -86,7 +86,7 @@ const AddFriendsForm = ({
           onClick={() =>
             append({
               name: '',
-              birthday: new Date(),
+              birthday: null,
               medicalInfo: '',
               bloodType: 'N/A'
             })

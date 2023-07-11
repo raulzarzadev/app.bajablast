@@ -33,7 +33,7 @@ const ClientForm = ({
 }) => {
   const defaultClient: NewClient = {
     bloodType: 'N/A',
-    birthday: new Date(),
+    birthday: null,
     signature: '',
     medicalInfo: '',
     name: '',

@@ -10,8 +10,8 @@ const AdminLayout = ({ children }: { children?: ReactNode }) => {
   const layoutSegment = useSelectedLayoutSegment()
   const segments = [
     {
-      label: 'Inicio',
-      segment: ''
+      label: 'Caja',
+      segment: 'cashbox'
     },
     {
       label: 'Actividades',

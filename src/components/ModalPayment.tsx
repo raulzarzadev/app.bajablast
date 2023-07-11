@@ -38,19 +38,19 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
     }, clientAmount) || 0
 
   const handlePay = async () => {
-    const clientId = client.id || ''
-    const payment: NewClient['payment'] = {
-      amount: subtotal,
-      date: new Date(),
-      method: paymentMethod,
-      discount,
-      created: {
-        by: user?.id,
-        at: new Date()
-      },
-      dollarPrice: USD_PRICE
-    }
     try {
+      const clientId = client.id || ''
+      const payment: NewClient['payment'] = {
+        amount: subtotal,
+        date: new Date(),
+        method: paymentMethod,
+        discount,
+        created: {
+          by: user?.id,
+          at: new Date()
+        },
+        dollarPrice: USD_PRICE
+      }
       const res = await updateClient(clientId, { payment })
     } catch (error) {
       console.error(error)
@@ -101,11 +101,12 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   <TextField
                     inputProps={{
                       inputMode: 'numeric',
-                      pattern: '[0-9]*',
+                      // pattern: '[0-9]*',
                       min: 0,
                       max: 100,
                       step: 5
                     }}
+                    
                     className="w-24 "
                     name="discount"
                     label="Descuento"

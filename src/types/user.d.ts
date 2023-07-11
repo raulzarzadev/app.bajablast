@@ -9,7 +9,7 @@ export interface UserType extends Partial<BaseType> {
   name: string
   email: string
   phone: string
-  birthday: Date
+  birthday: Date | null
   rol: UserRol
   emergencyPhone: string
   bloodType: BloodType

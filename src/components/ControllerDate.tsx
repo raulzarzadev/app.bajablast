@@ -7,15 +7,19 @@ const ControllerDate = ({ name, label }: { name: string; label: string }) => {
     <Controller
       name={name}
       render={({ field, fieldState: { error } }) => {
-        const value =
-          field.value instanceof Timestamp
-            ? field.value.toDate()
-            : new Date(field.value)
+        let value
+        if (!!field.value) {
+          value =
+            field.value instanceof Timestamp
+              ? field.value.toDate()
+              : new Date(field.value)
+        }
+
         return (
           <DatePicker
             format="dd / MM / yy"
             {...field}
-            value={value}
+            value={value || null}
             label={label}
           />
         )

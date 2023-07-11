@@ -1,3 +1,4 @@
+'use client'
 import { UserRol } from '@/CONST/user'
 import { UserContext } from '@/context/user'
 import { UserType } from '@/types/user'

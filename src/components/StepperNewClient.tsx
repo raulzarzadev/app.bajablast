@@ -1,3 +1,4 @@
+'use client'
 import Stepper, { ManageStepper } from './Stepper'
 import ClientForm from './ClientForm'
 import AddFriendsForm from './AddFriendsForm'
@@ -116,7 +117,7 @@ function StepperNewClient() {
                 ]}
                 handleFinish={async () => {
                   await onSubmit()
-                  router.push('/bb/cashbox/clients')
+                  router.push('/bb/admin/cashbox')
                   return
                 }}
               />

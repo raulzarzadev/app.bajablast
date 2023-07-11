@@ -1,19 +1,17 @@
 'use client'
 import { NewClient } from '@/types/user'
 import { Box, Typography } from '@mui/material'
-import { useContext, useEffect, useState } from 'react'
 import ClientsTable from '@/components/ClientsTable'
-import { UserContext } from '@/context/user'
 import { deleteUser } from '@/firebase/users'
-import withAuth from '@/HOCs/withAuth'
 import useClients from '@/hooks/useClients'
-import LinkApp from '@/components/LinkApp'
-import { USER_ROL } from '@/CONST/user'
 
-const Clients = () => {
-  const { user } = useContext(UserContext)
+const AwaitingClients = () => {
   const { clients = [] } = useClients()
-
+  /**
+   * Removes a user with the given client ID.
+   *
+   * @param clientId - The client ID of the user to be removed.
+   */
   const handleRemove = async (clientId: NewClient['id']) => {
     try {
       await deleteUser(clientId || '')
@@ -23,43 +21,22 @@ const Clients = () => {
   }
 
   const awaitingClients = clients?.filter((client) => !client.payment)
-  const paidClients = clients?.filter((client) => !!client.payment)
 
   return (
     <Box
       component={'section'}
       className="flex flex-col justify-center items-center pt-12 max-w-2xl mx-auto p-1"
     >
-      <Box className="flex flex-col gap-4 mt-4">
-        <LinkApp href="clients/new" label="Nuevo cliente" />
-      </Box>
       <Typography component={'h6'} variant="h6" className="w-full text-left">
-        En espera
+        Clientes en espera
       </Typography>
       {awaitingClients?.length === 0 ? (
         <Typography variant="h6">Aún no hay clientes en espera</Typography>
       ) : (
         <ClientsTable clients={awaitingClients} handleRemove={handleRemove} />
       )}
-
-      {user?.rol === USER_ROL.COORDINATOR && (
-        <>
-          <Typography
-            component={'h6'}
-            variant="h6"
-            className="w-full text-left"
-          >
-            Pagos
-          </Typography>
-          {paidClients?.length === 0 ? (
-            <Typography variant="h6">Aún no hay pagos realizados</Typography>
-          ) : (
-            <ClientsTable clients={paidClients} />
-          )}
-        </>
-      )}
     </Box>
   )
 }
 
-export default withAuth(Clients)
+export default AwaitingClients

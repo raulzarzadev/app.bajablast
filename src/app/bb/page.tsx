@@ -10,9 +10,6 @@ const BB = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <ParkActivities />
-      {[USER_ROL.COLLABORATOR, USER_ROL.COORDINATOR].includes(
-        user?.rol as USER_ROL
-      ) && <ParkAreas />}
     </div>
   )
 }

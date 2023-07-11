@@ -1,4 +1,5 @@
 import ClientsChart from '@/components/ClientsChart'
+import ParkAreas from '@/components/ParkAreas'
 
 const Page = () => {
   return (
