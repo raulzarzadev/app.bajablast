@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Container } from '@mui/material'
+import { Box, Button, Container } from '@mui/material'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { useSelectedLayoutSegment } from 'next/navigation'
@@ -9,6 +9,10 @@ import LinkApp from '@/components/LinkApp'
 const AdminLayout = ({ children }: { children?: ReactNode }) => {
   const layoutSegment = useSelectedLayoutSegment()
   const segments = [
+    {
+      label: 'dashboard',
+      segment: ''
+    },
     {
       label: 'Caja',
       segment: 'cashbox'
@@ -46,7 +50,7 @@ const AdminLayout = ({ children }: { children?: ReactNode }) => {
           ))}
         </ul>
       </nav>
-      <div>{children}</div>
+      <Box>{children}</Box>
     </Container>
   )
 }

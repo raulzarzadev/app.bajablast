@@ -1,11 +1,11 @@
 import LoadingButtonMUI, { LoadingButtonProps } from '@mui/lab/LoadingButton'
-import SaveIcon from '@mui/icons-material/Save'
 import useLoading from '@/hooks/useLoading'
+import AppIcon, { IconName } from './AppIcon'
 
 const LoadingButton = ({
   onClick,
   label = 'Save',
-  icon = <SaveIcon />,
+  icon = 'save',
   disabled,
   color,
   ...rest
@@ -13,12 +13,13 @@ const LoadingButton = ({
   disabled?: boolean
   onClick?: () => void | Promise<void>
   label: string
-  icon?: JSX.Element
+  icon?: IconName
 }) => {
   const { loading, setLoading } = useLoading()
 
   return (
     <LoadingButtonMUI
+      variant="outlined"
       className={`${color === 'success' && 'bg-green-600'}`}
       disabled={disabled}
       onClick={async () => {
@@ -33,7 +34,7 @@ const LoadingButton = ({
       }}
       loading={loading}
       loadingPosition="start"
-      startIcon={icon}
+      startIcon={icon ? <AppIcon icon={icon} /> : undefined}
       {...rest}
     >
       {label}

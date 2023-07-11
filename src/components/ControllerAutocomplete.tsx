@@ -19,7 +19,7 @@ const ControllerAutocomplete = ({
     <Autocomplete
       renderInput={(params) => <TextField {...params} label={label} />}
       options={options}
-      value={value || options[0]}
+      value={value || null}
       onChange={(_, value) => {
         onChange(value)
       }}

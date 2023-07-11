@@ -12,7 +12,8 @@ export const weekDays = {
   6: 'Sabado'
 }
 
-export const dateMx = (date?: Date | Timestamp) => {
+export const dateMx = (date?: Date | Timestamp | null) => {
+  if (!date) return '-'
   const value = date instanceof Timestamp ? date.toDate() : date
   return new Intl.DateTimeFormat(['es-Mx']).format(value)
 }

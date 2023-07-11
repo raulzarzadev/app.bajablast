@@ -11,6 +11,7 @@ const page = () => {
         Caja
       </Typography>
       <Box className="w-full flex justify-evenly">
+        <LinkApp href="/bb/admin/cashbox/reconciliation" label="Corte" />
         <LinkApp href="/bb/admin/cashbox/newClient" label="Nuevo cliente" />
       </Box>
       <AwaitingClients />

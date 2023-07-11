@@ -106,7 +106,6 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                       max: 100,
                       step: 5
                     }}
-                    
                     className="w-24 "
                     name="discount"
                     label="Descuento"
@@ -186,7 +185,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                     return handlePay()
                   }}
                   label="Pagar"
-                  icon={<AppIcon icon="money" />}
+                  icon={'money'}
                 />
               </Box>
             </>

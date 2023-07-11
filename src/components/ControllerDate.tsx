@@ -2,7 +2,15 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { Timestamp } from 'firebase/firestore'
 import { Controller } from 'react-hook-form'
 
-const ControllerDate = ({ name, label }: { name: string; label: string }) => {
+const ControllerDate = ({
+  name,
+  label,
+  format = 'dd / MM / yy'
+}: {
+  name: string
+  label: string
+  format?: string
+}) => {
   return (
     <Controller
       name={name}
@@ -17,7 +25,7 @@ const ControllerDate = ({ name, label }: { name: string; label: string }) => {
 
         return (
           <DatePicker
-            format="dd / MM / yy"
+            format={format}
             {...field}
             value={value || null}
             label={label}
