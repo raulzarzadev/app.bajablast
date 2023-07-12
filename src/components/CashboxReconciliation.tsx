@@ -14,11 +14,10 @@ import CurrencySpan from './CurrencySpan'
 import useCollaborators from '@/hooks/useCollaborators'
 import { useState } from 'react'
 import { Client } from '@/types/user'
-type ReconciliationData = {
-  cashier: { name: string; id: string } | null
-  from: Date
-  to: Date
-}
+import calculateReconciliation from '@/utils/calculateReconciliation'
+import { ReconciliationData } from '@/types/reconciliations'
+import { createReconciliation } from '@/firebase/reconciliations'
+
 const CashboxReconciliation = () => {
   const { clients } = useClients()
   const modal = useModal()
@@ -61,10 +60,12 @@ const CashboxReconciliation = () => {
       <Typography>Lista de cortes previos</Typography>
       <Modal {...modal} title="Nuevo corte">
         <ReconciliationForm onSubmit={handleSubmitReconciliation} />
-        <ReconciliationInfo
-          clients={clientsFiltered}
-          reconciliationData={reconciliationData}
-        />
+        {reconciliationData && (
+          <ReconciliationInfo
+            clients={clientsFiltered}
+            reconciliationData={reconciliationData}
+          />
+        )}
       </Modal>
     </Box>
   )
@@ -77,46 +78,22 @@ const ReconciliationInfo = ({
   clients: Client[]
   reconciliationData?: ReconciliationData
 }) => {
-  const cashier = reconciliationData?.cashier || null
-  const activities = clients
-    .map((client) => {
-      const friendsActivities =
-        client?.friends?.map((friend) => {
-          return friend?.activity
-        }) || []
-      return [client.activity, ...friendsActivities]
-    })
-    .flat()
-
-  const groupedActivities: Record<string, any[]> = {}
-  activities.forEach((activity) => {
-    const name = activity?.name || ''
-    if (!groupedActivities[name]) {
-      groupedActivities[name] = []
+  const reconciliation = calculateReconciliation(clients, reconciliationData)
+  const { activities, total, cashier, totalCard, totalDollars, totalCash } =
+    reconciliation
+  const handleSave = async () => {
+    try {
+      const res = await createReconciliation(reconciliation)
+      console.log({ res })
+      return
+    } catch (error) {
+      console.error(error)
     }
-    groupedActivities[name].push(activity)
-  })
-
-  const totalCash = clients.reduce((acc, client) => {
-    return (
-      //TODO: should add discount?
-      acc + (client?.payment?.method === 'cash' ? client.payment?.amount : 0)
-    )
-  }, 0)
-  const totalDollars = clients.reduce((acc, client) => {
-    return (
-      //TODO: should add discount?
-      acc + (client?.payment?.method === 'usd' ? client.payment?.amount : 0)
-    )
-  }, 0)
-  const totalCard = clients.reduce((acc, client) => {
-    return (
-      //TODO: should add discount?
-      acc + (client?.payment?.method === 'card' ? client.payment?.amount : 0)
-    )
-  }, 0)
-  const total = totalCash + totalDollars + totalCard
-
+  }
+  const handlePrint = async () => {
+    await handleSave()
+    console.log('print')
+  }
   return (
     <Box>
       <Box className="flex justify-end">
@@ -133,7 +110,7 @@ const ReconciliationInfo = ({
         Cajero: {cashier ? cashier.name : 'Todos'}
       </Typography>
       <Box className="w-1/2 text-end">
-        {Object.entries(groupedActivities).map(([name, activities]) => (
+        {Object.entries(activities).map(([name, activities]) => (
           <Box key={name}>
             <Typography>
               {name}: {activities?.length || 0}
@@ -156,6 +133,22 @@ const ReconciliationInfo = ({
           Total: <CurrencySpan quantity={total} />
         </Typography>
       </Box>
+      <Box className="flex w-full justify-evenly">
+        <LoadingButton
+          label="Guardar"
+          icon="save"
+          onClick={async () => {
+            return await handleSave()
+          }}
+        ></LoadingButton>
+        <LoadingButton
+          label="Imprimir"
+          icon="print"
+          onClick={() => {
+            handlePrint()
+          }}
+        ></LoadingButton>
+      </Box>
     </Box>
   )
 }
@@ -174,6 +167,7 @@ const ReconciliationForm = ({
   })
   const formValues = methods.watch()
   const _onSubmit = (data: any) => {
+    // console.log(data)
     onSubmit(data)
   }
   interface Cashier {
@@ -182,13 +176,6 @@ const ReconciliationForm = ({
   }
   const { collaborators } = useCollaborators()
 
-  // const cashiers: readonly Cashier[] = [
-  //   { name: 'Todos', id: 'all' },
-  //   { name: 'Raul Zarza', id: '1' },
-  //   { name: 'Gamaliel Gonzalez', id: '2' },
-  //   { name: 'Enrique Escobar', id: '3' }
-  // ]
-  // console.log({ formValues })
   const cashiers: readonly Cashier[] =
     collaborators?.map(({ name = '', id = '' }) => ({
       name,
@@ -242,11 +229,13 @@ const ReconciliationForm = ({
             onChange={(value: any) => methods.setValue('to', value)}
           />
         </Box>
-        <LoadingButton
-          label="Generar"
-          onClick={methods.handleSubmit(_onSubmit)}
-          icon="add"
-        ></LoadingButton>
+        <Box className="flex w-full justify-end">
+          <LoadingButton
+            label="Generar"
+            onClick={methods.handleSubmit(_onSubmit)}
+            icon="add"
+          ></LoadingButton>
+        </Box>
       </FormProvider>
     </form>
   )
