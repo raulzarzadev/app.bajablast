@@ -11,27 +11,42 @@ import { isAfter, isBefore } from 'date-fns'
 import asDate from '@/utils/asDate'
 import { dateFormat } from '@/utils/utils-date'
 import CurrencySpan from './CurrencySpan'
-
+import useCollaborators from '@/hooks/useCollaborators'
+import { useState } from 'react'
+import { Client } from '@/types/user'
+type ReconciliationData = {
+  cashier: { name: string; id: string } | null
+  from: Date
+  to: Date
+}
 const CashboxReconciliation = () => {
   const { clients } = useClients()
   const modal = useModal()
-  const handleSubmitReconciliation = (data: {
-    cashier: { name: string; id: string }
-    from: Date
-    to: Date
-  }) => {
-    //** Filter clients that had paymentes between dates */
-    const filteredClients = clients?.filter((client) => {
-      const paymentCreatedAt = asDate(client?.payment?.created?.at)
-      if (paymentCreatedAt === null) return false
-      return (
-        isAfter(paymentCreatedAt, asDate(data.from) || new Date()) &&
-        isBefore(paymentCreatedAt, asDate(data.to) || new Date())
-      )
-    })
-    console.log({ filteredClients })
-  }
 
+  const handleSubmitReconciliation = (data: ReconciliationData) => {
+    setReconciliationData(data)
+    const filteredClientsByDate =
+      clients?.filter((client) => {
+        const paymentCreatedAt = asDate(client?.payment?.created?.at)
+        if (paymentCreatedAt === null) return false
+        const from = asDate(data.from) || new Date()
+        const to = asDate(data.to) || new Date()
+        return isAfter(paymentCreatedAt, from) && isBefore(paymentCreatedAt, to)
+      }) || []
+
+    let payments: Client[] = filteredClientsByDate
+
+    const cashierId = data?.cashier?.id
+    if (cashierId) {
+      payments = filteredClientsByDate.filter(
+        (client) => client?.payment?.created.by === cashierId
+      )
+    }
+    setClientsFiltered(payments)
+  }
+  const [clientsFiltered, setClientsFiltered] = useState<Client[]>([])
+  const [reconciliationData, setReconciliationData] =
+    useState<ReconciliationData>()
   return (
     <Box className="max-w-md mx-auto">
       <Typography variant="h4">Cortes de caja</Typography>
@@ -46,41 +61,99 @@ const CashboxReconciliation = () => {
       <Typography>Lista de cortes previos</Typography>
       <Modal {...modal} title="Nuevo corte">
         <ReconciliationForm onSubmit={handleSubmitReconciliation} />
-        <ReconciliationInfo />
+        <ReconciliationInfo
+          clients={clientsFiltered}
+          reconciliationData={reconciliationData}
+        />
       </Modal>
     </Box>
   )
 }
 
-const ReconciliationInfo = () => {
+const ReconciliationInfo = ({
+  reconciliationData,
+  clients
+}: {
+  clients: Client[]
+  reconciliationData?: ReconciliationData
+}) => {
+  const cashier = reconciliationData?.cashier || null
+  const activities = clients
+    .map((client) => {
+      const friendsActivities =
+        client?.friends?.map((friend) => {
+          return friend?.activity
+        }) || []
+      return [client.activity, ...friendsActivities]
+    })
+    .flat()
+
+  const groupedActivities: Record<string, any[]> = {}
+  activities.forEach((activity) => {
+    const name = activity?.name || ''
+    if (!groupedActivities[name]) {
+      groupedActivities[name] = []
+    }
+    groupedActivities[name].push(activity)
+  })
+
+  const totalCash = clients.reduce((acc, client) => {
+    return (
+      //TODO: should add discount?
+      acc + (client?.payment?.method === 'cash' ? client.payment?.amount : 0)
+    )
+  }, 0)
+  const totalDollars = clients.reduce((acc, client) => {
+    return (
+      //TODO: should add discount?
+      acc + (client?.payment?.method === 'usd' ? client.payment?.amount : 0)
+    )
+  }, 0)
+  const totalCard = clients.reduce((acc, client) => {
+    return (
+      //TODO: should add discount?
+      acc + (client?.payment?.method === 'card' ? client.payment?.amount : 0)
+    )
+  }, 0)
+  const total = totalCash + totalDollars + totalCard
+
   return (
     <Box>
       <Box className="flex justify-end">
         <Typography className="mx-2">
-          Desde: {dateFormat(asDate(new Date()), ' dd/MMM/yy HH:mm ')}
+          Desde:{' '}
+          {dateFormat(asDate(reconciliationData?.from), ' dd/MMM/yy HH:mm ')}
         </Typography>
         <Typography className="mx-2">
-          Hasta: {dateFormat(asDate(new Date()), ' dd/MMM/yy HH:mm ')}
+          Hasta:{' '}
+          {dateFormat(asDate(reconciliationData?.to), ' dd/MMM/yy HH:mm ')}
         </Typography>
       </Box>
-      <Box>
-        <Box>actividad-2: 2</Box>
-        <Box>actividad-1: 5</Box>
-        <Box>actividad-6: 1</Box>
+      <Typography className="text-center">
+        Cajero: {cashier ? cashier.name : 'Todos'}
+      </Typography>
+      <Box className="w-1/2 text-end">
+        {Object.entries(groupedActivities).map(([name, activities]) => (
+          <Box key={name}>
+            <Typography>
+              {name}: {activities?.length || 0}
+            </Typography>
+          </Box>
+        ))}
       </Box>
       <Box className="text-end">
-        <Typography>Pagos: 6</Typography>
+        <Typography>Pagos: {clients.length || 0}</Typography>
         <Typography>
-          Efectivo: <CurrencySpan quantity={2500} />
+          Efectivo: <CurrencySpan quantity={totalCash} />
         </Typography>
         <Typography>
-          Dollares: <CurrencySpan quantity={200} />
+          Dollares: <CurrencySpan quantity={totalDollars} />
         </Typography>
         <Typography>
-          Tarjeta: <CurrencySpan quantity={1800} />
+          Tarjeta: <CurrencySpan quantity={totalCard} />
         </Typography>
         <Typography className="text-center" variant="h4">
-          Total: <CurrencySpan quantity={4500} />
+          Total: <CurrencySpan quantity={total} />
         </Typography>
       </Box>
     </Box>
@@ -107,13 +180,21 @@ const ReconciliationForm = ({
     name: string
     id: string
   }
-  const cashiers: readonly Cashier[] = [
-    { name: 'Todos', id: 'all' },
-    { name: 'Raul Zarza', id: '1' },
-    { name: 'Gamaliel Gonzalez', id: '2' },
-    { name: 'Enrique Escobar', id: '3' }
-  ]
+  const { collaborators } = useCollaborators()
+
+  // const cashiers: readonly Cashier[] = [
+  //   { name: 'Todos', id: 'all' },
+  //   { name: 'Raul Zarza', id: '1' },
+  //   { name: 'Gamaliel Gonzalez', id: '2' },
+  //   { name: 'Enrique Escobar', id: '3' }
+  // ]
   // console.log({ formValues })
+  const cashiers: readonly Cashier[] =
+    collaborators?.map(({ name = '', id = '' }) => ({
+      name,
+      id
+    })) || []
+
   return (
     <form>
       <FormProvider {...methods}>

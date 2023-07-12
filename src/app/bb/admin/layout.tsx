@@ -1,7 +1,6 @@
 'use client'
 
-import { Box, Button, Container } from '@mui/material'
-import Link from 'next/link'
+import { Box, Container } from '@mui/material'
 import { ReactNode } from 'react'
 import { useSelectedLayoutSegment } from 'next/navigation'
 import withAuth from '@/HOCs/withAuth'
