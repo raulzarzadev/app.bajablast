@@ -2,9 +2,9 @@ import { Reconciliation, ReconciliationData } from '@/types/reconciliations'
 import { Client } from '@/types/user'
 
 const calculateReconciliation = (
-  clients: Client[],
+  clients: Partial<Client>[],
   reconciliationData?: ReconciliationData
-): Reconciliation => {
+): Partial<Reconciliation> => {
   const cashier = reconciliationData?.cashier || null
   const activities = clients
     .map((client) => {
@@ -48,6 +48,10 @@ const calculateReconciliation = (
     return { clientId: client.id, ...client?.payment }
   })
   return {
+    dates: {
+      from: reconciliationData?.from || null,
+      to: reconciliationData?.to || null
+    },
     total,
     totalCash,
     totalDollars,

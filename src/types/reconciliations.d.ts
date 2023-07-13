@@ -12,6 +12,7 @@ export interface Reconciliation extends BaseType {
   totalCash: number
   totalDollars: number
   totalCard: number
+  dates: { from: Date | null; to: Date | null }
   cashier: { name: string; id: string } | null
   activities: Record<string, any[]>
   payments: Partial<Client['payment'] & { clientId: Client['id'] }>[]

@@ -1,6 +1,19 @@
 'use client'
 
-import { Autocomplete, Box, Button, TextField, Typography } from '@mui/material'
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography
+} from '@mui/material'
 import useModal from '@/hooks/useModal'
 import Modal from './Modal'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -17,6 +30,8 @@ import { Client } from '@/types/user'
 import calculateReconciliation from '@/utils/calculateReconciliation'
 import { ReconciliationData } from '@/types/reconciliations'
 import { createReconciliation } from '@/firebase/reconciliations'
+import CashboxReconciliationsList from './CashboxReconciliationsList'
+import CashboxReconciliationCard from './CashboxReconciliationCard'
 
 const CashboxReconciliation = () => {
   const { clients } = useClients()
@@ -47,8 +62,9 @@ const CashboxReconciliation = () => {
   const [reconciliationData, setReconciliationData] =
     useState<ReconciliationData>()
   return (
-    <Box className="max-w-md mx-auto">
+    <Box className=" mx-auto text-center">
       <Typography variant="h4">Cortes de caja</Typography>
+
       <Button
         onClick={(e) => {
           e.preventDefault()
@@ -57,7 +73,7 @@ const CashboxReconciliation = () => {
       >
         Nuevo corte
       </Button>
-      <Typography>Lista de cortes previos</Typography>
+      <CashboxReconciliationsList />
       <Modal {...modal} title="Nuevo corte">
         <ReconciliationForm onSubmit={handleSubmitReconciliation} />
         {reconciliationData && (
@@ -79,8 +95,7 @@ const ReconciliationInfo = ({
   reconciliationData?: ReconciliationData
 }) => {
   const reconciliation = calculateReconciliation(clients, reconciliationData)
-  const { activities, total, cashier, totalCard, totalDollars, totalCash } =
-    reconciliation
+
   const handleSave = async () => {
     try {
       const res = await createReconciliation(reconciliation)
@@ -90,49 +105,9 @@ const ReconciliationInfo = ({
       console.error(error)
     }
   }
-  const handlePrint = async () => {
-    await handleSave()
-    console.log('print')
-  }
   return (
     <Box>
-      <Box className="flex justify-end">
-        <Typography className="mx-2">
-          Desde:{' '}
-          {dateFormat(asDate(reconciliationData?.from), ' dd/MMM/yy HH:mm ')}
-        </Typography>
-        <Typography className="mx-2">
-          Hasta:{' '}
-          {dateFormat(asDate(reconciliationData?.to), ' dd/MMM/yy HH:mm ')}
-        </Typography>
-      </Box>
-      <Typography className="text-center">
-        Cajero: {cashier ? cashier.name : 'Todos'}
-      </Typography>
-      <Box className="w-1/2 text-end">
-        {Object.entries(activities).map(([name, activities]) => (
-          <Box key={name}>
-            <Typography>
-              {name}: {activities?.length || 0}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
-      <Box className="text-end">
-        <Typography>Pagos: {clients.length || 0}</Typography>
-        <Typography>
-          Efectivo: <CurrencySpan quantity={totalCash} />
-        </Typography>
-        <Typography>
-          Dollares: <CurrencySpan quantity={totalDollars} />
-        </Typography>
-        <Typography>
-          Tarjeta: <CurrencySpan quantity={totalCard} />
-        </Typography>
-        <Typography className="text-center" variant="h4">
-          Total: <CurrencySpan quantity={total} />
-        </Typography>
-      </Box>
+      <CashboxReconciliationCard reconciliation={reconciliation} />
       <Box className="flex w-full justify-evenly">
         <LoadingButton
           label="Guardar"
@@ -141,13 +116,14 @@ const ReconciliationInfo = ({
             return await handleSave()
           }}
         ></LoadingButton>
-        <LoadingButton
+        {/* <LoadingButton
           label="Imprimir"
           icon="print"
           onClick={() => {
             handlePrint()
           }}
-        ></LoadingButton>
+        ></LoadingButton> */}
+        R
       </Box>
     </Box>
   )
