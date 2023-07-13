@@ -19,18 +19,18 @@ import { useState } from 'react'
 import Modal from './Modal'
 import CurrencySpan from './CurrencySpan'
 import { dateFormat } from '@/utils/utils-date'
-import { USD_PRICE } from '@/CONST/CURRENCY'
 import LoadingButton from './LoadingButton'
-import AppIcon from './AppIcon'
 import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
 import { updateClient } from '@/firebase/clients'
 import { USER_ROL } from '@/CONST/user'
+import useParkConfig from '@/hooks/useParkConfig'
 
 const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
+  const { parkConfig } = useParkConfig()
   const clientAmount = asNumber(client.activity?.price)
-
+  const USD_PRICE = asNumber(parkConfig?.dollarPrice)
   const subtotal =
     client?.friends?.reduce((acc, friend) => {
       const friendAmount = asNumber(friend?.activity?.price)
@@ -64,7 +64,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const [amount, setAmount] = useState(0)
   const modalDetails = useModal()
   const total = subtotal - subtotal * (discount / 100)
-  const showDiscountInput = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
+  const showDiscountInput = false //user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
   const handleOpenEdit = () => {
     modalDetails.handleOpen()
   }
@@ -167,7 +167,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   name="amount"
                   label="Recibido"
                   type="number"
-                  value={asNumber(amount)}
+                  value={asNumber(amount) || ''}
                   onChange={(e) => {
                     setAmount(asNumber(e.target.value))
                   }}
@@ -292,6 +292,9 @@ const AmountInfo = ({
             </Typography>
           </Typography>
           <Typography>
+            <Typography component={'span'} className="text-xs">
+              (<CurrencySpan quantity={dollarPrice} />)
+            </Typography>
             <Typography component={'span'}>
               <CurrencySpan quantity={total / dollarPrice} />
               {'usd'}

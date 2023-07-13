@@ -1,13 +1,9 @@
-import ParkBasicConfig from '@/components/ParkBasicConfig'
-import WeekScheduleSection from '@/components/WeekScheduleSection'
+import ParkConfigurations from '@/components/ParkConfigurations'
 
-const Page = () => {
-  return (
-    <div>
-      <WeekScheduleSection />
-      <ParkBasicConfig />
-    </div>
-  )
-}
+const Page = () => (
+  <div>
+    <ParkConfigurations />
+  </div>
+)
 
 export default Page

@@ -6,6 +6,7 @@ import { UserContextProvider } from '@/context/user'
 import { PickerDateContextProvider } from '@/context/picker-date'
 import { ClientsContextProvider } from '@/context/clients'
 import { CollaboratorsContextProvider } from '@/context/collaborators'
+import { ParkContextProvider } from '@/context/park'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -48,14 +49,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <PickerDateContextProvider>
-          <UserContextProvider>
-            <ClientsContextProvider>
-              <CollaboratorsContextProvider>
-                <Navigation />
-                {children}
-              </CollaboratorsContextProvider>
-            </ClientsContextProvider>
-          </UserContextProvider>
+          <ParkContextProvider>
+            <UserContextProvider>
+              <ClientsContextProvider>
+                <CollaboratorsContextProvider>
+                  <Navigation />
+                  {children}
+                </CollaboratorsContextProvider>
+              </ClientsContextProvider>
+            </UserContextProvider>
+          </ParkContextProvider>
         </PickerDateContextProvider>
       </body>
     </html>
