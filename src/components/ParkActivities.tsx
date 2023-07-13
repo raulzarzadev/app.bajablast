@@ -9,6 +9,7 @@ import AppIcon from './AppIcon'
 import useUser from '@/hooks/useUser'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
+
 const ParkActivities = ({
   onClickActivity
 }: {
@@ -48,6 +49,7 @@ const ParkActivities = ({
             w-full 
             sm:w-[190px]
             sm:aspect-video
+            h-full
              `}
           >
             <Box

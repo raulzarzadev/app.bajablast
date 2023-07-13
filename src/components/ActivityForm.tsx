@@ -12,6 +12,7 @@ import {
 import { FormProvider, useForm } from 'react-hook-form'
 import ControllerText from './ControllerText'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
+import ScheduleForm from './ScheduleForm'
 
 const ActivityForm = ({
   onSubmit,
@@ -28,14 +29,19 @@ const ActivityForm = ({
   }
   const formValues = methods.watch()
   return (
-    <div>
+    <div className="my-4">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(_onSubmit)}>
           <Box className="grid gap-4 ">
+            {/* ********* Basic information of the activity */}
+
             <ControllerText name="name" label="Nombre" />
             <ControllerText name="description" label="Descripción" />
-            <ControllerText name="shortName" label="Nombre corto" />
+            {/* <ControllerText name="shortName" label="Nombre corto" /> */}
             <ControllerText type="number" name="price" label="Precio" />
+
+            {/* ********* Current state of the activity  */}
+
             <FormControl>
               <FormLabel id="radio-select-activity-status">Estado</FormLabel>
               <RadioGroup
@@ -59,6 +65,15 @@ const ActivityForm = ({
                 ))}
               </RadioGroup>
             </FormControl>
+
+            {/* ********* Activity schedule */}
+
+            <ScheduleForm
+              onChange={(schedule) => {
+                methods.setValue('schedule', schedule)
+              }}
+            />
+
             <Box className="flex w-full justify-around ">
               {onCancel && (
                 <Button

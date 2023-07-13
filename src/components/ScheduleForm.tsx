@@ -12,8 +12,10 @@ import { WEEK_DAYS } from '@/CONST/dateLabels'
 
 const ScheduleForm = ({
   onSubmit,
-  schedule
+  schedule,
+  onChange
 }: {
+  onChange?: (schedule: Schedule) => void
   schedule?: Schedule
   onSubmit?: (schedule: Schedule) => void
 }) => {
@@ -31,6 +33,7 @@ const ScheduleForm = ({
 
   const handleChange = (day: string, time: string | null) => {
     _setSchedule({ ..._schedule, [day]: time })
+    onChange?.({ ..._schedule, [day]: time })
   }
   const _onSubmit = () => {
     onSubmit?.(_schedule)
@@ -48,17 +51,19 @@ const ScheduleForm = ({
           }}
         />
       ))}
-      <Box className="flex w-full justify-center">
-        <Button
-          variant="outlined"
-          onClick={(e) => {
-            e.preventDefault()
-            _onSubmit()
-          }}
-        >
-          Guardar
-        </Button>
-      </Box>
+      {!onChange && (
+        <Box className="flex w-full justify-center">
+          <Button
+            variant="outlined"
+            onClick={(e) => {
+              e.preventDefault()
+              _onSubmit()
+            }}
+          >
+            Guardar
+          </Button>
+        </Box>
+      )}
     </div>
   )
 }

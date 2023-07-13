@@ -1,8 +1,6 @@
 'use client'
 
-import { USER_ROL } from '@/CONST/user'
 import ParkActivities from '@/components/ParkActivities'
-import ParkAreas from '@/components/ParkAreas'
 import useUser from '@/hooks/useUser'
 
 const BB = () => {
