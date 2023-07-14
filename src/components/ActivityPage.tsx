@@ -8,6 +8,7 @@ import { listenActivity, updateActivity } from '@/firebase/activities'
 import WeekScheduleSection from './WeekScheduleSection'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
+import WeekSchedule from './WeekSchedule'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -49,10 +50,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       </Container>
 
       <Container component={'section'}>
-        <WeekScheduleSection
-          schedule={activity.schedule}
-          setSchedule={(newSchedule) => handleUpdateSchedule(newSchedule)}
-        />
+        <WeekSchedule schedule={activity.schedule} />
       </Container>
 
       {/* 

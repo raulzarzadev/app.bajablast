@@ -28,6 +28,7 @@ const ActivityForm = ({
     onSubmit?.(data)
   }
   const formValues = methods.watch()
+  console.log({ activity })
   return (
     <div className="my-4">
       <FormProvider {...methods}>
@@ -69,6 +70,7 @@ const ActivityForm = ({
             {/* ********* Activity schedule */}
 
             <ScheduleForm
+              schedule={formValues.schedule}
               onChange={(schedule) => {
                 methods.setValue('schedule', schedule)
               }}
