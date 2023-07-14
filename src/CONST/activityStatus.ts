@@ -16,7 +16,7 @@ export enum ACTIVITY_STATUSES {
 export const ACTIVITY_STATUS: Record<ACTIVITY_STATUSES, { label: string }> = {
   [ACTIVITY_STATUSES.OPEN]: { label: 'Abierto' },
   [ACTIVITY_STATUSES.CLOSED]: { label: 'Cerrado' },
-  [ACTIVITY_STATUSES.UPCOMING]: { label: 'Prioximamente' },
+  [ACTIVITY_STATUSES.UPCOMING]: { label: 'Proximamente' },
   [ACTIVITY_STATUSES.HIDDEN]: { label: 'Oculto' }
 } as const
 

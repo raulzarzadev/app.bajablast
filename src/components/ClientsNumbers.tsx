@@ -20,11 +20,13 @@ import useModal from '@/hooks/useModal'
 import Modal from './Modal'
 import CurrencySpan from './CurrencySpan'
 import AgeSpan from './AgeSpan'
+import LinkApp from './LinkApp'
 
 const ClientsNumbers = () => {
   const { clients } = useClients()
 
   const groupedClients = groupClients(clients || [])
+  console.log({ groupedClients })
   return (
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
@@ -44,7 +46,7 @@ const ClientsNumbers = () => {
             {Object.entries(groupedClients).map(([activityName, users]) => (
               <UsersRow
                 key={activityName}
-                activityName={activityName}
+                activity={{ name: activityName, id: users.activity.id }}
                 users={users}
               ></UsersRow>
             ))}
@@ -59,15 +61,20 @@ const ClientsNumbers = () => {
 
 const UsersRow = ({
   users,
-  activityName
+  activity
 }: {
   users: GroupedData[string]
-  activityName: string
+  activity: {
+    name: string
+    id: string
+  }
 }) => {
   const { total, today, thisWeek, thisMonth } = users
   return (
     <TableRow>
-      <TableCell>{activityName}</TableCell>
+      <TableCell>
+        <LinkApp href={`/bb/${activity?.id}`} label={activity?.name} />
+      </TableCell>
       <TableCell>{total?.length}</TableCell>
       <TableCell>
         <UsersDetails users={today} />
@@ -124,6 +131,10 @@ const UsersDetails = ({ users = [] }: { users: any }) => {
 }
 type GroupedData = {
   [key: string]: {
+    activity: {
+      name: string
+      id: string
+    }
     total: any[]
     today: any[]
     thisWeek: any[]
@@ -133,9 +144,13 @@ type GroupedData = {
 const groupClients = (clients: Client[]): GroupedData =>
   clients?.reduce((groups: { [key: string]: any }, client) => {
     const activityName = client?.activity?.name || '' // Obtener el nombre de la actividad
-
+    const activity = {
+      name: activityName,
+      id: client?.activity?.id
+    }
     if (!groups[activityName]) {
       groups[activityName] = {
+        activity,
         total: [],
         today: [],
         thisWeek: [],
@@ -165,9 +180,13 @@ const groupClients = (clients: Client[]): GroupedData =>
     if (client.friends) {
       client.friends.forEach((friend) => {
         const friendActivityName = friend?.activity?.name || ''
-
+        const friendActivity = {
+          name: friendActivityName,
+          id: friend?.activity?.id
+        }
         if (!groups[friendActivityName]) {
           groups[friendActivityName] = {
+            activity: friendActivity,
             total: [],
             today: [],
             thisWeek: [],
