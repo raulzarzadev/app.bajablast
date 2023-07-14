@@ -12,12 +12,14 @@ import SignatureCanvas from 'react-signature-canvas'
 import Image from 'next/image'
 
 const ModalAcceptTerms = ({
-  setSignature
+  setSignature,
+  signature
 }: {
+  signature?: string | null
   setSignature?: (signature: string | null) => void
 }) => {
-  const [termsAccepted, setTermsAccepted] = useState(false)
-  const [_signature, _setSignature] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(!!signature)
+  const [_signature, _setSignature] = useState<string | null>(signature || null)
   const termsAndCondsModal = useModal()
   const signatureRef = useRef<any>()
   const handleClearSignature = () => {
@@ -28,6 +30,7 @@ const ModalAcceptTerms = ({
     _setSignature(signature)
     setSignature?.(signature)
   }
+  console.log({ _signature })
 
   return (
     <div className="w-full">
@@ -83,7 +86,6 @@ const ModalAcceptTerms = ({
                 e.preventDefault()
                 handleClearSignature()
                 handleSetSignature(null)
-                methods.setValue('termsAccepted', false)
               }}
               color="success"
             >
@@ -98,7 +100,6 @@ const ModalAcceptTerms = ({
                   .toDataURL('image/png')
 
                 handleSetSignature(image)
-                methods.setValue('termsAccepted', true)
               }}
               penColor="green"
               ref={(ref) => (signatureRef.current = ref)}
@@ -109,22 +110,24 @@ const ModalAcceptTerms = ({
               }}
             />
           </Box>
-          {_signature && (
-            <Image
-              src={_signature}
-              width={80}
-              height={80}
-              alt="signature"
-              className="w-[80px] h-[80px]"
-            />
-          )}
+          <Box className="flex justify-center w-full">
+            {_signature && (
+              <Image
+                src={_signature}
+                width={80}
+                height={80}
+                alt="signature"
+                className="w-[80px] h-[80px]"
+              />
+            )}
+          </Box>
 
           <FormControlLabel
             control={
               <Checkbox
                 checked={!!termsAccepted}
-                {...methods.register('termsAccepted')}
                 disabled={!_signature}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
               />
             }
             label={'Acepto los terminos y condiciones descritos arriba'}

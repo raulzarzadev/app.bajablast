@@ -108,7 +108,7 @@ const ReconciliationInfo = ({
   return (
     <Box>
       <CashboxReconciliationCard reconciliation={reconciliation} />
-      <Box className="flex w-full justify-evenly">
+      <Box className="flex w-full justify-evenly my-4">
         <LoadingButton
           label="Guardar"
           icon="save"
@@ -123,7 +123,6 @@ const ReconciliationInfo = ({
             handlePrint()
           }}
         ></LoadingButton> */}
-        R
       </Box>
     </Box>
   )
@@ -169,7 +168,7 @@ const ReconciliationForm = ({
             <TextField
               {...params}
               label={'Seleccionar cajero'}
-              placeholder="Seleccionar cajero"
+              placeholder="Todos los cajeros"
             />
           )}
           isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -205,7 +204,7 @@ const ReconciliationForm = ({
             onChange={(value: any) => methods.setValue('to', value)}
           />
         </Box>
-        <Box className="flex w-full justify-end">
+        <Box className="flex w-full justify-end my-8">
           <LoadingButton
             label="Generar"
             onClick={methods.handleSubmit(_onSubmit)}

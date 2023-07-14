@@ -33,7 +33,8 @@ const CashboxReconciliationCard = ({
       <Typography className="text-center">
         Cajero: {cashier ? cashier.name : 'Todos'}
       </Typography>
-      <Box className="w-1/2 text-end">
+      <Box className="w-1/2 text-end my-4">
+        <Typography className="font-bold">Actividades</Typography>
         {Object.entries(activities || {}).map(([name, activities]) => (
           <Box key={name}>
             <Typography>
@@ -53,7 +54,7 @@ const CashboxReconciliationCard = ({
         <Typography>
           Tarjeta: <CurrencySpan quantity={totalCard} />
         </Typography>
-        <Typography className="text-center" variant="h4">
+        <Typography className="text-center" variant="h5">
           Total: <CurrencySpan quantity={total} />
         </Typography>
       </Box>

@@ -55,15 +55,16 @@ const ClientForm = ({
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()
   }
-  const [imageSignature, setImageSignature] = useState<string | null>(null)
+  //const [imageSignature, setImageSignature] = useState<string | null>(null)
 
   const onSubmit = (data: NewClient) => {
     const clientData = {
-      ...data,
-      signature: imageSignature
+      ...data
+      //signature: imageSignature
     }
     handleSubmit?.(clientData)
   }
+  console.log({ clientsignature: client?.signature })
   return (
     <FormProvider {...methods}>
       <form
@@ -104,13 +105,6 @@ const ClientForm = ({
 
         {/** **************************************** Medic information */}
         <ModalMedicInfo />
-        {/** **************************************** Terms and conditions */}
-        <ModalAcceptTerms
-          setSignature={(signature) => {
-            setImageSignature(signature)
-            methods.setValue('termsAccepted', !!signature)
-          }}
-        />
 
         <div className="flex justify-evenly w-full">
           <Button
