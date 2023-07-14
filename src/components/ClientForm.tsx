@@ -1,27 +1,20 @@
 import {
-  Box,
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
-  RadioGroup,
-  Typography
+  RadioGroup
 } from '@mui/material'
 import { useForm, FormProvider } from 'react-hook-form'
-import Modal from './Modal'
 import useModal from '@/hooks/useModal'
-import SignatureCanvas from 'react-signature-canvas'
-import { useContext, useId, useRef, useState } from 'react'
+import { useRef } from 'react'
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
-import ControllerCheckbox from './ControllerCheckbox'
-import Image from 'next/image'
 import ModalMedicInfo from './ModalMedicInfo'
 import { NewClient, UserType } from '@/types/user'
 import { USER_ROLES } from '@/CONST/user'
-import ModalAcceptTerms from './ModalAcceptTerms'
 
 const ClientForm = ({
   client,
@@ -64,7 +57,6 @@ const ClientForm = ({
     }
     handleSubmit?.(clientData)
   }
-  console.log({ clientsignature: client?.signature })
   return (
     <FormProvider {...methods}>
       <form
