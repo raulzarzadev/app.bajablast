@@ -15,7 +15,7 @@ const ActivityAdmin = ({ activity }: { activity?: ParkActivity }) => {
         Sección Admin
       </Typography>
       <ActivityInfo activity={activity} />
-      <ClientsChart activityId={activity?.id} />
+      <ClientsChart activityId={activity?.id || ''} />
     </div>
   )
 }

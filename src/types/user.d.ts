@@ -45,5 +45,6 @@ export type Payment = {
 }
 
 export interface Client extends NewClient {
+  paymentDate?: number | Date | Timestamp | null | undefined
   id: string
 }
