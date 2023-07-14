@@ -70,6 +70,8 @@ const CashboxReconciliation = () => {
           e.preventDefault()
           modal.handleOpen()
         }}
+        variant="outlined"
+        className="my-4"
       >
         Nuevo corte
       </Button>
@@ -99,7 +101,6 @@ const ReconciliationInfo = ({
   const handleSave = async () => {
     try {
       const res = await createReconciliation(reconciliation)
-      console.log({ res })
       return
     } catch (error) {
       console.error(error)

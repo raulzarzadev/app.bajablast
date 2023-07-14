@@ -19,12 +19,20 @@ import useCollaborators from '@/hooks/useCollaborators'
 import Modal from './Modal'
 import useModal from '@/hooks/useModal'
 import CashboxReconciliationCard from './CashboxReconciliationCard'
+import { NewClient } from '@/types/user'
 
 const CashboxReconciliationsList = () => {
   const [reconciliations, setReconciliations] = useState<Reconciliation[]>([])
   useEffect(() => {
     listenReconciliations(setReconciliations)
   }, [])
+  const sortByCreatedDate = (a: Reconciliation, b: Reconciliation) => {
+    const aCreatedAt = asDate(a.created?.at)
+    const bCreatedAt = asDate(b.created?.at)
+    const aDate = aCreatedAt?.getTime() || 0
+    const bDate = bCreatedAt?.getTime() || 0
+    return bDate - aDate
+  }
   return (
     <div>
       <Typography>Lista de cortes previos</Typography>
@@ -41,7 +49,7 @@ const CashboxReconciliationsList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {reconciliations.map((reconciliation) => (
+              {reconciliations.sort(sortByCreatedDate).map((reconciliation) => (
                 <ReconciliationRow
                   reconciliation={reconciliation}
                   key={reconciliation?.id}
@@ -72,7 +80,9 @@ const ReconciliationRow = ({
         }}
       >
         <TableCell>
-          {dateFormat(asDate(reconciliation.created.at), 'dd/MMM/yy HH:mm')}
+          <Typography className="whitespace-nowrap">
+            {dateFormat(asDate(reconciliation.created.at), 'dd/MMM/yy HH:mm')}
+          </Typography>
         </TableCell>
         <TableCell>
           <Typography className="whitespace-nowrap">
