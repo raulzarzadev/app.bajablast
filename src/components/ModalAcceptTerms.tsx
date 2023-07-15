@@ -30,7 +30,6 @@ const ModalAcceptTerms = ({
     _setSignature(signature)
     setSignature?.(signature)
   }
-  console.log({ _signature })
 
   return (
     <div className="w-full">

@@ -19,9 +19,6 @@ const FinishNewClient = ({
     0
   )
 
-  console.log({ clients })
-  console.log({ client })
-
   return (
     <Box component={'section'}>
       <table className="w-full text-center">

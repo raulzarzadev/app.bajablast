@@ -108,9 +108,7 @@ const ClientForm = ({
             Limpiar
           </Button>
           <Button
-            disabled={
-              !formValues.termsAccepted && formValues.medicalInfoUpdated
-            }
+            disabled={!formValues.medicalInfoUpdated}
             // LinkComponent={Link}
             type="submit"
           >
