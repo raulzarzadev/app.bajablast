@@ -10,6 +10,7 @@ import Modal from './Modal'
 import { useRef, useState } from 'react'
 import SignatureCanvas from 'react-signature-canvas'
 import Image from 'next/image'
+import useParkConfig from '@/hooks/useParkConfig'
 
 const ModalAcceptTerms = ({
   setSignature,
@@ -30,6 +31,8 @@ const ModalAcceptTerms = ({
     _setSignature(signature)
     setSignature?.(signature)
   }
+  const { parkConfig } = useParkConfig()
+  const termAndConds = parkConfig?.termsAndConds || ''
 
   return (
     <div className="w-full">
@@ -69,13 +72,7 @@ const ModalAcceptTerms = ({
             variant="body2"
             className="whitespace-pre-line"
           >
-            {`
-              1.- Al acceder al parque acepto los riesgos inneretes que conlleva
-              el realizar las actividades 
-              2.- Acepto hacer caso a todos los
-              instructores
-              etc...
-              `}
+            {termAndConds}
           </Typography>
           <Box className="flex w-full justify-between -mb-4">
             <Typography className="">Firma:</Typography>

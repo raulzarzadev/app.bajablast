@@ -24,6 +24,10 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
   }
   const methods = useForm({ defaultValues: config })
 
+  const termAndCondsRows = Math.floor(
+    methods.watch('termsAndConds').length / 29
+  )
+  console.log(termAndCondsRows)
   return (
     <div>
       <Typography variant="h5" className="text-center mt-8">
@@ -42,6 +46,18 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
         <ScheduleForm
           schedule={methods.watch('schedule')}
           onChange={(schedule) => methods.setValue('schedule', schedule)}
+        />
+
+        <TextField
+          multiline
+          {...methods.register('address')}
+          label="Dirección"
+        />
+        <TextField
+          multiline
+          rows={termAndCondsRows}
+          {...methods.register('termsAndConds')}
+          label="Terinos y condiciones"
         />
 
         <LoadingButton

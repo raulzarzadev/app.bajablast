@@ -7,6 +7,8 @@ export type DTO_ParkConfiguration = {
   schedule: Schedule
   description: string
   selected?: boolean
+  address: string
+  termsAndConds: string
 }
 
 export type ParkConfiguration = DTO_ParkConfiguration & BaseType

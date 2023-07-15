@@ -32,6 +32,7 @@ const SelectParkActivity = ({
       <Box className="">
         {clients?.map((client, i) => (
           <ClientSelectRow
+            key={client?.id}
             onSelectActivity={(activityId) => {
               const aux = [...clients]
               const activity = activities.find((a) => a?.id === activityId)
@@ -55,7 +56,6 @@ const SelectParkActivity = ({
             }}
             client={client}
             activities={activities}
-            key={client?.id}
           />
         ))}
       </Box>
