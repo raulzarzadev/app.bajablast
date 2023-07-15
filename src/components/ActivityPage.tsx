@@ -1,11 +1,10 @@
 'use client'
 import useUser from '@/hooks/useUser'
 import { ParkActivity, Schedule } from '@/types/activities'
-import { Box, Container, Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
 import { listenActivity, updateActivity } from '@/firebase/activities'
-import WeekScheduleSection from './WeekScheduleSection'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
 import WeekSchedule from './WeekSchedule'
@@ -33,7 +32,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   if (activity === undefined) return <>Loading...</>
   return (
     <>
-      <Container>
+      <div>
         <Typography variant="h4" className="text-center">
           {activity?.name}
         </Typography>
@@ -47,7 +46,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
         >
           {activity?.description}
         </Typography>
-      </Container>
+      </div>
 
       <Container component={'section'}>
         <WeekSchedule schedule={activity.schedule} />

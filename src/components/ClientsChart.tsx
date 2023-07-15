@@ -23,7 +23,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Label
 } from 'recharts'
 
 const ClientsChart = ({ activityId }: { activityId: string }) => {
@@ -42,15 +43,33 @@ const ClientsChart = ({ activityId }: { activityId: string }) => {
       <Typography variant="h5" className="text-center">
         Hoy{' '}
       </Typography>
-      <Chart data={clientsToday} color="#820a9d" />
+      <Chart
+        data={clientsToday}
+        color="#820a9d"
+        YLabel="Cantidad de U"
+        XLabel="Hora del día"
+        lineName="Usuarios"
+      />
       <Typography variant="h5" className="text-center">
         Esta semana
       </Typography>
-      <Chart data={clientsWeek} color="#82ca9d" />
+      <Chart
+        data={clientsWeek}
+        color="#82ca9d"
+        YLabel="Cantidad de U"
+        XLabel="Dias de la semana"
+        lineName="Usuarios"
+      />
       <Typography variant="h5" className="text-center">
         Desde siempre
       </Typography>
-      <Chart data={fromEver} color="#82ca9d" />
+      <Chart
+        data={fromEver}
+        color="#82ca9d"
+        YLabel="Cantidad de U"
+        XLabel="Día"
+        lineName="Usuarios"
+      />
       {/*
       <Typography>Clientes ultimos 15 días</Typography>
       <Chart data={clientsLast15Days} color="#820a9d" />
@@ -60,7 +79,19 @@ const ClientsChart = ({ activityId }: { activityId: string }) => {
   )
 }
 
-const Chart = ({ data, color }: { data: any[]; color: `#${string}` }) => {
+const Chart = ({
+  data,
+  color,
+  YLabel,
+  XLabel,
+  lineName
+}: {
+  data: any[]
+  color: `#${string}`
+  YLabel?: string
+  lineName?: string
+  XLabel?: string
+}) => {
   return (
     <Container className="h-56">
       <ResponsiveContainer width="100%" height="100%">
@@ -72,15 +103,18 @@ const Chart = ({ data, color }: { data: any[]; color: `#${string}` }) => {
             top: 5,
             right: 30,
             left: 20,
-            bottom: 5
+            bottom: 20
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" />
-          <YAxis />
+          <XAxis dataKey="time">
+            <Label value={XLabel} offset={-10} position="insideBottom" />
+          </XAxis>
+          <YAxis label={{ value: YLabel, angle: -90 }} />
           <Tooltip />
-          <Legend />
+          <Legend verticalAlign="top" />
           <Line
+            name={lineName}
             type="monotone"
             dataKey="quantity"
             stroke={color}
