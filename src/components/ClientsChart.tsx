@@ -65,9 +65,9 @@ const ClientsChart = ({ activityId }: { activityId: string }) => {
       </Typography>
       <Chart
         data={fromEver}
-        color="#82ca9d"
+        color="#82aafd"
         YLabel="Cantidad de U"
-        XLabel="Día"
+        XLabel="Día del año"
         lineName="Usuarios"
       />
       {/*

@@ -15,22 +15,23 @@ import {
 } from '@mui/material'
 import { isThisMonth, isThisWeek, isToday } from 'date-fns'
 import asDate from '@/utils/asDate'
-import { Client } from '@/types/user'
+import { Client, Friend } from '@/types/user'
 import useModal from '@/hooks/useModal'
 import Modal from './Modal'
-import CurrencySpan from './CurrencySpan'
 import AgeSpan from './AgeSpan'
 import LinkApp from './LinkApp'
+import ClientList from './ClientList'
+import UsersList from './UsersList'
 
 const ClientsNumbers = () => {
   const { clients } = useClients()
 
   const groupedClients = groupClients(clients || [])
-  console.log({ groupedClients })
+
   return (
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
-      <Typography variant="h4">Usuarios</Typography>
+      <Typography variant="h4">Usuarios por actividad</Typography>
       <TableContainer component={Paper}>
         <Table size="small" className="mx-auto">
           <TableHead>
@@ -53,9 +54,26 @@ const ClientsNumbers = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
+      <Typography variant="h4">Lista de clientes</Typography>
+      <ClientList />
+      <Typography variant="h4">Lista de usuarios</Typography>
+      <UsersList users={allUsersFromClients(clients)} />
       {/* <ClientsChart /> */}
     </div>
+  )
+}
+
+const allUsersFromClients = (clients: Client[] = []): (Client | Friend)[] => {
+  return (
+    clients?.flatMap((client) => {
+      return [
+        client,
+        ...(client?.friends?.map((friend) => ({
+          ...friend,
+          paymentDate: client?.payment?.created?.at
+        })) || [])
+      ]
+    }) || []
   )
 }
 

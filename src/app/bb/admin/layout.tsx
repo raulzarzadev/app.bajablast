@@ -24,10 +24,7 @@ const AdminLayout = ({ children }: { children?: ReactNode }) => {
       label: 'Colaboradores',
       segment: 'collaborators'
     },
-    {
-      label: 'Clientes',
-      segment: 'clients'
-    },
+
     {
       label: 'Parque',
       segment: 'park'
