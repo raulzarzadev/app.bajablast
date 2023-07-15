@@ -9,7 +9,17 @@ import { useEffect, useState } from 'react'
 import TimePicker from './InputTimeRange'
 import AppIcon from './AppIcon'
 import { WEEK_DAYS } from '@/CONST/dateLabels'
+import useParkConfig from '@/hooks/useParkConfig'
 
+const emptySchedule = {
+  Monday: null,
+  Tuesday: null,
+  Wednesday: null,
+  Thursday: null,
+  Friday: null,
+  Saturday: null,
+  Sunday: null
+}
 const ScheduleForm = ({
   onSubmit,
   schedule,
@@ -20,15 +30,7 @@ const ScheduleForm = ({
   onSubmit?: (schedule: Schedule) => void
 }) => {
   const [_schedule, _setSchedule] = useState<Schedule>(
-    schedule || {
-      Monday: null,
-      Tuesday: null,
-      Wednesday: null,
-      Thursday: null,
-      Friday: null,
-      Saturday: null,
-      Sunday: null
-    }
+    schedule || emptySchedule
   )
 
   const handleChange = (day: string, time: string | null) => {
@@ -38,9 +40,11 @@ const ScheduleForm = ({
   const _onSubmit = () => {
     onSubmit?.(_schedule)
   }
+
   return (
     <div>
       <Typography>Horario</Typography>
+
       {Object.entries(WEEK_DAYS).map(([key, value]) => (
         <DaySchedule
           key={key}

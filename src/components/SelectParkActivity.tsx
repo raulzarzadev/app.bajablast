@@ -20,9 +20,14 @@ const SelectParkActivity = ({
   const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
     return clients?.every((client) => !!client?.activity?.name)
   }
-
+  const openActivitiesAtFirst = (a: ParkActivity, b: ParkActivity) => {
+    if (a.status === 'OPEN') return -1
+    return 1
+  }
   useEffect(() => {
-    listenActivities(setActivities)
+    listenActivities((activities: ParkActivity[]) =>
+      setActivities(activities.sort(openActivitiesAtFirst))
+    )
   }, [])
 
   const [activities, setActivities] = useState<ParkActivity[]>([])
@@ -102,9 +107,9 @@ const ClientSelectRow = ({
       <Typography variant="h6" className="text-start">
         {client?.name || ''}
       </Typography>
-      <div className="grid grid-flow-col overflow-x-auto h-32 gap-4 pb-2">
+      <div className="grid grid-flow-col overflow-x-auto h-32 gap-2 pb-2">
         {activities.map((activity) => (
-          <Box key={activity.id} className="w-32 h-full">
+          <Box key={activity.id} className="w-28 h-full">
             <SelectActivityCard
               activity={activity}
               onClick={() => onSelectActivity(activity.id)}
@@ -153,11 +158,11 @@ const SelectActivityCard = ({
         <Typography variant="subtitle1" component={'p'}>
           {activity.name}
         </Typography>
-        <Typography variant="caption" component={'p'}>
+        <Typography component={'p'} className="text-lg">
           <CurrencySpan quantity={activity.price} />
         </Typography>
-        <Typography variant="caption" component={'p'}>
-          {ACTIVITY_STATUS[activity.status].label}
+        <Typography component={'p'} className="truncate text-xl">
+          <span>{ACTIVITY_STATUS[activity.status].label}</span>
         </Typography>
       </div>
     </Box>

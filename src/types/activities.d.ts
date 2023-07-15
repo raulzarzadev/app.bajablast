@@ -22,6 +22,7 @@ export interface ParkActivity extends Partial<BaseType> {
   name: string
   description: string
   schedule: Schedule
+  scheduleAsPark: boolean
   price: number
   operators?: ActivityOperator[]
   status: ActivityStatus

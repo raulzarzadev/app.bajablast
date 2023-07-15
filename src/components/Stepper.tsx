@@ -16,7 +16,7 @@ export default function Stepper({
     React.useContext(StepperContext)
 
   return (
-    <Box sx={{ width: '100%' }} className="max-w-md mx-auto">
+    <Box sx={{ width: '100%' }} className="max-w-xl mx-auto">
       <ManageStepper steps={steps} />
       <MUIStepper activeStep={activeStep} alternativeLabel className="mb-4">
         {steps.map((label) => (

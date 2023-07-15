@@ -8,6 +8,7 @@ import { listenActivity, updateActivity } from '@/firebase/activities'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
 import WeekSchedule from './WeekSchedule'
+import useParkConfig from '@/hooks/useParkConfig'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -29,7 +30,12 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       console.error(error)
     }
   }
+  const { parkConfig } = useParkConfig()
+  const parkSchedule = parkConfig?.schedule
   if (activity === undefined) return <>Loading...</>
+  const activitySchedule = activity.scheduleAsPark
+    ? parkSchedule
+    : activity.schedule
   return (
     <>
       <div>
@@ -49,7 +55,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       </div>
 
       <Container component={'section'}>
-        <WeekSchedule schedule={activity.schedule} />
+        <WeekSchedule schedule={activitySchedule} />
       </Container>
 
       {/* 

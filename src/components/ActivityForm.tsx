@@ -3,6 +3,7 @@ import { ParkActivity } from '@/types/activities'
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -28,7 +29,8 @@ const ActivityForm = ({
     onSubmit?.(data)
   }
   const formValues = methods.watch()
-  console.log({ activity })
+  const scheduleAsPark = !!formValues.scheduleAsPark
+
   return (
     <div className="my-4">
       <FormProvider {...methods}>
@@ -68,7 +70,12 @@ const ActivityForm = ({
             </FormControl>
 
             {/* ********* Activity schedule */}
-
+            <FormControlLabel
+              checked={scheduleAsPark}
+              {...methods.register('scheduleAsPark')}
+              label="Igual al del parque?"
+              control={<Checkbox />}
+            />
             <ScheduleForm
               schedule={formValues.schedule}
               onChange={(schedule) => {
