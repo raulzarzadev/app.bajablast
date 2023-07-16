@@ -22,6 +22,7 @@ import asNumber from '@/utils/asNumber'
 import ModalPayment from './ModalPayment'
 import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
+import { paymentMethods } from '@/CONST/paymentMethods'
 
 const ClientsTable = ({
   clients,
@@ -83,6 +84,7 @@ const ClientsTable = ({
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
+            <TableCell align="center">Metodo</TableCell>
             <TableCell align="center">Ops</TableCell>
           </TableRow>
         </TableHead>
@@ -184,6 +186,12 @@ const ClientsRow = ({
           </span>
         )}
         <CurrencySpan quantity={total()} />{' '}
+      </TableCell>
+      <TableCell>
+        {
+          paymentMethods.find(({ key }) => key === client.payment?.method)
+            ?.label
+        }
       </TableCell>
 
       <TableCell>

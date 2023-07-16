@@ -39,7 +39,9 @@ const ActivityForm = ({
     const linesJumps = formValues.recommendations?.split('\n').length || 3
     setRecommendationsRows(linesJumps)
   }, [formValues.recommendations])
-  const handleDelete = () => {}
+  const handleDelete = () => {
+    console.log('delete activitity')
+  }
   return (
     <div className="my-4">
       <FormProvider {...methods}>
