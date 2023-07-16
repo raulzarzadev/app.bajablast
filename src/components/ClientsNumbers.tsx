@@ -178,10 +178,11 @@ const groupClients = (clients: Client[]): GroupedData =>
 
     groups[activityName].total.push(client) // Agregar el objeto al grupo total
 
-    // format a date if not exist make it today
     const clientPaymentDate =
-      (client.payment?.created?.at && asDate(client.payment?.created?.at)) ||
-      new Date()
+      client.payment?.created?.at && asDate(client.payment?.created?.at)
+    if (!clientPaymentDate) {
+      return groups
+    }
 
     if (isToday(clientPaymentDate)) {
       groups[activityName].today.push(client) // Agregar el objeto al grupo today
