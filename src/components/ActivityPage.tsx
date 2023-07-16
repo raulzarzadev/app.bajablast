@@ -1,7 +1,7 @@
 'use client'
 import useUser from '@/hooks/useUser'
 import { ParkActivity, Schedule } from '@/types/activities'
-import { Container, Typography } from '@mui/material'
+import { Box, Container, Paper, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
 import { listenActivity, updateActivity } from '@/firebase/activities'
@@ -9,6 +9,7 @@ import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
 import WeekSchedule from './WeekSchedule'
 import useParkConfig from '@/hooks/useParkConfig'
+import CurrencySpan from './CurrencySpan'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
@@ -42,6 +43,11 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
         <Typography variant="h4" className="text-center">
           {activity?.name}
         </Typography>
+        <Box>
+          <Typography className="text-center text-2xl">
+            <CurrencySpan quantity={activity.price} />
+          </Typography>
+        </Box>
         <Typography variant="h6" className="text-center ">
           {ACTIVITY_STATUS[activity?.status]?.label}
         </Typography>
@@ -57,6 +63,12 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
       <Container component={'section'}>
         <WeekSchedule schedule={activitySchedule} />
       </Container>
+
+      <Box className="max-w-lg  mx-auto">
+        <Typography className="whitespace-pre-wrap mx-auto">
+          {activity.recommendations}
+        </Typography>
+      </Box>
 
       {/* 
       <Container>

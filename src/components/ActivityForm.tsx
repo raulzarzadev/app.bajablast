@@ -8,12 +8,14 @@ import {
   FormControlLabel,
   FormLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
+  TextField
 } from '@mui/material'
 import { FormProvider, useForm } from 'react-hook-form'
 import ControllerText from './ControllerText'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import ScheduleForm from './ScheduleForm'
+import { useEffect, useRef, useState } from 'react'
 
 const ActivityForm = ({
   onSubmit,
@@ -30,7 +32,14 @@ const ActivityForm = ({
   }
   const formValues = methods.watch()
   const scheduleAsPark = !!formValues.scheduleAsPark
+  const recommendationsRef = useRef(null)
 
+  const [recommendationsRows, setRecommendationsRows] = useState(3)
+  useEffect(() => {
+    const linesJumps = formValues.recommendations?.split('\n').length || 3
+    setRecommendationsRows(linesJumps)
+  }, [formValues.recommendations])
+  const handleDelete = () => {}
   return (
     <div className="my-4">
       <FormProvider {...methods}>
@@ -83,7 +92,26 @@ const ActivityForm = ({
               }}
             />
 
+            <TextField
+              multiline
+              rows={recommendationsRows}
+              placeholder="Recomendaciones"
+              {...methods.register('recommendations')}
+              inputRef={recommendationsRef}
+            />
+
             <Box className="flex w-full justify-around ">
+              <Button
+                variant="outlined"
+                type="submit"
+                color="error"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleDelete()
+                }}
+              >
+                Eliminar
+              </Button>
               {onCancel && (
                 <Button
                   onClick={(e) => {
@@ -96,6 +124,7 @@ const ActivityForm = ({
                   Cancelar
                 </Button>
               )}
+
               <Button variant="outlined" type="submit">
                 Guardar
               </Button>

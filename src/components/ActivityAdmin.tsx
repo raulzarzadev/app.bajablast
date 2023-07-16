@@ -80,15 +80,7 @@ const ActivityDetails = ({
         </IconButton>
       )}
       <Box>
-        <Typography>Nombre: {activity?.name}</Typography>
-        <Typography>Nombre Corto: {activity?.shortName}</Typography>
-        <Typography>Descripción: {activity?.description}</Typography>
-        <Typography>
-          Precio: <CurrencySpan quantity={activity?.price} />
-        </Typography>
-        <Typography>
-          Estado actual: {ACTIVITY_STATUS[activity?.status || 'UPCOMING'].label}
-        </Typography>
+        <Typography variant="h6">Editar</Typography>
       </Box>
     </Box>
   )

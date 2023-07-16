@@ -26,6 +26,7 @@ export interface ParkActivity extends Partial<BaseType> {
   price: number
   operators?: ActivityOperator[]
   status: ActivityStatus
+  recommendations?: string
 }
 
 export type ActivityOperator = {
