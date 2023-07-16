@@ -217,6 +217,7 @@ const groupClientsByDay = (
   const groupedData: { time: string; quantity: number }[] = []
 
   clientData?.forEach((client) => {
+    if (!client.payment) return
     const clientPaymentDate = dateFormat(
       asDate(client.payment?.created.at),
       'dd-MMM'
@@ -291,8 +292,8 @@ const groupClientsByActivityId = (
   }
 
   clients?.forEach((client) => {
-    const clientPaymentDate =
-      client.payment?.created?.at && asDate(client.payment?.created?.at)
+    if (!client.payment) return
+    const clientPaymentDate = asDate(client.payment?.created?.at)
     if (!clientPaymentDate) return
     if (client.activity?.id === activityId) {
       groupedData.total.push(client)
