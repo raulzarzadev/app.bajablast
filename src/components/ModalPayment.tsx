@@ -7,6 +7,7 @@ import asNumber from '@/utils/asNumber'
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -27,6 +28,8 @@ import { USER_ROL } from '@/CONST/user'
 import useParkConfig from '@/hooks/useParkConfig'
 import UsersList from './UsersList'
 import { getActivity } from '@/firebase/activities'
+
+import useCollaborators from '@/hooks/useCollaborators'
 const activityRequireInsurance = async (activityId?: string) => {
   if (activityId)
     return await getActivity(activityId).then((activity) => {
@@ -96,6 +99,10 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   }
 
   const amountInMXN = paymentMethod === 'usd' ? amount * USD_PRICE : amount
+
+  const handleSetAsCortesia = (isFree: boolean) => {
+    setDiscount(isFree ? 100 : 0)
+  }
   return (
     <>
       <Button
@@ -149,6 +156,17 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                 <Typography variant="h5" className="text-center">
                   Total: <CurrencySpan quantity={total} />
                 </Typography>
+              </Box>
+
+              <Box className="justify-end flex w-full">
+                <FormControlLabel
+                  onChange={(e) => {
+                    //@ts-ignore
+                    handleSetAsCortesia(e.target?.checked as boolean)
+                  }}
+                  label="Es cortesia"
+                  control={<Checkbox />}
+                />
               </Box>
 
               <Box className="flex w-full justify-center">
@@ -253,6 +271,7 @@ const AmountInfo = ({
   payment?: NewClient['payment']
 }) => {
   const total = addDiscount(subtotal, discount)
+  const { collaborators } = useCollaborators()
   return (
     <>
       {payment ? (
@@ -263,16 +282,29 @@ const AmountInfo = ({
               quantity={addDiscount(payment.amount, payment.discount)}
             />
           </Typography>
+          {payment.discount > 0 && (
+            <p>
+              <span>Descuento:</span>
+              <Typography color={'green'} component={'span'}>
+                -{payment.discount}%
+              </Typography>
+            </p>
+          )}
           <span className="text-sm font-normal">
             Metodo de pago:{' '}
             {paymentMethods.find((p) => p.key === payment.method)?.label}
-            {` ($${payment.method === 'usd' && payment.dollarPrice})`}
+            {payment.method === 'usd' && ` ($${payment.dollarPrice})`}
           </span>
           <Typography>
             {dateFormat(
               asDate(payment.created.at || payment.date),
               'dd/MMM HH:mm'
             )}
+          </Typography>
+          <Typography>
+            Cobrado por:{' '}
+            {payment.created.by &&
+              collaborators?.find((c) => c.id === payment.created.by)?.name}
           </Typography>
         </Box>
       ) : (
