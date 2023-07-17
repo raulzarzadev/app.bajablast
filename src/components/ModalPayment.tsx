@@ -1,5 +1,5 @@
 'use client'
-import { PaymentMethods } from '@/CONST/paymentMethods'
+import { PaymentMethods, paymentMethods } from '@/CONST/paymentMethods'
 import useModal from '@/hooks/useModal'
 import useUser from '@/hooks/useUser'
 import { NewClient } from '@/types/user'
@@ -68,6 +68,11 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   const handleOpenEdit = () => {
     modalDetails.handleOpen()
   }
+  const handleSetAmount = (amount: number) => {
+    setAmount(amount)
+  }
+
+  const amountInMXN = paymentMethod === 'usd' ? amount * USD_PRICE : amount
   return (
     <>
       <Button
@@ -81,7 +86,6 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
       </Button>
       <Modal {...modalDetails} title={`Detalle de cliente: ${client.name}`}>
         <PaymentClientTable client={client} />
-
         <Box className="flex flex-col w-full justify-evenly mb-4">
           {!!client.payment ? (
             <>
@@ -169,16 +173,16 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                   type="number"
                   value={asNumber(amount) || ''}
                   onChange={(e) => {
-                    setAmount(asNumber(e.target.value))
+                    handleSetAmount(asNumber(e.target.value))
                   }}
                   helperText={
-                    amount < total
-                      ? `Faltan $${asNumber(total - amount).toFixed(2)}`
-                      : `Sobran $${asNumber(amount - total).toFixed(2)}`
+                    amountInMXN < total
+                      ? `Faltan $${asNumber(total - amountInMXN).toFixed(2)}`
+                      : `Sobran $${asNumber(amountInMXN - total).toFixed(2)}`
                   }
                 />
                 <LoadingButton
-                  disabled={amount < total}
+                  disabled={amountInMXN < total}
                   variant="contained"
                   color="success"
                   onClick={() => {
@@ -264,6 +268,11 @@ const AmountInfo = ({
               quantity={addDiscount(payment.amount, payment.discount)}
             />
           </Typography>
+          <span className="text-sm font-normal">
+            Metodo de pago:{' '}
+            {paymentMethods.find((p) => p.key === payment.method)?.label}
+            {` ($${payment.method === 'usd' && payment.dollarPrice})`}
+          </span>
           <Typography>
             {dateFormat(
               asDate(payment.created.at || payment.date),
