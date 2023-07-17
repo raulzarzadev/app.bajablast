@@ -27,7 +27,7 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
   const termAndCondsRows = Math.floor(
     methods.watch('termsAndConds').length / 29
   )
-  console.log(termAndCondsRows)
+
   return (
     <div>
       <Typography variant="h5" className="text-center mt-8">
@@ -58,6 +58,20 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
           rows={termAndCondsRows}
           {...methods.register('termsAndConds')}
           label="Terinos y condiciones"
+        />
+        <TextField
+          multiline
+          // rows={checkMedicalConditions}
+          // {...methods.register('checkMedicalConditions')}
+          rows={4}
+          value={methods.watch('checkMedicalConditions')?.join(',')}
+          onChange={(e) => {
+            methods.setValue(
+              'checkMedicalConditions',
+              e.target.value.split(',')
+            )
+          }}
+          label="Condiciones medicas preexistentes"
         />
 
         <LoadingButton

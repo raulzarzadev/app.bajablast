@@ -9,6 +9,7 @@ export type DTO_ParkConfiguration = {
   selected?: boolean
   address: string
   termsAndConds: string
+  checkMedicalConditions?: string[]
 }
 
 export type ParkConfiguration = DTO_ParkConfiguration & BaseType

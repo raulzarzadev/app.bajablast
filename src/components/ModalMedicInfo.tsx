@@ -1,24 +1,35 @@
 import useModal from '@/hooks/useModal'
-import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import Modal from './Modal'
 import ControllerAutocomplete from './ControllerAutocomplete'
 import ControllerCheckbox from './ControllerCheckbox'
 import ControllerText from './ControllerText'
 import { useFormContext } from 'react-hook-form'
 import bloodTypes from '@/CONST/bloodTypes'
-import MedicalInformationIcon from '@mui/icons-material/MedicalInformation'
 import { useEffect } from 'react'
+import AppIcon from './AppIcon'
+import useParkConfig from '@/hooks/useParkConfig'
 
 const ModalMedicInfo = ({ name = '', justIcon = false }) => {
   const medicModal = useModal()
   const methods = useFormContext()
 
   const medicalInfoUpdated = methods.watch(`${name}medicalInfoUpdated`)
-  const formValues = methods.watch()
-  useEffect(() => {
-    methods.setValue(`${name}medicalInfoUpdated`, true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formValues.medicalInfo, formValues.bloodType, formValues.weight])
+  const conditionsAdded = methods.watch(`${name}medicalInfo`)
+  const handleAddCondition = (condition: string) => {
+    const addedCondition = `${conditionsAdded} ${condition},`
+    methods.setValue(`${name}medicalInfo`, addedCondition)
+  }
+  const { parkConfig } = useParkConfig()
+  const medicalConditions = [...(parkConfig?.checkMedicalConditions || [])]
   return (
     <>
       <Box className="flex w-full justify-center">
@@ -31,7 +42,7 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
               }}
               color={medicalInfoUpdated ? 'success' : 'error'}
             >
-              <MedicalInformationIcon />
+              <AppIcon icon="medicalInfo" />
             </IconButton>
           ) : (
             <Button
@@ -42,7 +53,7 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
                 medicModal.handleOpen()
               }}
               color={medicalInfoUpdated ? 'success' : 'error'}
-              endIcon={<MedicalInformationIcon />}
+              endIcon={<AppIcon icon="medicalInfo" />}
             >
               Actualizar info
             </Button>
@@ -60,6 +71,24 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
             name={`${name}bloodType`}
             label="Tipo de sangre"
           />
+
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap={'wrap'}
+            useFlexGap={true}
+          >
+            {medicalConditions.map((condition) => (
+              <Chip
+                disabled={conditionsAdded
+                  .toLowerCase()
+                  .includes(condition.toLowerCase())}
+                key={condition}
+                label={condition}
+                onClick={() => handleAddCondition(condition)}
+              />
+            ))}
+          </Stack>
 
           <ControllerText
             name={`${name}medicalInfo`}
