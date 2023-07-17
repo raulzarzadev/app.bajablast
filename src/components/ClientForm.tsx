@@ -1,10 +1,12 @@
 import {
   Button,
+  Chip,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Stack
 } from '@mui/material'
 import { useForm, FormProvider } from 'react-hook-form'
 import useModal from '@/hooks/useModal'
@@ -57,6 +59,15 @@ const ClientForm = ({
     }
     handleSubmit?.(clientData)
   }
+  const handleAddEmailDomain = (domain: string) => {
+    methods.setValue('email', `${formValues.email}${domain}`)
+  }
+  const emailsDomains = [
+    '@gmail.com',
+    '@hotmail.com',
+    '@outlook.com',
+    '@live.com'
+  ]
   return (
     <FormProvider {...methods}>
       <form
@@ -91,7 +102,27 @@ const ClientForm = ({
           </FormControl>
         )}
         <ControllerText name="name" label="Nombre" />
+
         <ControllerText name="email" label="Correo" />
+        <Stack
+          className="-mt-2"
+          direction="row"
+          spacing={1}
+          flexWrap={'wrap'}
+          useFlexGap={true}
+        >
+          {formValues.email.length > 1 &&
+            emailsDomains.map((domain) => (
+              <Chip
+                key={domain}
+                disabled={formValues.email.includes('@')}
+                label={domain}
+                onClick={() => {
+                  handleAddEmailDomain(domain)
+                }}
+              />
+            ))}
+        </Stack>
         <ControllerPhone name="phone" label="telefono" />
         <ControllerDate name={'birthday'} label="Fecha de nacimiento" />
 
