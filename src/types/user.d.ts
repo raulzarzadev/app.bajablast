@@ -19,9 +19,12 @@ export interface UserType extends Partial<BaseType> {
   weight?: number
 }
 
+export type InsurancePolicyNumber = number | 'n/a'
+
 export interface Friend extends Partial<UserType> {
   activity?: ClientActivity | null
   id?: string
+  insurancePolicyNumber: InsurancePolicyNumber
 }
 
 export interface NewClient extends UserType {
@@ -31,6 +34,7 @@ export interface NewClient extends UserType {
   signature?: string | null
   friends?: Friend[]
   payment?: Payment
+  insurancePolicyNumber: InsurancePolicyNumber
 }
 
 export type Payment = {

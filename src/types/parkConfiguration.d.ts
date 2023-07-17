@@ -10,6 +10,7 @@ export type DTO_ParkConfiguration = {
   address: string
   termsAndConds: string
   checkMedicalConditions?: string[]
+  insurancePolicyCount?: number
 }
 
 export type ParkConfiguration = DTO_ParkConfiguration & BaseType

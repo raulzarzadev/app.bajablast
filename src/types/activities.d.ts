@@ -27,6 +27,7 @@ export interface ParkActivity extends Partial<BaseType> {
   operators?: ActivityOperator[]
   status: ActivityStatus
   recommendations?: string
+  requiresInsurance?: boolean
 }
 
 export type ActivityOperator = {

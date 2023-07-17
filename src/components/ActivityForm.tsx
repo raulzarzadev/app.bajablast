@@ -32,6 +32,8 @@ const ActivityForm = ({
   }
   const formValues = methods.watch()
   const scheduleAsPark = !!formValues.scheduleAsPark
+  const requiresInsurance = !!formValues?.requiresInsurance
+
   const recommendationsRef = useRef(null)
 
   const [recommendationsRows, setRecommendationsRows] = useState(3)
@@ -85,6 +87,12 @@ const ActivityForm = ({
               checked={scheduleAsPark}
               {...methods.register('scheduleAsPark')}
               label="Igual al del parque?"
+              control={<Checkbox />}
+            />
+            <FormControlLabel
+              checked={requiresInsurance}
+              {...methods.register('requiresInsurance')}
+              label="Requiere seguro?"
               control={<Checkbox />}
             />
             <ScheduleForm

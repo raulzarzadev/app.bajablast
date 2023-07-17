@@ -11,19 +11,28 @@ import AgeSpan from './AgeSpan'
 import CurrencySpan from './CurrencySpan'
 import { dateFormat } from '@/utils/utils-date'
 import asDate from '@/utils/asDate'
-import { Client, Friend } from '@/types/user'
+import { Friend, NewClient } from '@/types/user'
 
-const UsersList = ({ users = [] }: { users?: (Client | Friend)[] }) => {
+const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
+  const showPaymentDate = users.some(
+    //@ts-ignore
+    (u) => u?.payment?.created.at || u?.paymentDate
+  )
   return (
     <div>
       <TableContainer component={Paper} className="mx-auto w-full">
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell className="font-bold">Fecha Pago</TableCell>
-              <TableCell className="font-bold">Usuario</TableCell>
+              {showPaymentDate && (
+                <TableCell className="font-bold">Fecha Pago</TableCell>
+              )}
+              <TableCell className="font-bold">No.</TableCell>
+              <TableCell className="font-bold">Nombre</TableCell>
               <TableCell className="font-bold">Tipo </TableCell>
-              <TableCell className="font-bold">Pago </TableCell>
+              {showPaymentDate && (
+                <TableCell className="font-bold">Pago </TableCell>
+              )}
               <TableCell className="font-bold" align="center">
                 Edad{' '}
               </TableCell>
@@ -34,18 +43,23 @@ const UsersList = ({ users = [] }: { users?: (Client | Friend)[] }) => {
           <TableBody>
             {users?.map((user: any) => (
               <TableRow key={user.id}>
-                <TableCell>
-                  {dateFormat(
-                    asDate(user?.payment?.created?.at || user?.paymentDate)
-                  )}
-                </TableCell>
+                {showPaymentDate && (
+                  <TableCell>
+                    {dateFormat(
+                      asDate(user?.payment?.created?.at || user?.paymentDate)
+                    )}
+                  </TableCell>
+                )}
+                <TableCell>{0}</TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>
                   {user.rol === 'CLIENT' ? 'Cliente' : 'Acompañante'}
                 </TableCell>
-                <TableCell>
-                  <CurrencySpan quantity={user?.payment?.amount} />
-                </TableCell>
+                {showPaymentDate && (
+                  <TableCell>
+                    <CurrencySpan quantity={user?.payment?.amount} />
+                  </TableCell>
+                )}
                 <TableCell align="center">
                   <AgeSpan birthday={user.birthday} />
                 </TableCell>

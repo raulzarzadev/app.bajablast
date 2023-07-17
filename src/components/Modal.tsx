@@ -37,7 +37,7 @@ const Modal = ({
     >
       <Box
         sx={style}
-        className="w-full max-w-md max-h-screen overflow-y-auto relative "
+        className="w-full max-w-lg max-h-screen overflow-y-auto relative "
       >
         <Box
           component={'header'}

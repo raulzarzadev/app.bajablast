@@ -2,7 +2,7 @@
 import { PaymentMethods, paymentMethods } from '@/CONST/paymentMethods'
 import useModal from '@/hooks/useModal'
 import useUser from '@/hooks/useUser'
-import { NewClient } from '@/types/user'
+import { Friend, NewClient } from '@/types/user'
 import asNumber from '@/utils/asNumber'
 import {
   Box,
@@ -25,6 +25,29 @@ import addDiscount from '@/utils/addDiscount'
 import { updateClient } from '@/firebase/clients'
 import { USER_ROL } from '@/CONST/user'
 import useParkConfig from '@/hooks/useParkConfig'
+import UsersList from './UsersList'
+import { getActivity } from '@/firebase/activities'
+const activityRequireInsurance = async (activityId?: string) => {
+  if (activityId)
+    return await getActivity(activityId).then((activity) => {
+      return !!activity.requiresInsurance
+    })
+}
+
+const assignInsurancePolicy = async (
+  user: NewClient | Friend,
+  currentPolicyNumber: number
+) => {
+  const activityRequiresInsurance = await activityRequireInsurance(
+    user.activity?.id
+  )
+  return {
+    ...user,
+    insurancePolicyNumber: activityRequiresInsurance
+      ? currentPolicyNumber + 1
+      : 'n/a'
+  }
+}
 
 const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
@@ -201,42 +224,14 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
 }
 
 const PaymentClientTable = ({ client }: { client: NewClient }) => {
+  const users = [client, ...(client.friends || [])]
   return (
     <Box className="my-4">
       <Typography className="text-end">
         {client?.created?.at &&
           dateFormat(client?.created?.at, 'dd/MMM HH:mm ')}{' '}
       </Typography>
-      <table className="w-full text-center">
-        <tbody>
-          <tr>
-            <th>Nombre</th>
-            <th>Paquete</th>
-            <th>Cantidad</th>
-          </tr>
-          <tr>
-            <td> {client.name} </td>
-            <td>{client.activity?.name}</td>
-            <td>
-              <CurrencySpan quantity={client.activity?.price} />
-            </td>
-          </tr>
-          {/* {!!client.friends?.length && (
-            <tr>
-              <th colSpan={3}>Acompañantes ({client.friends?.length})</th>
-            </tr>
-          )} */}
-          {client.friends?.map((friend) => (
-            <tr key={friend.name}>
-              <td>{friend.name} </td>
-              <td>{friend.activity?.name}</td>
-              <td>
-                <CurrencySpan quantity={friend.activity?.price} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <UsersList users={users} />
       <Box className="flex w-full justify-evenly text-center items-center my-4">
         {/* <Typography className="whitespace-nowrap">
             Por: <ShowUser userId={client.created?.by} />
