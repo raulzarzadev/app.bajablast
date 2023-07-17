@@ -16,6 +16,7 @@ export interface UserType extends Partial<BaseType> {
   medicalInfo: string
   image: string
   isAdmin?: boolean
+  weight?: number
 }
 
 export interface Friend extends Partial<UserType> {

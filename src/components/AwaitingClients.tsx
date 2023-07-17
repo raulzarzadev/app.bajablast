@@ -2,8 +2,8 @@
 import { NewClient } from '@/types/user'
 import { Box, Typography } from '@mui/material'
 import ClientsTable from '@/components/ClientsTable'
-import { deleteUser } from '@/firebase/users'
 import useClients from '@/hooks/useClients'
+import { deleteClient } from '@/firebase/clients'
 
 const AwaitingClients = () => {
   const { clients = [] } = useClients()
@@ -14,7 +14,8 @@ const AwaitingClients = () => {
    */
   const handleRemove = async (clientId: NewClient['id']) => {
     try {
-      await deleteUser(clientId || '')
+      const res = await deleteClient(clientId || '')
+      //console.log({ res })
     } catch (error) {
       console.error(error)
     }

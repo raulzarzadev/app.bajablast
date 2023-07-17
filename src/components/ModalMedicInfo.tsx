@@ -14,14 +14,11 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
   const methods = useFormContext()
 
   const medicalInfoUpdated = methods.watch(`${name}medicalInfoUpdated`)
-
-  const { dirtyFields } = methods.formState
+  const formValues = methods.watch()
   useEffect(() => {
-    if (dirtyFields?.medicalInfo) {
-      methods.setValue(`${name}medicalInfoUpdated`, true)
-    }
+    methods.setValue(`${name}medicalInfoUpdated`, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dirtyFields])
+  }, [formValues.medicalInfo, formValues.bloodType, formValues.weight])
   return (
     <>
       <Box className="flex w-full justify-center">
@@ -70,6 +67,13 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
             multiline
             minRows={4}
             maxRows={8}
+            fullWidth
+          />
+
+          <ControllerText
+            name={`${name}weight`}
+            label="Peso (kg)"
+            type="number"
             fullWidth
           />
 

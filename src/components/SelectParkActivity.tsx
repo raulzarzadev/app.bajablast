@@ -107,7 +107,7 @@ const ClientSelectRow = ({
       <Typography variant="h6" className="text-start">
         {client?.name || ''}
       </Typography>
-      <div className="grid grid-flow-col overflow-x-auto h-32 gap-2 pb-2">
+      <div className="grid grid-flow-col overflow-x-auto h-36 gap-2 pb-2">
         {activities.map((activity) => (
           <Box key={activity.id} className="w-28 h-full">
             <SelectActivityCard
