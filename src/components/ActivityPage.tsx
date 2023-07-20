@@ -1,7 +1,7 @@
 'use client'
 import useUser from '@/hooks/useUser'
 import { ParkActivity, Schedule } from '@/types/activities'
-import { Box, Container, Paper, Typography } from '@mui/material'
+import { Box, Button, Container, Paper, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ActivityAdmin from './ActivityAdmin'
 import { listenActivity, updateActivity } from '@/firebase/activities'
@@ -10,9 +10,12 @@ import { USER_ROL } from '@/CONST/user'
 import WeekSchedule from './WeekSchedule'
 import useParkConfig from '@/hooks/useParkConfig'
 import CurrencySpan from './CurrencySpan'
+import { useRouter } from 'next/navigation'
+import ContentNotFound from './ContentNotFound'
 
 const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   const [activity, setActivity] = useState<ParkActivity | undefined>()
+  const router = useRouter()
 
   const { user } = useUser()
   useEffect(() => {
@@ -33,10 +36,13 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
   }
   const { parkConfig } = useParkConfig()
   const parkSchedule = parkConfig?.schedule
-  if (activity === undefined) return <>Loading...</>
-  const activitySchedule = activity.scheduleAsPark
+
+  const activitySchedule = activity?.scheduleAsPark
     ? parkSchedule
-    : activity.schedule
+    : activity?.schedule
+
+  if (!activity) return <ContentNotFound content={activity} />
+
   return (
     <>
       <div>
@@ -45,7 +51,7 @@ const ActivityPage = ({ activityId }: { activityId: ParkActivity['id'] }) => {
         </Typography>
         <Box>
           <Typography className="text-center text-2xl">
-            <CurrencySpan quantity={activity.price} />
+            <CurrencySpan quantity={activity?.price} />
           </Typography>
         </Box>
         <Typography variant="h6" className="text-center ">

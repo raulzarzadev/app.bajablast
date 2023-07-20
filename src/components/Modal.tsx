@@ -16,18 +16,13 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24
 }
-
-const Modal = ({
-  open,
-  onClose,
-  children,
-  title
-}: {
+export type ModalProps = {
   open: boolean
   onClose: () => void
   children: React.ReactNode
   title?: string
-}) => {
+}
+const Modal = ({ open, onClose, children, title }: ModalProps) => {
   return (
     <MaterialModal
       open={open}

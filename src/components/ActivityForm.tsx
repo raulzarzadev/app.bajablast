@@ -9,13 +9,17 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material'
 import { FormProvider, useForm } from 'react-hook-form'
 import ControllerText from './ControllerText'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import ScheduleForm from './ScheduleForm'
 import { useEffect, useRef, useState } from 'react'
+import ModalConfirm from './ModalConfirm'
+import useModal from '@/hooks/useModal'
+import { deleteActivity } from '@/firebase/activities'
 
 const ActivityForm = ({
   onSubmit,
@@ -41,9 +45,11 @@ const ActivityForm = ({
     const linesJumps = formValues.recommendations?.split('\n').length || 3
     setRecommendationsRows(linesJumps)
   }, [formValues.recommendations])
-  const handleDelete = () => {
-    console.log('delete activitity')
+  const handleDeleteActivity = async (actividadId: string) => {
+    return await deleteActivity(actividadId)
   }
+  const modalDelete = useModal()
+
   return (
     <div className="my-4">
       <FormProvider {...methods}>
@@ -117,11 +123,26 @@ const ActivityForm = ({
                 color="error"
                 onClick={(e) => {
                   e.preventDefault()
-                  handleDelete()
+                  modalDelete.handleOpen()
                 }}
               >
                 Eliminar
               </Button>
+              <ModalConfirm
+                {...modalDelete}
+                buttonConfirmProps={{
+                  onClick() {
+                    return handleDeleteActivity(activity?.id || '')
+                  },
+                  color: 'error',
+                  label: 'Eliminar'
+                }}
+              >
+                <Typography>
+                  Se eliminara esta actividad, pero seguira formando parte de
+                  las estadisiticas de cada usuario. ¿Desea continuar?
+                </Typography>
+              </ModalConfirm>
               {onCancel && (
                 <Button
                   onClick={(e) => {
