@@ -10,4 +10,4 @@ const Page = () => {
   )
 }
 
-export default withAuth(Page, ['ADMIN', 'COORDINATOR'])
+export default withAuth(Page, ['ADMIN', 'COORDINATOR', 'COLLABORATOR'])

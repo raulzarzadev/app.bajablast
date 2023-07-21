@@ -18,7 +18,7 @@ const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
     //@ts-ignore
     (u) => u?.payment?.created?.at || u?.paymentDate
   )
-  const sortByPaymentDate = (a, b) => {
+  const sortByPaymentDate = (a: any, b: any) => {
     const aPaymentDate =
       asDate(a.payment?.created?.at || a.paymentDate)?.getDate() || 0
     const bPaymentDate =

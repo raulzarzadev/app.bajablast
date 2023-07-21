@@ -326,7 +326,8 @@ const ModalDeletePayment = ({
   const handleDeleteClient = async (clientId: string) => {
     try {
       await deleteClient(clientId)
-      await incrementUsersCount(parkConfig?.id || '', -usersCount)
+      //** You should not reduce the user count */
+      // await incrementUsersCount(parkConfig?.id || '', -usersCount)
     } catch (error) {
       console.error(error)
     }
