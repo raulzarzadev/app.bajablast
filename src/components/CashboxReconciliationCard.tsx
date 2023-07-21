@@ -3,6 +3,7 @@ import asDate from '@/utils/asDate'
 import { dateFormat } from '@/utils/utils-date'
 import { Box, Typography } from '@mui/material'
 import CurrencySpan from './CurrencySpan'
+import asNumber from '@/utils/asNumber'
 
 const CashboxReconciliationCard = ({
   reconciliation
@@ -16,8 +17,14 @@ const CashboxReconciliationCard = ({
     totalCard,
     totalDollars,
     totalCash,
-    payments
+    payments,
+    cancellations
   } = reconciliation
+  const totalCancellations = cancellations?.reduce(
+    (acc, curr) => acc + asNumber(curr?.payment?.amount),
+    0
+  )
+  console.log({ cancellations })
   return (
     <div>
       <Box className="flex justify-end">
@@ -45,6 +52,7 @@ const CashboxReconciliationCard = ({
       </Box>
       <Box className="text-end">
         <Typography>Pagos: {payments?.length || 0}</Typography>
+        <Typography>Cancelaciones: {cancellations?.length || 0}</Typography>
         <Typography>
           Efectivo: <CurrencySpan quantity={totalCash} />
         </Typography>
@@ -54,9 +62,17 @@ const CashboxReconciliationCard = ({
         <Typography>
           Tarjeta: <CurrencySpan quantity={totalCard} />
         </Typography>
-        <Typography className="text-center" variant="h5">
-          Total: <CurrencySpan quantity={total} />
-        </Typography>
+        <Box className="w-1/2 mx-auto flex flex-col text-end">
+          <Typography className="text-end" variant="h6">
+            SubTotal: <CurrencySpan quantity={total} />
+          </Typography>
+          <Typography className="text-end" variant="h6">
+            Cancelaciones: <CurrencySpan quantity={totalCancellations} />
+          </Typography>
+          <Typography className="text-end" variant="h5">
+            Total: <CurrencySpan quantity={(total || 0) - totalCancellations} />
+          </Typography>
+        </Box>
       </Box>
     </div>
   )

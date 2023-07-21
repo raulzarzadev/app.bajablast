@@ -1,5 +1,6 @@
 import { Reconciliation, ReconciliationData } from '@/types/reconciliations'
 import { Client } from '@/types/user'
+import asNumber from './asNumber'
 
 const calculateReconciliation = (
   clients: Partial<Client>[],
@@ -47,6 +48,11 @@ const calculateReconciliation = (
   const payments = clients.map((client) => {
     return { clientId: client.id, ...client?.payment }
   })
+  const cancellations = clients.filter((c) => c.payment?.isCancelled)
+  const totalCancellations = cancellations.reduce(
+    (acc, client) => acc + asNumber(client?.payment?.amount),
+    0
+  )
   return {
     dates: {
       from: reconciliationData?.from || null,
@@ -58,7 +64,8 @@ const calculateReconciliation = (
     totalCard,
     cashier,
     activities: groupedActivities,
-    payments
+    payments,
+    cancellations
   }
 }
 export default calculateReconciliation

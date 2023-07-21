@@ -25,13 +25,19 @@ import asDate from '@/utils/asDate'
 import { dateFormat } from '@/utils/utils-date'
 import CurrencySpan from './CurrencySpan'
 import useCollaborators from '@/hooks/useCollaborators'
-import { useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { Client } from '@/types/user'
 import calculateReconciliation from '@/utils/calculateReconciliation'
 import { ReconciliationData } from '@/types/reconciliations'
 import { createReconciliation } from '@/firebase/reconciliations'
 import CashboxReconciliationsList from './CashboxReconciliationsList'
 import CashboxReconciliationCard from './CashboxReconciliationCard'
+
+type CashBoxContext = {
+  isDirty?: boolean
+  setIsDirty?: (value: boolean) => void
+}
+const CashBoxContext = createContext<CashBoxContext>({})
 
 const CashboxReconciliation = () => {
   const { clients } = useClients()
@@ -61,31 +67,35 @@ const CashboxReconciliation = () => {
   const [clientsFiltered, setClientsFiltered] = useState<Client[]>([])
   const [reconciliationData, setReconciliationData] =
     useState<ReconciliationData>()
-  return (
-    <Box className=" mx-auto text-center">
-      <Typography variant="h4">Cortes de caja</Typography>
 
-      <Button
-        onClick={(e) => {
-          e.preventDefault()
-          modal.handleOpen()
-        }}
-        variant="outlined"
-        className="my-4"
-      >
-        Nuevo corte
-      </Button>
-      <CashboxReconciliationsList />
-      <Modal {...modal} title="Nuevo corte">
-        <ReconciliationForm onSubmit={handleSubmitReconciliation} />
-        {reconciliationData && (
-          <ReconciliationInfo
-            clients={clientsFiltered}
-            reconciliationData={reconciliationData}
-          />
-        )}
-      </Modal>
-    </Box>
+  const [isDirty, setIsDirty] = useState(false)
+  return (
+    <CashBoxContext.Provider value={{ isDirty, setIsDirty }}>
+      <Box className=" mx-auto text-center">
+        <Typography variant="h4">Cortes de caja</Typography>
+
+        <Button
+          onClick={(e) => {
+            e.preventDefault()
+            modal.handleOpen()
+          }}
+          variant="outlined"
+          className="my-4"
+        >
+          Nuevo corte
+        </Button>
+        <CashboxReconciliationsList />
+        <Modal {...modal} title="Nuevo corte">
+          <ReconciliationForm onSubmit={handleSubmitReconciliation} />
+          {reconciliationData && (
+            <ReconciliationInfo
+              clients={clientsFiltered}
+              reconciliationData={reconciliationData}
+            />
+          )}
+        </Modal>
+      </Box>
+    </CashBoxContext.Provider>
   )
 }
 
@@ -106,11 +116,14 @@ const ReconciliationInfo = ({
       console.error(error)
     }
   }
+  const cashBoxContext = useContext(CashBoxContext)
+  console.log({ first: cashBoxContext.isDirty })
   return (
     <Box>
       <CashboxReconciliationCard reconciliation={reconciliation} />
       <Box className="flex w-full justify-evenly my-4">
         <LoadingButton
+          disabled={cashBoxContext.isDirty}
           label="Guardar"
           icon="save"
           onClick={async () => {
@@ -142,10 +155,15 @@ const ReconciliationForm = ({
     }
   })
   const formValues = methods.watch()
+  const cashBoxContext = useContext(CashBoxContext)
   const _onSubmit = (data: any) => {
     // console.log(data)
+    cashBoxContext?.setIsDirty?.(false)
     onSubmit(data)
   }
+  useEffect(() => {
+    cashBoxContext?.setIsDirty?.(true)
+  }, [formValues.cashier, formValues.from, formValues.to])
   interface Cashier {
     name: string
     id: string
@@ -161,7 +179,25 @@ const ReconciliationForm = ({
   return (
     <form>
       <FormProvider {...methods}>
-        <Typography className="mt-4 mb-2">Cajero:</Typography>
+        <Typography className="mt-4 mb-2">Periodo:</Typography>
+        <Box className="flex w-full justify-between mb-4">
+          <DateTimePicker
+            ampm={false}
+            className="w-full mr-2"
+            label="Desde"
+            format="dd/MMM/yy HH:mm"
+            value={formValues.from}
+            onChange={(value: any) => methods.setValue('from', value)}
+          />
+          <DateTimePicker
+            ampm={false}
+            className="w-full ml-2"
+            label="Hasta"
+            format="dd/MMM/yy HH:mm"
+            value={formValues.to}
+            onChange={(value: any) => methods.setValue('to', value)}
+          />
+        </Box>
 
         <Autocomplete
           options={cashiers}
@@ -186,25 +222,6 @@ const ReconciliationForm = ({
             )
           }}
         />
-        <Typography className="mt-4 mb-2">Periodo:</Typography>
-        <Box className="flex w-full justify-between mb-4">
-          <DateTimePicker
-            ampm={false}
-            className="w-full mr-2"
-            label="Desde"
-            format="dd/MMM/yy HH:mm"
-            value={formValues.from}
-            onChange={(value: any) => methods.setValue('from', value)}
-          />
-          <DateTimePicker
-            ampm={false}
-            className="w-full ml-2"
-            label="Hasta"
-            format="dd/MMM/yy HH:mm"
-            value={formValues.to}
-            onChange={(value: any) => methods.setValue('to', value)}
-          />
-        </Box>
         <Box className="flex w-full justify-end my-8">
           <LoadingButton
             label="Generar"
