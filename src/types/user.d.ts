@@ -43,6 +43,7 @@ export type Payment = {
   amount: number
   discount: number
   dollarPrice: number
+  isCancelled?: boolean
   created: {
     at: Date | Timestamp
     by: UserType['id']

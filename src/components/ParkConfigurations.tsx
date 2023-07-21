@@ -13,7 +13,6 @@ import useModal from '@/hooks/useModal'
 import Modal from './Modal'
 import ParkConfigurationForm from './ParkConfigurationForm'
 import { ParkConfiguration } from '@/types/parkConfiguration'
-import useParkConfig from '@/hooks/useParkConfig'
 import ModalConfirm from './ModalConfirm'
 
 const ParkConfigurations = () => {

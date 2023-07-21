@@ -55,7 +55,16 @@ const ClientsTable = ({
     return acc + (client?.friends?.length || 0) + 1
   }, 0)
   const clientsAlreadyPay = clients.some((client) => client.payment)
-
+  const cancellationsTotal = clients.reduce((acc, client) => {
+    const canceledAmount = client.payment?.isCancelled
+      ? asNumber(client.payment.amount)
+      : 0
+    return acc + canceledAmount
+  }, 0)
+  const cancellations = clients.filter(
+    (client) => client.payment?.isCancelled
+  ).length
+  console.log({ cancellationsTotal })
   const sortByDate = (a: NewClient, b: NewClient) => {
     if (clientsAlreadyPay) {
       const aPaidAt = asDate(a?.payment?.created?.at)
@@ -87,6 +96,7 @@ const ClientsTable = ({
             <TableCell align="center">Usuarios</TableCell>
             <TableCell align="center">Cantidad</TableCell>
             <TableCell align="center">Metodo</TableCell>
+            <TableCell align="center">Status</TableCell>
             <TableCell align="center">Ops</TableCell>
           </TableRow>
         </TableHead>
@@ -102,12 +112,27 @@ const ClientsTable = ({
         <TableFooter>
           <TableRow>
             <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
-              Total:
+              Subtotal:
             </TableCell>
             <TableCell align="center">{clientsTotal}</TableCell>
             <TableCell align="right">
               <CurrencySpan
                 quantity={clientsAlreadyPay ? totalPayments : totalRequested}
+              />
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
+              Cancelaciones:
+            </TableCell>
+            <TableCell align="center">{cancellations}</TableCell>
+            <TableCell align="right">
+              <CurrencySpan
+                quantity={
+                  clientsAlreadyPay
+                    ? totalPayments - cancellationsTotal
+                    : totalRequested
+                }
               />
             </TableCell>
           </TableRow>
@@ -210,6 +235,9 @@ const ClientsRow = ({
           paymentMethods.find(({ key }) => key === client.payment?.method)
             ?.label
         }
+      </TableCell>
+      <TableCell>
+        {client.payment?.isCancelled ? 'Cancelado' : 'Valido'}
       </TableCell>
 
       <TableCell>

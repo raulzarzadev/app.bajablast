@@ -43,3 +43,6 @@ export const listenClient = async (
 
 export const listenClients = async (cb: CallableFunction) =>
   await itemCRUD.listenItems([where('rol', '==', 'CLIENT')], cb)
+
+export const cancelClientPayment = async ({ clientId }: { clientId: string }) =>
+  await itemCRUD.updateItem(clientId, { 'payment.isCancelled': true })

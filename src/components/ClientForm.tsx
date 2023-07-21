@@ -45,7 +45,6 @@ const ClientForm = ({
     defaultValues: { ...defaultClient, ...client } || defaultClient
   })
   const formValues = methods.watch()
-  const termsAndCondsModal = useModal()
   const signatureRef = useRef<any>()
   const handleClearSignature = () => {
     signatureRef?.current?.clear?.()

@@ -23,7 +23,7 @@ import { dateFormat } from '@/utils/utils-date'
 import LoadingButton from './LoadingButton'
 import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
-import { updateClient } from '@/firebase/clients'
+import { cancelClientPayment, updateClient } from '@/firebase/clients'
 import { USER_ROL } from '@/CONST/user'
 import useParkConfig from '@/hooks/useParkConfig'
 import UsersList from './UsersList'
@@ -123,6 +123,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
           {!!client.payment ? (
             <>
               <AmountInfo payment={client.payment} />
+              <ModalCancelPayment clientId={client.id || ''} />
               <ModalEditPayment payment={client.payment} />
             </>
           ) : (
@@ -372,6 +373,39 @@ const AmountInfo = ({
   )
 }
 
+const ModalCancelPayment = ({ clientId }: { clientId: string }) => {
+  const modal = useModal()
+  const handleCanclePayment = (clientId: string) => {
+    console.log('cancel', clientId)
+    //updateClient(clientId,{payment})
+    return cancelClientPayment({ clientId })
+  }
+  return (
+    <Box>
+      <Button
+        fullWidth
+        variant="outlined"
+        onClick={(e) => {
+          e.preventDefault()
+          modal.handleOpen()
+        }}
+      >
+        Cancelar Pago
+      </Button>
+      <ModalConfirm
+        {...modal}
+        buttonConfirmProps={{
+          onClick: () => handleCanclePayment(clientId),
+          color: 'success',
+          label: 'Cancelar Pago'
+        }}
+      >
+        <Typography>Cancelar pago</Typography>
+      </ModalConfirm>
+    </Box>
+  )
+}
+
 const ModalEditPayment = ({ payment }: { payment: NewClient['payment'] }) => {
   const modalEdit = useModal()
   const handleOpenEdit = () => {
@@ -391,7 +425,6 @@ const ModalEditPayment = ({ payment }: { payment: NewClient['payment'] }) => {
         Editar
       </Button>
       <Modal {...modalEdit} title="Editar pago">
-        <Typography>Editar Pago</Typography>
         <AmountInfo payment={payment} />
       </Modal>
     </>

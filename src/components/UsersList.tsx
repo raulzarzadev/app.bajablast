@@ -16,7 +16,7 @@ import { Friend, NewClient } from '@/types/user'
 const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
   const showPaymentDate = users.some(
     //@ts-ignore
-    (u) => u?.payment?.created.at || u?.paymentDate
+    (u) => u?.payment?.created?.at || u?.paymentDate
   )
   return (
     <div>
