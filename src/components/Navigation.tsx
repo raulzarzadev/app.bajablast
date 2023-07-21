@@ -26,11 +26,10 @@ const pages = [
   //'Products', 'Pricing', 'Blog'
   { label: 'Actividades', href: '/bb' }
 ]
-const settings = [
+const links = [
   //'Profile', 'Account', 'Dashboard', 'Logout'
   { label: 'Home', href: '/' },
-  { label: 'Perfil', href: '/profile' },
-  { label: 'Dashboard', href: '/bb/admin' }
+  { label: 'Perfil', href: '/profile' }
 ]
 
 function Navigation() {
@@ -40,6 +39,9 @@ function Navigation() {
   const { user } = useUser()
   const router = useRouter()
 
+  const showDasboardLink =
+    user?.isAdmin ||
+    ['ADMIN', 'COORDINATOR', 'COLLABORATOR'].includes(user?.rol || '')
   const [anchorElSignIn, setAnchorElSignIn] =
     React.useState<null | HTMLElement>(null)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -202,7 +204,7 @@ function Navigation() {
 
             {user && (
               <>
-                <Tooltip title="Open settings">
+                <Tooltip title="Open links">
                   <IconButton
                     aria-label="open-user-menu"
                     onClick={handleOpenUserMenu}
@@ -228,7 +230,14 @@ function Navigation() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
+                  {showDasboardLink && (
+                    <Link href={'/bb/admin'} passHref>
+                      <MenuItem role="listitem">
+                        <Typography textAlign="center">Dashboard</Typography>
+                      </MenuItem>
+                    </Link>
+                  )}
+                  {links.map((setting) => (
                     <Link href={setting.href} key={setting.label} passHref>
                       <MenuItem role="listitem">
                         <Typography textAlign="center">

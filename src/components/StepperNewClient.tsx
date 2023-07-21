@@ -108,7 +108,7 @@ function StepperNewClient() {
             )
           },
           {
-            label: 'Pagar',
+            label: 'Registrar',
             component: (
               <FinishNewClient
                 clients={[

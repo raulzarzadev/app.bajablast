@@ -1,6 +1,6 @@
-import ClientsChart from '@/components/ClientsChart'
+'use client'
+import withAuth from '@/HOCs/withAuth'
 import ClientsNumbers from '@/components/ClientsNumbers'
-import ParkAreas from '@/components/ParkAreas'
 
 const Page = () => {
   return (
@@ -10,4 +10,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default withAuth(Page, ['ADMIN', 'COORDINATOR'])

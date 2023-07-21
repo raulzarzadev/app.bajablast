@@ -80,30 +80,59 @@ const ConfigurationCard = ({
   config: ParkConfiguration
   handleSelectConfig: (configId: string) => void
 }) => {
-  const modalEdit = useModal()
-  const handleDelete = async () => {
-    await deleteParkConfiguration(config.id).catch((err) => console.error(err))
-  }
-  const modalDelete = useModal()
-  const modalChangeConfig = useModal()
+  return (
+    <>
+      <Box
+        key={config?.id}
+        className={`my-2 border shadow-md p-2 rounded-md  
+      ${config.selected ? 'bg-blue-500' : ' '}`}
+      >
+        <Box className="flex justify-between ">
+          <Typography>{config?.name} </Typography>
+          <Typography>
+            Precio del dolar <CurrencySpan quantity={config?.dollarPrice} />
+          </Typography>
+          <Box className="flex">
+            <ModalEdit parkConfig={config} />
+            <ModalSelect
+              selected={config.selected}
+              onSelect={() => handleSelectConfig(config.id)}
+            />
+          </Box>
+        </Box>
+        <WeekSchedule schedule={config.schedule} />
+      </Box>
+    </>
+  )
+}
+
+const ModalSelect = ({
+  onSelect,
+  selected
+}: {
+  onSelect: () => void
+  selected?: boolean
+}) => {
+  const modal = useModal()
 
   return (
-    <Box
-      key={config?.id}
-      onClick={() => {
-        modalChangeConfig.handleOpen()
-        // handleSelectConfig(config.id)
-      }}
-      className={`my-2 border shadow-md p-2 rounded-md hover:bg-blue-300 cursor-pointer hover:shadow-none hover:border-transparent active:bg-transparent ${
-        config.selected && 'bg-blue-500'
-      }`}
-    >
+    <>
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          modal.handleOpen()
+        }}
+        variant="outlined"
+        className={`${selected && 'text-white'}`}
+      >
+        {selected ? 'Seleccionado' : 'Seleccionar'}
+      </Button>
       <ModalConfirm
         title="Cambiar configuración"
-        {...modalChangeConfig}
+        {...modal}
         buttonConfirmProps={{
           label: 'Cambiar configuración',
-          onClick: () => handleSelectConfig(config.id)
+          onClick: () => onSelect()
         }}
       >
         <Typography>
@@ -112,46 +141,64 @@ const ConfigurationCard = ({
           otro movimiento dentro de la app
         </Typography>
       </ModalConfirm>
-      <Box className="flex justify-between ">
-        <Typography>{config?.name} </Typography>
-        <Typography>
-          Precio del dolar <CurrencySpan quantity={config?.dollarPrice} />
+    </>
+  )
+}
+
+const ModalEdit = ({ parkConfig }: { parkConfig?: ParkConfiguration }) => {
+  const modal = useModal()
+  return (
+    <>
+      <IconButton
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          modal.handleOpen()
+        }}
+      >
+        <AppIcon icon="edit" />
+      </IconButton>
+      <Modal {...modal} title="Editar configuración">
+        <ParkConfigurationForm config={parkConfig} />
+        <ModalDelete configId={parkConfig?.id || ''} />
+      </Modal>
+    </>
+  )
+}
+
+const ModalDelete = ({ configId }: { configId: ParkConfiguration['id'] }) => {
+  const modal = useModal()
+  const handleDelete = async () => {
+    await deleteParkConfiguration(configId).catch((err) => console.error(err))
+  }
+
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="error"
+        fullWidth
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          modal.handleOpen()
+        }}
+      >
+        Eliminar
+      </Button>
+      <ModalConfirm
+        {...modal}
+        buttonConfirmProps={{
+          onClick: handleDelete,
+          color: 'error',
+          label: 'Eliminar'
+        }}
+      >
+        <Typography variant="h5" className="text-center my-10">
+          Eliminar configuración
         </Typography>
-        <IconButton
-          onClick={() => {
-            modalEdit.handleOpen()
-          }}
-        >
-          <AppIcon icon="edit" />
-        </IconButton>
-        <Modal {...modalEdit} title="Editar configuración">
-          <ParkConfigurationForm config={config} />
-          <Button
-            variant="outlined"
-            color="error"
-            fullWidth
-            onClick={(e) => {
-              modalDelete.handleOpen()
-            }}
-          >
-            Eliminar
-          </Button>
-        </Modal>
-        <ModalConfirm
-          {...modalDelete}
-          buttonConfirmProps={{
-            onClick: handleDelete,
-            color: 'error',
-            label: 'Eliminar'
-          }}
-        >
-          <Typography variant="h5" className="text-center my-10">
-            Eliminar configuración
-          </Typography>
-        </ModalConfirm>
-      </Box>
-      <WeekSchedule schedule={config.schedule} />
-    </Box>
+      </ModalConfirm>
+    </>
   )
 }
 
