@@ -35,6 +35,7 @@ export interface NewClient extends UserType {
   friends?: Friend[]
   payment?: Payment
   insurancePolicyNumber?: InsurancePolicyNumber
+  userNumber?: number
 }
 
 export type Payment = {

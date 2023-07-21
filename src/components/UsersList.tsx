@@ -14,23 +14,35 @@ import asDate from '@/utils/asDate'
 import { Friend, NewClient } from '@/types/user'
 
 const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
-  const showPaymentDate = users.some(
+  const alreadyPaid = users.some(
     //@ts-ignore
     (u) => u?.payment?.created?.at || u?.paymentDate
   )
+  const sortByPaymentDate = (a, b) => {
+    const aPaymentDate =
+      asDate(a.payment?.created?.at || a.paymentDate)?.getDate() || 0
+    const bPaymentDate =
+      asDate(b.payment?.created?.at || b.paymentDate)?.getDate() || 0
+    if (aPaymentDate > bPaymentDate) return -1
+    if (aPaymentDate < bPaymentDate) return 1
+    return 0
+  }
   return (
     <div>
       <TableContainer component={Paper} className="mx-auto w-full">
         <Table size="small">
           <TableHead>
             <TableRow>
-              {showPaymentDate && (
+              {alreadyPaid && (
+                <TableCell className="font-bold">No.Usuario</TableCell>
+              )}
+              {alreadyPaid && (
                 <TableCell className="font-bold">Fecha Pago</TableCell>
               )}
               <TableCell className="font-bold">No.</TableCell>
               <TableCell className="font-bold">Nombre</TableCell>
               <TableCell className="font-bold">Tipo </TableCell>
-              {showPaymentDate && (
+              {alreadyPaid && (
                 <TableCell className="font-bold">Pago </TableCell>
               )}
               <TableCell className="font-bold" align="center">
@@ -41,12 +53,16 @@ const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users?.map((user: any) => (
+            {users?.sort(sortByPaymentDate).map((user: any, i) => (
               <TableRow key={user.id}>
-                {showPaymentDate && (
-                  <TableCell>
+                {alreadyPaid && (
+                  <TableCell>{user?.userNumber || '-'}</TableCell>
+                )}
+                {alreadyPaid && (
+                  <TableCell className="whitespace-nowrap">
                     {dateFormat(
-                      asDate(user?.payment?.created?.at || user?.paymentDate)
+                      asDate(user?.payment?.created?.at || user?.paymentDate),
+                      'dd/MMM HH:mm'
                     )}
                   </TableCell>
                 )}
@@ -55,7 +71,7 @@ const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
                 <TableCell>
                   {user.rol === 'CLIENT' ? 'Cliente' : 'Acompañante'}
                 </TableCell>
-                {showPaymentDate && (
+                {alreadyPaid && (
                   <TableCell>
                     <CurrencySpan quantity={user?.payment?.amount} />
                   </TableCell>

@@ -89,8 +89,10 @@ const ConfigurationCard = ({
         <Box className="flex justify-between ">
           <Typography>{config?.name} </Typography>
           <Typography>
-            Precio del dolar <CurrencySpan quantity={config?.dollarPrice} />
+            Precio del dolars <CurrencySpan quantity={config?.dollarPrice} />
           </Typography>
+          <Typography>Usuarios: {config?.usersCount || 0} </Typography>
+
           <Box className="flex">
             <ModalEdit parkConfig={config} />
             <ModalSelect
