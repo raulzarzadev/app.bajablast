@@ -1,5 +1,5 @@
 const CurrencySpan = ({
-  quantity = 0,
+  quantity = 1,
   ...rest
 }: {
   quantity?: number | string
@@ -10,7 +10,7 @@ const CurrencySpan = ({
       {new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-      }).format(parseFloat(`${quantity}`))}{' '}
+      }).format(parseFloat(`${quantity || 1}`))}{' '}
     </span>
   )
 }

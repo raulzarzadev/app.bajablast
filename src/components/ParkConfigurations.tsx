@@ -14,6 +14,7 @@ import Modal from './Modal'
 import ParkConfigurationForm from './ParkConfigurationForm'
 import { ParkConfiguration } from '@/types/parkConfiguration'
 import useParkConfig from '@/hooks/useParkConfig'
+import ModalConfirm from './ModalConfirm'
 
 const ParkConfigurations = () => {
   return (
@@ -83,16 +84,34 @@ const ConfigurationCard = ({
   const handleDelete = async () => {
     await deleteParkConfiguration(config.id).catch((err) => console.error(err))
   }
+  const modalDelete = useModal()
+  const modalChangeConfig = useModal()
+
   return (
     <Box
       key={config?.id}
       onClick={() => {
-        handleSelectConfig(config.id)
+        modalChangeConfig.handleOpen()
+        // handleSelectConfig(config.id)
       }}
       className={`my-2 border shadow-md p-2 rounded-md hover:bg-blue-300 cursor-pointer hover:shadow-none hover:border-transparent active:bg-transparent ${
         config.selected && 'bg-blue-500'
       }`}
     >
+      <ModalConfirm
+        title="Cambiar configuración"
+        {...modalChangeConfig}
+        buttonConfirmProps={{
+          label: 'Cambiar configuración',
+          onClick: () => handleSelectConfig(config.id)
+        }}
+      >
+        <Typography>
+          Cambiar la configuración puede alterar las estadisiticas . Asegurase
+          de que esta en la configuración correcta antes de realziar cualquier
+          otro movimiento dentro de la app
+        </Typography>
+      </ModalConfirm>
       <Box className="flex justify-between ">
         <Typography>{config?.name} </Typography>
         <Typography>
@@ -112,12 +131,24 @@ const ConfigurationCard = ({
             color="error"
             fullWidth
             onClick={(e) => {
-              handleDelete()
+              modalDelete.handleOpen()
             }}
           >
             Eliminar
           </Button>
         </Modal>
+        <ModalConfirm
+          {...modalDelete}
+          buttonConfirmProps={{
+            onClick: handleDelete,
+            color: 'error',
+            label: 'Eliminar'
+          }}
+        >
+          <Typography variant="h5" className="text-center my-10">
+            Eliminar configuración
+          </Typography>
+        </ModalConfirm>
       </Box>
       <WeekSchedule schedule={config.schedule} />
     </Box>

@@ -35,7 +35,7 @@ const ModalConfirm = (
               onClick={async (e) => {
                 e.preventDefault()
                 await onConfirm()
-                console.log('first')
+                props.onClose()
               }}
             >
               {label}

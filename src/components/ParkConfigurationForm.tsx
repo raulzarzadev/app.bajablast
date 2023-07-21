@@ -25,7 +25,7 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
   const methods = useForm({ defaultValues: config })
 
   const termAndCondsRows = Math.floor(
-    methods.watch('termsAndConds')?.length / 29
+    (methods.watch('termsAndConds')?.length || 0) / 29
   )
 
   return (
