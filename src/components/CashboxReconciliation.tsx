@@ -163,6 +163,7 @@ const ReconciliationForm = ({
   }
   useEffect(() => {
     cashBoxContext?.setIsDirty?.(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues.cashier, formValues.from, formValues.to])
   interface Cashier {
     name: string
