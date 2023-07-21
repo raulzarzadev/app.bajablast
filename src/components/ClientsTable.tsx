@@ -10,7 +10,8 @@ import {
   TableContainer,
   TableFooter,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import Modal from './Modal'
@@ -23,6 +24,7 @@ import ModalPayment from './ModalPayment'
 import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
 import { paymentMethods } from '@/CONST/paymentMethods'
+import ModalConfirm from './ModalConfirm'
 
 const ClientsTable = ({
   clients,
@@ -144,6 +146,8 @@ const ClientsRow = ({
 
   const createdAt = client?.created?.at
   const paymentAt = client?.payment?.created?.at || client?.payment?.date
+
+  const removeModal = useModal()
   return (
     <TableRow
       onClick={(e) => {
@@ -151,16 +155,30 @@ const ClientsRow = ({
       }}
     >
       {handleRemove && (
-        <TableCell>
-          <IconButton
-            disabled={!!client.payment}
-            onClick={(e) => {
-              handleRemove?.(client?.id)
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </TableCell>
+        <>
+          <TableCell>
+            <ModalConfirm
+              {...removeModal}
+              title="Remover cliente"
+              buttonConfirmProps={{
+                onClick: () => handleRemove?.(client?.id),
+                color: 'success'
+              }}
+            >
+              <Typography className="text-center my-8">
+                ¿Deseas remover este cliente de la fila?
+              </Typography>
+            </ModalConfirm>
+            <IconButton
+              disabled={!!client.payment}
+              onClick={(e) => {
+                removeModal.handleOpen()
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </TableCell>
+        </>
       )}
       <TableCell align="center">
         {paymentAt && (
