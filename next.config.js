@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+
+const withPWA = require('next-pwa')({
+  dest: 'public'
+})
+
 const nextConfig = {
   async headers() {
     return [
@@ -23,4 +28,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+module.exports = withPWA(nextConfig)
