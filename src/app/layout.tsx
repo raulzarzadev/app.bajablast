@@ -11,7 +11,7 @@ import { ParkContextProvider } from '@/context/park'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'BajaBlastApp',
+  title: 'BajaBlast',
   description: 'BajaBlast platform. Make easy admin your park',
   applicationName: 'BajaBlast',
 
