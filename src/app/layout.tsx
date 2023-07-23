@@ -1,14 +1,11 @@
 import Navigation from '@/components/Navigation'
 import './globals.css'
 
-import { Inter } from 'next/font/google'
 import { UserContextProvider } from '@/context/user'
 import { PickerDateContextProvider } from '@/context/picker-date'
 import { ClientsContextProvider } from '@/context/clients'
 import { CollaboratorsContextProvider } from '@/context/collaborators'
 import { ParkContextProvider } from '@/context/park'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'BajaBlast',
@@ -46,7 +43,7 @@ export const metadata = {
   // formatDetection: 'telephone=no',
   appleMobileWebAppCapable: 'yes',
   appleMobileWebAppStatusBarStyle: 'default',
-  appleMobileWebAppTitle: 'PWA App',
+  appleMobileWebAppTitle: 'BajaBlastApp',
   mobileWebAppCapable: 'yes',
   msapplicationConfig: '/icons/browserconfig.xml',
   msapplicationTileColor: '#2B5797',
@@ -77,7 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={'pb-32'}>
         <PickerDateContextProvider>
           <ParkContextProvider>
             <UserContextProvider>
