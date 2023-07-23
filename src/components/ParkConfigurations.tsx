@@ -86,14 +86,14 @@ const ConfigurationCard = ({
         className={`my-2 border shadow-md p-2 rounded-md  
       ${config.selected ? 'bg-blue-500' : ' '}`}
       >
-        <Box className="flex justify-between ">
-          <Typography>{config?.name} </Typography>
+        <Box className="flex justify-center flex-col sm:flex-row sm:justify-between text-center ">
+          <Typography className="font-bold"> {config?.name} </Typography>
           <Typography>
-            Precio del dolars <CurrencySpan quantity={config?.dollarPrice} />
+            Dolar <CurrencySpan quantity={config?.dollarPrice} />
           </Typography>
-          <Typography>Usuarios: {config?.usersCount || 0} </Typography>
+          <Typography>Usuarios {config?.usersCount || 0} </Typography>
 
-          <Box className="flex">
+          <Box className="flex w-full justify-around sm:justify-end sm:gap-4">
             <ModalEdit parkConfig={config} />
             <ModalSelect
               selected={config.selected}
@@ -102,6 +102,24 @@ const ConfigurationCard = ({
           </Box>
         </Box>
         <WeekSchedule schedule={config.schedule} />
+        <Box>
+          <Typography className="font-bold">Dirección: </Typography>
+          <Typography>{config.address || ''} </Typography>
+          <Typography className="font-bold">Terminos y condiciones:</Typography>
+          <Typography className="whitespace-pre-line">
+            {config.termsAndConds || ''}{' '}
+          </Typography>
+          <Typography className="mt-4 font-bold">
+            Check de condiciones medicas:
+          </Typography>
+          <Typography component={'div'}>
+            <ul className="list-disc pl-4">
+              {config.checkMedicalConditions?.map((c, i) => (
+                <li key={c + i}>{c}</li>
+              ))}
+            </ul>
+          </Typography>
+        </Box>
       </Box>
     </>
   )
@@ -124,6 +142,7 @@ const ModalSelect = ({
           modal.handleOpen()
         }}
         variant="outlined"
+        size="small"
         className={`${selected && 'text-white'}`}
       >
         {selected ? 'Seleccionado' : 'Seleccionar'}

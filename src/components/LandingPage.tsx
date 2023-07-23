@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const LandingPage = () => {
   return (
-    <div className="flex  flex-col items-center justify-evenly p-2 text-center ">
+    <div className="flex h-full min-h-[50vh] flex-col items-center justify-evenly p-2 text-center ">
       <div className="relative   aspect-[25/16] w-full max-w-md ">
         <Link href={'/bb'} passHref>
           <Image

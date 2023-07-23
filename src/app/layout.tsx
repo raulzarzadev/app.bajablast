@@ -6,8 +6,9 @@ import { PickerDateContextProvider } from '@/context/picker-date'
 import { ClientsContextProvider } from '@/context/clients'
 import { CollaboratorsContextProvider } from '@/context/collaborators'
 import { ParkContextProvider } from '@/context/park'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'BajaBlast',
   description: 'BajaBlast platform. Make easy admin your park',
   applicationName: 'BajaBlast',
@@ -41,24 +42,24 @@ export const metadata = {
   // applicationName: 'PWA App',
   // description: 'Best PWA App in the world',
   // formatDetection: 'telephone=no',
-  appleMobileWebAppCapable: 'yes',
-  appleMobileWebAppStatusBarStyle: 'default',
-  appleMobileWebAppTitle: 'BajaBlastApp',
-  mobileWebAppCapable: 'yes',
-  msapplicationConfig: '/icons/browserconfig.xml',
-  msapplicationTileColor: '#2B5797',
-  msapplicationTapHighlight: 'no',
+  // appleMobileWebAppCapable: 'yes',
+  // appleMobileWebAppStatusBarStyle: 'default',
+  // appleMobileWebAppTitle: 'BajaBlastApp',
+  // mobileWebAppCapable: 'yes',
+  //msapplicationConfig: '/icons/browserconfig.xml',
+  // msapplicationTileColor: '#2B5797',
+  // msapplicationTapHighlight: 'no',
   themeColor: '#000000',
-  appleTouchIcon: '/icons/touch-icon-iphone.png',
-  appleTouchIconSizes152x152: '/icons/touch-icon-ipad.png',
-  appleTouchIconSizes180x180: '/icons/touch-icon-iphone-retina.png',
-  appleTouchIconSizes167x167: '/icons/touch-icon-ipad-retina.png',
-  icon: '/icons/favicon-32x32.png',
-  iconSizes32x32: '/icons/favicon-16x16.png',
-  manifest: '/manifest.json',
-  maskIcon: '/icons/safari-pinned-tab.svg',
-  shortcutIcon: '/favicon.ico',
-  stylesheet: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500'
+  // appleTouchIcon: '/icons/touch-icon-iphone.png',
+  // appleTouchIconSizes152x152: '/icons/touch-icon-ipad.png',
+  // appleTouchIconSizes180x180: '/icons/touch-icon-iphone-retina.png',
+  // appleTouchIconSizes167x167: '/icons/touch-icon-ipad-retina.png',
+  // icon: '/icons/favicon-32x32.png',
+  //iconSizes32x32: '/icons/favicon-16x16.png',
+  manifest: '/manifest.json'
+  // maskIcon: '/icons/safari-pinned-tab.svg',
+  // shortcutIcon: '/favicon.ico',
+  // stylesheet: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500'
   // twitterCard: 'summary',
   // twitterUrl: 'https://yourdomain.com',
   // twitterTitle: 'PWA App',

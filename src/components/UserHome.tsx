@@ -1,6 +1,5 @@
 'use client'
 
-import useUser from '@/hooks/useUser'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,7 +8,7 @@ export const imageLoader = () => {
 }
 const UserHome = () => {
   return (
-    <div className="flex  flex-col items-center justify-start p-2 mt-16 text-center ">
+    <div className="flex h-full min-h-[50vh] flex-col items-center justify-start p-2 mt-16 text-center ">
       <div className="relative   aspect-[25/16] w-full max-w-md ">
         <Link href={'/bb'} passHref>
           <Image
