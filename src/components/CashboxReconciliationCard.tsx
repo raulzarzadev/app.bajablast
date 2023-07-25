@@ -24,7 +24,6 @@ const CashboxReconciliationCard = ({
     (acc, curr) => acc + asNumber(curr?.payment?.amount),
     0
   )
-  console.log({ cancellations })
   return (
     <div>
       <Box className="flex justify-end">

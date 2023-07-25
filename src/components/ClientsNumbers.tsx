@@ -22,6 +22,7 @@ import AgeSpan from './AgeSpan'
 import LinkApp from './LinkApp'
 import ClientList from './ClientList'
 import UsersList from './UsersList'
+import ExportDocument from './ExportDocument'
 
 const ClientsNumbers = () => {
   const { clients } = useClients()
@@ -32,6 +33,10 @@ const ClientsNumbers = () => {
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
       <Typography variant="h4">Usuarios por actividad</Typography>
+      <ExportDocument
+        document={clients || []}
+        fileName="Usuarios por actividad"
+      />
       <TableContainer component={Paper}>
         <Table size="small" className="mx-auto">
           <TableHead>
@@ -55,8 +60,13 @@ const ClientsNumbers = () => {
         </Table>
       </TableContainer>
       <Typography variant="h4">Lista de clientes</Typography>
+
       <ClientList />
       <Typography variant="h4">Lista de usuarios</Typography>
+      <ExportDocument
+        document={allUsersFromClients(clients)}
+        fileName="Lista de usuarios"
+      />
       <UsersList users={allUsersFromClients(clients)} />
       {/* <ClientsChart /> */}
     </div>
