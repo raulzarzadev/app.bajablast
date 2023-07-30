@@ -36,6 +36,25 @@ const ClientsTable = ({
   const totalRequested = clients.reduce((acc, client) => {
     //* Get the total of money calculated by the activity price requested and their friends activity
     const clientActivityPrice = asNumber(client.activity?.price)
+    const activitiesClientTotal =
+      client.activities?.reduce((acc, curr) => acc + asNumber(curr.price), 0) ||
+      0
+
+    const activitiesFriendsTotal =
+      client.friends?.reduce(
+        (acc, friend) =>
+          acc +
+          asNumber(
+            friend.activities.reduce(
+              (acc, curr) => acc + asNumber(curr.price),
+              0
+            )
+          ),
+        0
+      ) || 0
+
+    return activitiesFriendsTotal + activitiesClientTotal
+
     return (
       acc +
       clientActivityPrice +
@@ -45,6 +64,8 @@ const ClientsTable = ({
       }, 0) || 0)
     )
   }, 0)
+
+  console.log({ totalRequested })
 
   const totalPayments = clients.reduce((acc, client) => {
     const clientAmount = parseFloat(`${client?.payment?.amount || 0}`)
@@ -153,6 +174,23 @@ const ClientsRow = ({
   const clientAlreadyPaid = !!client.payment
 
   const total = (): number => {
+    const clientActivityAmount = asNumber(client?.activity?.price)
+    if (clientAlreadyPaid) {
+      const discount = asNumber(client.payment?.discount)
+      const amount = asNumber(client.payment?.amount)
+      if (!discount) return amount
+      return addDiscount(amount, discount)
+    } else {
+      return (
+        client?.friends?.reduce((acc, friend) => {
+          const friendActivityAmount = asNumber(friend?.activity?.price)
+          return acc + friendActivityAmount
+        }, clientActivityAmount) || 0
+      )
+    }
+  }
+
+  const totalFromActivities = (): number => {
     const clientActivityAmount = asNumber(client?.activity?.price)
     if (clientAlreadyPaid) {
       const discount = asNumber(client.payment?.discount)

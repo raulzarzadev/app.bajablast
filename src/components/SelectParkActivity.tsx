@@ -18,7 +18,10 @@ const SelectParkActivity = ({
   handleFinish?: () => void
 }) => {
   const allClientsHaveActivity = (clients: NewClient[] | undefined) => {
-    return clients?.every((client) => !!client?.activity?.name)
+    return (
+      clients?.every((client) => !!client?.activity?.name) ||
+      clients?.every((c) => (c?.activities?.length || 0) > 0)
+    )
   }
   const openActivitiesAtFirst = (a: ParkActivity, b: ParkActivity) => {
     if (a.status === 'OPEN') return -1
@@ -31,6 +34,33 @@ const SelectParkActivity = ({
   }, [])
 
   const [activities, setActivities] = useState<ParkActivity[]>([])
+  const handleAddActivityToClient = (
+    activity: ParkActivity,
+    clientId: string
+  ) => {
+    const newActivity = {
+      id: activity?.id,
+      name: activity?.name || '',
+      price: activity?.price || 0
+    }
+    //* get client
+    let client = clients?.find((c) => c.id === clientId)
+    if (!client) return null
+    //* client already have this activity
+    const clientActivityAlreadyAdded = !!client?.activities?.find(
+      (a) => a.id === activity.id
+    )
+    const clientActivities = [...(client.activities || [])]
+    const clearActivities = clientActivities.filter((a) => a.id !== activity.id)
+
+    if (clientActivityAlreadyAdded) {
+      // remove activity
+      return { ...client, activities: clearActivities }
+    }
+    // add activity
+    clientActivities.push(newActivity)
+    return { ...client, activities: clientActivities }
+  }
 
   return (
     <Box>
@@ -41,6 +71,20 @@ const SelectParkActivity = ({
             onSelectActivity={(activityId) => {
               const aux = [...clients]
               const activity = activities.find((a) => a?.id === activityId)
+              const clientModified = handleAddActivityToClient(
+                activity,
+                client.id
+              )
+              console.log({ clientModified })
+
+              // // clean clients
+              aux.splice(i, 1, clientModified)
+              setClients?.(aux)
+              //aux.filter((c) => c.id !== client.id)
+              // // add  client modified
+              // aux.push(clientModified)
+              // setClients?.(aux)
+              return
               if (activity === null) {
                 aux.splice(i, 1, {
                   ...client,
@@ -113,7 +157,7 @@ const ClientSelectRow = ({
             <SelectActivityCard
               activity={activity}
               onClick={() => onSelectActivity(activity.id)}
-              selected={client?.activity?.id === activity.id}
+              selected={!!client?.activities?.find((a) => a.id === activity.id)}
             />
           </Box>
         ))}

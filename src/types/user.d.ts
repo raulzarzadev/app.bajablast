@@ -23,6 +23,7 @@ export type InsurancePolicyNumber = number | 'n/a'
 
 export interface Friend extends Partial<UserType> {
   activity?: ClientActivity | null
+  activities?: NewClient['activities']
   id?: string
   insurancePolicyNumber?: InsurancePolicyNumber
 }
@@ -31,6 +32,7 @@ export interface NewClient extends UserType {
   termsAccepted?: boolean
   medicalInfoUpdated?: boolean
   activity?: ClientActivity | null
+  activities?: ClientActivity[] | null
   signature?: string | null
   friends?: Friend[]
   payment?: Payment

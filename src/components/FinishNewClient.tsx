@@ -5,6 +5,7 @@ import CurrencySpan from './CurrencySpan'
 import ModalAcceptTerms from './ModalAcceptTerms'
 import { useContext } from 'react'
 import { NewClientContext } from '@/context/new-client'
+import asNumber from '@/utils/asNumber'
 
 const FinishNewClient = ({
   handleFinish,
@@ -13,9 +14,20 @@ const FinishNewClient = ({
   clients: NewClient[]
   handleFinish?: () => void | Promise<void>
 }) => {
+  const reducerClientActivities = (acc, curr) =>
+    asNumber(acc) + asNumber(curr.price)
+
   const { client, setClient } = useContext(NewClientContext)
   const total = clients?.reduce(
     (acc, client) => acc + (parseFloat(`${client?.activity?.price}`) || 0),
+    0
+  )
+  const multiActivitiesTotal = clients?.reduce(
+    (acc, client) =>
+      acc +
+      (parseFloat(
+        `${client?.activities?.reduce(reducerClientActivities, 0)}`
+      ) || 0),
     0
   )
 
@@ -32,9 +44,23 @@ const FinishNewClient = ({
           {clients?.map((friend, i) => (
             <tr key={(friend?.id || '') + i}>
               <td>{friend?.name}</td>
-              <td>{friend?.activity?.name}</td>
               <td>
-                <CurrencySpan quantity={friend?.activity?.price} />
+                {friend?.activity?.name ||
+                  friend?.activities?.map((a) => (
+                    <p key={a.name}>{a.name}, </p>
+                  ))}
+              </td>
+              <td>
+                {friend?.activity?.price ? (
+                  <CurrencySpan quantity={friend?.activity?.price} />
+                ) : (
+                  <CurrencySpan
+                    quantity={friend.activities?.reduce(
+                      reducerClientActivities,
+                      0
+                    )}
+                  />
+                )}
               </td>
             </tr>
           ))}
@@ -44,7 +70,7 @@ const FinishNewClient = ({
             <td></td>
             <td>Total:</td>
             <td>
-              <CurrencySpan quantity={total} />
+              <CurrencySpan quantity={total || multiActivitiesTotal} />
             </td>
           </tr>
         </tfoot>
