@@ -40,6 +40,7 @@ import {
   incrementUsersCount,
   updateParkConfiguration
 } from '@/firebase/parkConfigurations'
+import { subtotalFromClient } from './ClientsTable'
 const activityRequireInsurance = async (activityId?: string) => {
   if (activityId)
     return await getActivity(activityId).then((activity) => {
@@ -65,13 +66,8 @@ const assignInsurancePolicy = async (
 const ModalPayment = ({ client }: { client: NewClient }) => {
   const { user } = useUser()
   const { parkConfig } = useParkConfig()
-  const clientAmount = asNumber(client.activity?.price)
   const USD_PRICE = asNumber(parkConfig?.dollarPrice)
-  const subtotal =
-    client?.friends?.reduce((acc, friend) => {
-      const friendAmount = asNumber(friend?.activity?.price)
-      return acc + friendAmount
-    }, clientAmount) || 0
+  const subtotal = subtotalFromClient(client)
 
   const parkUserCount = parkConfig?.usersCount || 0
   const handlePay = async () => {

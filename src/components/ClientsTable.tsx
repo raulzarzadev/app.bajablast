@@ -272,6 +272,10 @@ const ModalEditClient = ({ client }: { client: NewClient }) => {
   )
 }
 
+export const subtotalFromClient = (client: NewClient) => {
+  return activitiesTotalAmount(clientAndFriendsActivities(client))
+}
+
 export const clientAndFriendsActivities = (
   client: NewClient
 ): NewClient['activities'] => {
