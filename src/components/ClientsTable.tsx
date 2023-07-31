@@ -25,6 +25,7 @@ import asDate from '@/utils/asDate'
 import addDiscount from '@/utils/addDiscount'
 import { paymentMethods } from '@/CONST/paymentMethods'
 import ModalConfirm from './ModalConfirm'
+import { activities } from '@/CONST/fake-activities'
 
 const ClientsTable = ({
   clients,
@@ -33,73 +34,71 @@ const ClientsTable = ({
   clients: NewClient[]
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
-  const totalRequested = clients.reduce((acc, client) => {
-    //* Get the total of money calculated by the activity price requested and their friends activity
-    const clientActivityPrice = asNumber(client.activity?.price)
-    const activitiesClientTotal =
-      client.activities?.reduce((acc, curr) => acc + asNumber(curr.price), 0) ||
-      0
+  // const clientsTotal = clients.reduce((acc, curr) => {
+  //   return acc + activitiesTotalAmount(clientAndFriendsActivities(curr))
+  // }, 0)
 
-    const activitiesFriendsTotal =
-      client.friends?.reduce(
-        (acc, friend) =>
-          acc +
-          asNumber(
-            friend.activities.reduce(
-              (acc, curr) => acc + asNumber(curr.price),
-              0
-            )
-          ),
-        0
-      ) || 0
+  // console.log(t)
 
-    return activitiesFriendsTotal + activitiesClientTotal
+  // const totalRequested = clients.reduce((acc, client) => {
+  //   //* Get the total of money calculated by the activity price requested and their friends activity
+  //   const clientActivityPrice = asNumber(client.activity?.price)
+  //   const activitiesClientTotal =
+  //     client.activities?.reduce((acc, curr) => acc + asNumber(curr.price), 0) ||
+  //     0
 
-    return (
-      acc +
-      clientActivityPrice +
-      (client?.friends?.reduce((acc, friend) => {
-        const friendActivityPrice = asNumber(friend.activity?.price)
-        return acc + friendActivityPrice
-      }, 0) || 0)
-    )
-  }, 0)
+  //   const activitiesFriendsTotal =
+  //     client.friends?.reduce(
+  //       (acc, friend) =>
+  //         acc +
+  //         asNumber(
+  //           friend?.activities?.reduce(
+  //             (acc, curr) => acc + asNumber(curr.price),
+  //             0
+  //           )
+  //         ),
+  //       0
+  //     ) || 0
 
-  console.log({ totalRequested })
+  //   return activitiesFriendsTotal + activitiesClientTotal
 
-  const totalPayments = clients.reduce((acc, client) => {
-    const clientAmount = parseFloat(`${client?.payment?.amount || 0}`)
-    const clientDiscount = parseFloat(`${client?.payment?.discount || 0}`)
-    return acc + clientAmount - clientAmount * (clientDiscount / 100)
-  }, 0)
-  const clientsTotal = clients.reduce((acc, client) => {
-    return acc + (client?.friends?.length || 0) + 1
-  }, 0)
-  const clientsAlreadyPay = clients.some((client) => client.payment)
-  const cancellationsTotal = clients.reduce((acc, client) => {
-    const canceledAmount = client.payment?.isCancelled
-      ? asNumber(client.payment.amount)
-      : 0
-    return acc + canceledAmount
-  }, 0)
-  const cancellations = clients.filter(
-    (client) => client.payment?.isCancelled
-  ).length
-  console.log({ cancellationsTotal })
+  //   return (
+  //     acc +
+  //     clientActivityPrice +
+  //     (client?.friends?.reduce((acc, friend) => {
+  //       const friendActivityPrice = asNumber(friend.activity?.price)
+  //       return acc + friendActivityPrice
+  //     }, 0) || 0)
+  //   )
+  // }, 0)
+
+  // console.log({ totalRequested })
+
+  // const totalPayments = clients.reduce((acc, client) => {
+  //   const clientAmount = parseFloat(`${client?.payment?.amount || 0}`)
+  //   const clientDiscount = parseFloat(`${client?.payment?.discount || 0}`)
+  //   return acc + clientAmount - clientAmount * (clientDiscount / 100)
+  // }, 0)
+  // const clientsTotal = clients.reduce((acc, client) => {
+  //   return acc + (client?.friends?.length || 0) + 1
+  // }, 0)
+  // const clientsAlreadyPay = clients.some((client) => client.payment)
+  // const cancellationsTotal = clients.reduce((acc, client) => {
+  //   const canceledAmount = client.payment?.isCancelled
+  //     ? asNumber(client.payment.amount)
+  //     : 0
+  //   return acc + canceledAmount
+  // }, 0)
+  // const cancellations = clients.filter(
+  //   (client) => client.payment?.isCancelled
+  // ).length
+  // console.log({ cancellationsTotal })
   const sortByDate = (a: NewClient, b: NewClient) => {
-    if (clientsAlreadyPay) {
-      const aPaidAt = asDate(a?.payment?.created?.at)
-      const bPaidAt = asDate(b?.payment?.created?.at)
-      const aDate = aPaidAt?.getTime() || 0
-      const bDate = bPaidAt?.getTime() || 0
-      return bDate - aDate
-    } else {
-      const aCreatedAt = asDate(a.created?.at)
-      const bCreatedAt = asDate(b.created?.at)
-      const aDate = aCreatedAt?.getTime() || 0
-      const bDate = bCreatedAt?.getTime() || 0
-      return bDate - aDate
-    }
+    const aCreatedAt = asDate(a.created?.at)
+    const bCreatedAt = asDate(b.created?.at)
+    const aDate = aCreatedAt?.getTime() || 0
+    const bDate = bCreatedAt?.getTime() || 0
+    return bDate - aDate
   }
 
   return (
@@ -130,7 +129,7 @@ const ClientsTable = ({
             />
           ))}
         </TableBody>
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TableCell align="right" colSpan={!handleRemove ? 2 : 3}>
               Subtotal:
@@ -157,7 +156,7 @@ const ClientsTable = ({
               />
             </TableCell>
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </Table>
     </TableContainer>
   )
@@ -170,47 +169,15 @@ const ClientsRow = ({
   client: NewClient
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
+  const removeModal = useModal()
   const modalDetails = useModal()
   const clientAlreadyPaid = !!client.payment
-
-  const total = (): number => {
-    const clientActivityAmount = asNumber(client?.activity?.price)
-    if (clientAlreadyPaid) {
-      const discount = asNumber(client.payment?.discount)
-      const amount = asNumber(client.payment?.amount)
-      if (!discount) return amount
-      return addDiscount(amount, discount)
-    } else {
-      return (
-        client?.friends?.reduce((acc, friend) => {
-          const friendActivityAmount = asNumber(friend?.activity?.price)
-          return acc + friendActivityAmount
-        }, clientActivityAmount) || 0
-      )
-    }
-  }
-
-  const totalFromActivities = (): number => {
-    const clientActivityAmount = asNumber(client?.activity?.price)
-    if (clientAlreadyPaid) {
-      const discount = asNumber(client.payment?.discount)
-      const amount = asNumber(client.payment?.amount)
-      if (!discount) return amount
-      return addDiscount(amount, discount)
-    } else {
-      return (
-        client?.friends?.reduce((acc, friend) => {
-          const friendActivityAmount = asNumber(friend?.activity?.price)
-          return acc + friendActivityAmount
-        }, clientActivityAmount) || 0
-      )
-    }
-  }
 
   const createdAt = client?.created?.at
   const paymentAt = client?.payment?.created?.at || client?.payment?.date
 
-  const removeModal = useModal()
+  const total = activitiesTotalAmount(clientAndFriendsActivities(client))
+
   return (
     <TableRow
       onClick={(e) => {
@@ -266,7 +233,7 @@ const ClientsRow = ({
             -{client.payment.discount}%
           </span>
         )}
-        <CurrencySpan quantity={total()} />{' '}
+        <CurrencySpan quantity={total} />{' '}
       </TableCell>
       <TableCell>
         {
@@ -302,6 +269,32 @@ const ModalEditClient = ({ client }: { client: NewClient }) => {
         <StepperNewClientContext client={client} />
       </Modal>
     </>
+  )
+}
+
+export const clientAndFriendsActivities = (
+  client: NewClient
+): NewClient['activities'] => {
+  const clientActivities: NewClient['activities'] = [
+    ...(client.activities || [])
+  ]
+  if (client.activity) clientActivities.push(client.activity)
+  const friendsActivities: NewClient['activities'] = [
+    ...(client?.friends?.map((f) => f.activities || []).flat() || [])
+  ]
+  client.friends?.forEach((friend) => {
+    if (friend.activity) friendsActivities.push(friend.activity)
+  })
+  return [...clientActivities, ...friendsActivities]
+}
+
+export const activitiesTotalAmount = (
+  activities: NewClient['activities']
+): number => {
+  return (
+    activities?.reduce((acc, curr) => {
+      return acc + asNumber(curr?.price)
+    }, 0) || 0
   )
 }
 
