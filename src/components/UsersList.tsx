@@ -79,8 +79,8 @@ const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
                 <TableCell align="center">
                   <AgeSpan birthday={user.birthday} />
                 </TableCell>
-                <TableCell>{user.medicalInfo}</TableCell>
-                <TableCell>{user.activity.name}</TableCell>
+                <TableCell>{user?.medicalInfo}</TableCell>
+                <TableCell>{user?.activity?.name}</TableCell>
               </TableRow>
             ))}
           </TableBody>
