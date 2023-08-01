@@ -58,6 +58,13 @@ const calculateReconciliation = (
     (acc, client) => acc + asNumber(client?.payment?.amount),
     0
   )
+  const discounts = clients
+    .filter((client) => {
+      return (client.payment?.discount || 0) > 0
+    })
+    .map((client) => {
+      return { clientId: client.id, ...client?.payment }
+    })
   return {
     dates: {
       from: reconciliationData?.from || null,
@@ -70,7 +77,8 @@ const calculateReconciliation = (
     cashier,
     activities: groupedActivities,
     payments,
-    cancellations
+    cancellations,
+    discounts
   }
 }
 export default calculateReconciliation

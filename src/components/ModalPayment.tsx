@@ -105,7 +105,6 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
         friends: newFriends,
         userNumber: parkUserCount + 1
       }
-      console.log({ countData })
       await updateClient(clientId, countData)
       //* Update park user count
       if (parkConfig?.id) await incrementUsersCount(parkConfig?.id)
@@ -117,11 +116,11 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
   }
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>('cash')
-  const [discount, setDiscount] = useState(0)
+  const [discount, setDiscount] = useState<number>(0)
   const [amount, setAmount] = useState(0)
   const modalDetails = useModal()
-  const total = subtotal - subtotal * (discount / 100)
-  const showDiscountInput = false //user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
+  const total = subtotal - subtotal * (asNumber(discount) / 100)
+  const showDiscountInput = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
   const showCortesia = user?.isAdmin || user?.rol === USER_ROL.COORDINATOR
   const handleOpenEdit = () => {
     modalDetails.handleOpen()
@@ -183,7 +182,7 @@ const ModalPayment = ({ client }: { client: NewClient }) => {
                     label="Descuento"
                     size="small"
                     type="number"
-                    value={discount}
+                    value={discount || ''}
                     onChange={(e) => {
                       setDiscount(asNumber(e.target.value))
                     }}

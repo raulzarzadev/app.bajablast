@@ -100,9 +100,7 @@ const ModalAcceptTerms = ({
               penColor="green"
               ref={(ref) => (signatureRef.current = ref)}
               canvasProps={{
-                width: 500,
-                height: 200,
-                className: 'sigCanvas'
+                className: 'sigCanvas w-full aspect-video'
               }}
             />
           </Box>

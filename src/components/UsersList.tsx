@@ -100,7 +100,6 @@ type UsersRowProps = {
 }
 
 const UserRow = ({ user, alreadyPaid }: UsersRowProps) => {
-  console.log(user.payment?.discount)
   const paymentDiscount = user.payment?.discount
   return (
     <TableRow key={user.id}>

@@ -48,7 +48,7 @@ const ParkConfigurationsList = () => {
   }
   return (
     <Box>
-      <Typography variant="h5">Otras Configuraciones</Typography>
+      <Typography variant="h5">Configuraciones</Typography>
       {configurations.map((config) => (
         <ConfigurationCard
           key={config.id}
@@ -84,7 +84,8 @@ const ConfigurationCard = ({
       <Box
         key={config?.id}
         className={`my-2 border shadow-md p-2 rounded-md  
-      ${config.selected ? 'bg-blue-500' : ' '}`}
+       ${config.selected ? 'bg-blue-200' : ' '}
+      `}
       >
         <Box className="flex justify-center flex-col sm:flex-row sm:justify-between text-center ">
           <Typography className="font-bold"> {config?.name} </Typography>

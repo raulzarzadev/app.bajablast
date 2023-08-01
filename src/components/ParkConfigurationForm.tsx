@@ -33,7 +33,7 @@ const ParkConfigurationForm = ({ config }: { config?: ParkConfiguration }) => {
       <Typography variant="h5" className="text-center mt-8">
         Configuración del parque
       </Typography>
-      <form className="grid max-w-md mx-auto gap-4 my-4 ">
+      <form className="grid max-w-2xl mx-auto gap-4 my-4 ">
         {/* <WeekScheduleSection
           setSchedule={(schedule) => methods.setValue('schedule', schedule)}
         /> */}

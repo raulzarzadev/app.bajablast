@@ -1,9 +1,21 @@
 import { Reconciliation } from '@/types/reconciliations'
 import asDate from '@/utils/asDate'
 import { dateFormat } from '@/utils/utils-date'
-import { Box, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material'
 import CurrencySpan from './CurrencySpan'
 import asNumber from '@/utils/asNumber'
+import { useState } from 'react'
+import SpanDiscount2 from './SpanDiscount2'
 
 const CashboxReconciliationCard = ({
   reconciliation
@@ -18,12 +30,25 @@ const CashboxReconciliationCard = ({
     totalDollars,
     totalCash,
     payments,
-    cancellations
+    cancellations,
+    discounts
   } = reconciliation
   const totalCancellations = cancellations?.reduce(
     (acc, curr) => acc + asNumber(curr?.payment?.amount),
     0
   )
+  const [showDetails, setShowDetails] = useState(false)
+  const handleShowDetails = () => {
+    setShowDetails(!showDetails)
+  }
+
+  const totalDiscounted =
+    discounts?.reduce((acc, curr) => {
+      const amount = asNumber(curr?.amount)
+      const discount = asNumber(curr?.discount)
+      return acc + amount * (discount / 100)
+    }, 0) || 0
+
   return (
     <div>
       <Box className="flex justify-end">
@@ -36,6 +61,7 @@ const CashboxReconciliationCard = ({
           {dateFormat(asDate(reconciliation.dates?.to), ' dd/MMM/yy HH:mm ')}
         </Typography>
       </Box>
+      {showDetails && <PaymentsDetails payments={reconciliation.payments} />}
       <Typography className="text-center">
         Cajero: {cashier ? cashier.name : 'Todos'}
       </Typography>
@@ -52,8 +78,9 @@ const CashboxReconciliationCard = ({
       <Box className="text-end">
         <Typography>Pagos: {payments?.length || 0}</Typography>
         <Typography>Cancelaciones: {cancellations?.length || 0}</Typography>
+
         <Typography>
-          Efectivo:ca <CurrencySpan quantity={totalCash} />
+          Efectivo: <CurrencySpan quantity={totalCash} />
         </Typography>
         <Typography>
           Dollares: <CurrencySpan quantity={totalDollars} />
@@ -68,12 +95,76 @@ const CashboxReconciliationCard = ({
           <Typography className="text-end" variant="h6">
             Cancelaciones: <CurrencySpan quantity={totalCancellations} />
           </Typography>
+          <Typography>
+            Descuentos: <CurrencySpan quantity={totalDiscounted} />
+          </Typography>
           <Typography className="text-end" variant="h5">
-            Total: <CurrencySpan quantity={(total || 0) - totalCancellations} />
+            Total:{' '}
+            <CurrencySpan
+              quantity={(total || 0) - totalCancellations - totalDiscounted}
+            />
           </Typography>
         </Box>
+        <Button
+          onClick={(e) => {
+            handleShowDetails()
+          }}
+        >
+          Mostrar Detalles
+        </Button>
       </Box>
     </div>
+  )
+}
+
+const PaymentsDetails = ({
+  payments
+}: {
+  payments?: Partial<Reconciliation['payments']>
+}) => {
+  return (
+    <Box>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Fecha</TableCell>
+              <TableCell>Metodo</TableCell>
+              <TableCell align="center">Estatus</TableCell>
+
+              <TableCell align="right">Monto</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {payments
+              ?.sort(
+                (a, b) =>
+                  (asDate(b?.date)?.getTime() || 0) -
+                  (asDate(a?.date)?.getTime() || 0)
+              )
+              .map((payment) => {
+                return (
+                  <TableRow key={payment?.clientId}>
+                    <TableCell>
+                      {dateFormat(asDate(payment?.date), 'dd/MMM/yy HH:mm')}
+                    </TableCell>
+                    <TableCell>{payment?.method}</TableCell>
+                    <TableCell align="center">
+                      {payment?.isCancelled && 'Cancelado'}
+                    </TableCell>
+                    <TableCell align="right">
+                      <SpanDiscount2
+                        amount={payment?.amount}
+                        discount={payment?.discount}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }
 

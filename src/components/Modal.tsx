@@ -32,7 +32,7 @@ const Modal = ({ open, onClose, children, title }: ModalProps) => {
     >
       <Box
         sx={style}
-        className="w-full max-w-lg max-h-screen overflow-y-auto relative "
+        className="w-full max-w-2xl max-h-screen overflow-y-auto relative "
       >
         <Box
           component={'header'}

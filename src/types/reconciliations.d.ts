@@ -16,5 +16,6 @@ export interface Reconciliation extends BaseType {
   cashier: { name: string; id: string } | null
   activities: Record<string, any[]>
   payments: Partial<Client['payment'] & { clientId: Client['id'] }>[]
-  cancellations:any[]
+  cancellations: any[]
+  discounts: Partial<Client['payment'] & { clientId: Client['id'] }>[]
 }

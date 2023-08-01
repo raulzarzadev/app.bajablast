@@ -67,7 +67,7 @@ const SelectParkActivity = ({
       <Box className="">
         {clients?.map((client, i) => (
           <ClientSelectRow
-            key={client?.id}
+            key={client?.id || i}
             onSelectActivity={(activityId) => {
               const aux = [...clients]
               const activity = activities.find((a) => a?.id === activityId)
@@ -78,7 +78,6 @@ const SelectParkActivity = ({
                 activity,
                 client.id
               )
-              console.log({ clientModified })
               if (!clientModified) return console.log('no client modified')
               // // clean clients
               aux.splice(i, 1, clientModified)
