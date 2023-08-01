@@ -14,7 +14,7 @@ const FinishNewClient = ({
   clients: NewClient[]
   handleFinish?: () => void | Promise<void>
 }) => {
-  const reducerClientActivities = (acc, curr) =>
+  const reducerClientActivities = (acc: any, curr: any) =>
     asNumber(acc) + asNumber(curr.price)
 
   const { client, setClient } = useContext(NewClientContext)

@@ -117,7 +117,6 @@ const ReconciliationInfo = ({
     }
   }
   const cashBoxContext = useContext(CashBoxContext)
-  console.log({ first: cashBoxContext.isDirty })
   return (
     <Box>
       <CashboxReconciliationCard reconciliation={reconciliation} />

@@ -53,7 +53,7 @@ const CashboxReconciliationCard = ({
         <Typography>Pagos: {payments?.length || 0}</Typography>
         <Typography>Cancelaciones: {cancellations?.length || 0}</Typography>
         <Typography>
-          Efectivo: <CurrencySpan quantity={totalCash} />
+          Efectivo:ca <CurrencySpan quantity={totalCash} />
         </Typography>
         <Typography>
           Dollares: <CurrencySpan quantity={totalDollars} />

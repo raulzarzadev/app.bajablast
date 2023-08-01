@@ -71,12 +71,15 @@ const SelectParkActivity = ({
             onSelectActivity={(activityId) => {
               const aux = [...clients]
               const activity = activities.find((a) => a?.id === activityId)
+              if (!activity || !client.id)
+                return console.log('no activity or client')
+
               const clientModified = handleAddActivityToClient(
                 activity,
                 client.id
               )
               console.log({ clientModified })
-
+              if (!clientModified) return console.log('no client modified')
               // // clean clients
               aux.splice(i, 1, clientModified)
               setClients?.(aux)

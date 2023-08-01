@@ -1,21 +1,26 @@
 import { Reconciliation, ReconciliationData } from '@/types/reconciliations'
 import { Client } from '@/types/user'
 import asNumber from './asNumber'
+import { ClientActivity, ParkActivity } from '@/types/activities'
 
+const allClientsActivities = (clients: Partial<Client>[]): ClientActivity[] => {
+  let res: ClientActivity[] = []
+  clients.forEach((client) => {
+    client.activity && res.push({ ...client.activity })
+    client.activities?.forEach((activity) => res.push(activity))
+    client.friends?.forEach((friend) => {
+      friend.activity && res.push(friend.activity)
+      friend.activities?.forEach((activity) => res.push(activity))
+    })
+  })
+  return res
+}
 const calculateReconciliation = (
   clients: Partial<Client>[],
   reconciliationData?: ReconciliationData
 ): Partial<Reconciliation> => {
   const cashier = reconciliationData?.cashier || null
-  const activities = clients
-    .map((client) => {
-      const friendsActivities =
-        client?.friends?.map((friend) => {
-          return friend?.activity
-        }) || []
-      return [client.activity, ...friendsActivities]
-    })
-    .flat()
+  const activities = allClientsActivities(clients)
 
   const groupedActivities: Record<string, any[]> = {}
   activities.forEach((activity) => {

@@ -26,6 +26,7 @@ export interface Friend extends Partial<UserType> {
   activities?: NewClient['activities']
   id?: string
   insurancePolicyNumber?: InsurancePolicyNumber
+  paymentDate?: Date | Timestamp
 }
 
 export interface NewClient extends UserType {

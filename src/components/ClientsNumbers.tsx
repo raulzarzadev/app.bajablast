@@ -27,7 +27,7 @@ import ExportDocument from './ExportDocument'
 const ClientsNumbers = () => {
   const { clients } = useClients()
 
-  const groupedClients = groupClients(clients || [])
+  const groupedClients = groupUsersByActivity(clients || [])
 
   return (
     <div>
@@ -52,7 +52,7 @@ const ClientsNumbers = () => {
             {Object.entries(groupedClients).map(([activityName, users]) => (
               <UsersRow
                 key={activityName}
-                activity={{ name: activityName, id: users.activity.id }}
+                activity={{ name: activityName, id: users?.activity?.id }}
                 users={users}
               ></UsersRow>
             ))}
@@ -64,20 +64,22 @@ const ClientsNumbers = () => {
       <ClientList />
       <Typography variant="h4">Lista de usuarios</Typography>
       <ExportDocument
-        document={allUsersFromClients(clients)}
+        document={allUsersFromClientsAndPaymentDate(clients)}
         fileName="Lista de usuarios"
       />
-      <UsersList users={allUsersFromClients(clients)} />
+      <UsersList users={allUsersFromClientsAndPaymentDate(clients)} />
       {/* <ClientsChart /> */}
     </div>
   )
 }
 
-const allUsersFromClients = (clients: Client[] = []): (Client | Friend)[] => {
+const allUsersFromClientsAndPaymentDate = (
+  clients: Client[] = []
+): (Client | Friend)[] => {
   return (
     clients?.flatMap((client) => {
       return [
-        client,
+        { ...client, paymentDate: client?.payment?.created?.at },
         ...(client?.friends?.map((friend) => ({
           ...friend,
           paymentDate: client?.payment?.created?.at
@@ -103,7 +105,9 @@ const UsersRow = ({
       <TableCell>
         <LinkApp href={`/bb/${activity?.id}`} label={activity?.name} />
       </TableCell>
-      <TableCell>{total?.length}</TableCell>
+      <TableCell>
+        <UsersDetails users={total} />
+      </TableCell>
       <TableCell>
         <UsersDetails users={today} />
       </TableCell>
@@ -169,7 +173,7 @@ type GroupedData = {
     thisMonth: any[]
   }
 }
-const groupClients = (clients: Client[]): GroupedData =>
+const groupUsersByActivity_ = (clients: Client[]): GroupedData =>
   clients?.reduce((groups: { [key: string]: any }, client) => {
     const activityName = client?.activity?.name || '' // Obtener el nombre de la actividad
     const activity = {
@@ -188,6 +192,23 @@ const groupClients = (clients: Client[]): GroupedData =>
 
     groups[activityName].total.push(client) // Agregar el objeto al grupo total
 
+    const groupMultipleActivities = (activities: Client['activities'] = []) =>
+      activities?.forEach((a) => {
+        if (!groups[a.name]) {
+          groups[activityName] = {
+            activity,
+            total: [],
+            today: [],
+            thisWeek: [],
+            thisMonth: []
+          } // Agregar actividad al grupo de actividades
+        }
+      })
+
+    const clientActivities = client?.activities || []
+    if (clientActivities.length) {
+      groupMultipleActivities(clientActivities)
+    }
     const clientPaymentDate =
       client.payment?.created?.at && asDate(client.payment?.created?.at)
     if (!clientPaymentDate) {
@@ -208,6 +229,10 @@ const groupClients = (clients: Client[]): GroupedData =>
 
     if (client.friends) {
       client.friends.forEach((friend) => {
+        const friendActivities = friend?.activities || []
+        if (friendActivities) {
+          groupMultipleActivities(friendActivities)
+        }
         const friendActivityName = friend?.activity?.name || ''
         const friendActivity = {
           name: friendActivityName,
@@ -242,4 +267,73 @@ const groupClients = (clients: Client[]): GroupedData =>
     return groups
   }, {}) as GroupedData
 
+const groupUsersByActivity = (clients: Client[]): GroupedData => {
+  let grouped: GroupedData = {}
+  //* format clients as user with their friends
+  const users = allUsersFromClientsAndPaymentDate(clients)
+  //* group users
+  users.forEach((user) => {
+    //* determinate de client payment for user
+    const userMultiActivity = user?.activities || []
+    const clientPaymentDate = asDate(user?.paymentDate)
+    if (!clientPaymentDate) {
+      return grouped
+    }
+
+    //* group user with multiple activity
+    if (userMultiActivity?.length > 0) {
+      user.activities?.forEach((activity) => {
+        const activityName = activity?.name || ''
+        if (!activityName) return
+        if (!grouped[activityName]) {
+          grouped[activityName] = {
+            activity: {
+              id: activity?.id || '',
+              name: activity?.name || ''
+            },
+            total: [],
+            today: [],
+            thisWeek: [],
+            thisMonth: []
+          }
+        }
+        // Add to total
+        grouped[activityName].total.push(user)
+        // Agregar el objeto al grupo today
+        if (isToday(clientPaymentDate)) {
+          grouped[activityName].today.push(user)
+        }
+        // Agregar el objeto al grupo thisWeek
+        if (isThisWeek(clientPaymentDate)) {
+          grouped[activityName].thisWeek.push(user)
+        }
+        // Agregar el objeto al grupo thisMonth
+        if (isThisMonth(clientPaymentDate)) {
+          grouped[activityName].thisMonth.push(user)
+        }
+      })
+    }
+    const userActivity = user.activity
+    const activityName = userActivity?.name || ''
+
+    //* group user with single activity
+    if (!activityName) return
+
+    if (!grouped[activityName]) {
+      grouped[activityName] = {
+        activity: {
+          id: userActivity?.id || '',
+          name: userActivity?.name || ''
+        },
+        total: [],
+        today: [],
+        thisWeek: [],
+        thisMonth: []
+      }
+    }
+
+    grouped[activityName].total.push(user)
+  })
+  return grouped
+}
 export default ClientsNumbers
