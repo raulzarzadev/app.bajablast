@@ -36,7 +36,7 @@ const SelectParkActivity = ({
   const [activities, setActivities] = useState<ParkActivity[]>([])
   const handleAddActivityToClient = (
     activity: ParkActivity,
-    clientId: string
+    clientId?: string
   ) => {
     const newActivity = {
       id: activity?.id,
@@ -71,8 +71,8 @@ const SelectParkActivity = ({
             onSelectActivity={(activityId) => {
               const aux = [...clients]
               const activity = activities.find((a) => a?.id === activityId)
-              if (!activity || !client.id)
-                return console.log('no activity or client')
+              // if (!client.id) return console.log({ client }, 'no client.id')
+              if (!activity) return console.log('no activity')
 
               const clientModified = handleAddActivityToClient(
                 activity,

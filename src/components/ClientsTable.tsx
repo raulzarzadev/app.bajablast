@@ -26,6 +26,8 @@ import addDiscount from '@/utils/addDiscount'
 import { paymentMethods } from '@/CONST/paymentMethods'
 import ModalConfirm from './ModalConfirm'
 import { activities } from '@/CONST/fake-activities'
+import useUser from '@/hooks/useUser'
+import SpanDiscount from './SpanDiscount'
 
 const ClientsTable = ({
   clients,
@@ -34,65 +36,7 @@ const ClientsTable = ({
   clients: NewClient[]
   handleRemove?: (clientId: NewClient['id']) => void
 }) => {
-  // const clientsTotal = clients.reduce((acc, curr) => {
-  //   return acc + activitiesTotalAmount(clientAndFriendsActivities(curr))
-  // }, 0)
-
-  // console.log(t)
-
-  // const totalRequested = clients.reduce((acc, client) => {
-  //   //* Get the total of money calculated by the activity price requested and their friends activity
-  //   const clientActivityPrice = asNumber(client.activity?.price)
-  //   const activitiesClientTotal =
-  //     client.activities?.reduce((acc, curr) => acc + asNumber(curr.price), 0) ||
-  //     0
-
-  //   const activitiesFriendsTotal =
-  //     client.friends?.reduce(
-  //       (acc, friend) =>
-  //         acc +
-  //         asNumber(
-  //           friend?.activities?.reduce(
-  //             (acc, curr) => acc + asNumber(curr.price),
-  //             0
-  //           )
-  //         ),
-  //       0
-  //     ) || 0
-
-  //   return activitiesFriendsTotal + activitiesClientTotal
-
-  //   return (
-  //     acc +
-  //     clientActivityPrice +
-  //     (client?.friends?.reduce((acc, friend) => {
-  //       const friendActivityPrice = asNumber(friend.activity?.price)
-  //       return acc + friendActivityPrice
-  //     }, 0) || 0)
-  //   )
-  // }, 0)
-
-  // console.log({ totalRequested })
-
-  // const totalPayments = clients.reduce((acc, client) => {
-  //   const clientAmount = parseFloat(`${client?.payment?.amount || 0}`)
-  //   const clientDiscount = parseFloat(`${client?.payment?.discount || 0}`)
-  //   return acc + clientAmount - clientAmount * (clientDiscount / 100)
-  // }, 0)
-  // const clientsTotal = clients.reduce((acc, client) => {
-  //   return acc + (client?.friends?.length || 0) + 1
-  // }, 0)
-  // const clientsAlreadyPay = clients.some((client) => client.payment)
-  // const cancellationsTotal = clients.reduce((acc, client) => {
-  //   const canceledAmount = client.payment?.isCancelled
-  //     ? asNumber(client.payment.amount)
-  //     : 0
-  //   return acc + canceledAmount
-  // }, 0)
-  // const cancellations = clients.filter(
-  //   (client) => client.payment?.isCancelled
-  // ).length
-  // console.log({ cancellationsTotal })
+  const { user } = useUser()
   const sortByDate = (a: NewClient, b: NewClient) => {
     const aCreatedAt = asDate(a.created?.at)
     const bCreatedAt = asDate(b.created?.at)
@@ -100,6 +44,8 @@ const ClientsTable = ({
     const bDate = bCreatedAt?.getTime() || 0
     return bDate - aDate
   }
+  const canRemove =
+    user?.isAdmin || user?.rol === 'ADMIN' || user?.rol === 'COORDINATOR'
 
   return (
     <TableContainer component={Paper}>
@@ -110,7 +56,7 @@ const ClientsTable = ({
       >
         <TableHead>
           <TableRow>
-            {handleRemove && <TableCell>Elim</TableCell>}
+            {handleRemove && canRemove && <TableCell>Elim</TableCell>}
             <TableCell align="center">Fecha</TableCell>
             <TableCell align="center">Nombre</TableCell>
             <TableCell align="center">Usuarios</TableCell>
@@ -126,6 +72,7 @@ const ClientsTable = ({
               client={client}
               handleRemove={handleRemove}
               key={client.id}
+              canRemove={canRemove}
             />
           ))}
         </TableBody>
@@ -164,10 +111,12 @@ const ClientsTable = ({
 
 const ClientsRow = ({
   client,
-  handleRemove
+  handleRemove,
+  canRemove
 }: {
   client: NewClient
   handleRemove?: (clientId: NewClient['id']) => void
+  canRemove?: boolean
 }) => {
   const removeModal = useModal()
   const modalDetails = useModal()
@@ -184,7 +133,7 @@ const ClientsRow = ({
         modalDetails.handleOpen()
       }}
     >
-      {handleRemove && (
+      {handleRemove && canRemove && (
         <>
           <TableCell>
             <ModalConfirm
@@ -227,13 +176,11 @@ const ClientsRow = ({
 
       <TableCell>{client.name}</TableCell>
       <TableCell align="center">{(client?.friends?.length || 0) + 1}</TableCell>
-      <TableCell align="right">
-        {!!client.payment?.discount && (
-          <span className="text-green-600 font-bold">
-            -{client.payment.discount}%
-          </span>
-        )}
-        <CurrencySpan quantity={total} />{' '}
+      <TableCell align="center">
+        <CurrencySpan quantity={total} />
+        <p>
+          <SpanDiscount discount={client?.payment?.discount} />
+        </p>
       </TableCell>
       <TableCell>
         {

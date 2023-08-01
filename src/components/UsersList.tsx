@@ -11,9 +11,10 @@ import AgeSpan from './AgeSpan'
 import CurrencySpan from './CurrencySpan'
 import { dateFormat } from '@/utils/utils-date'
 import asDate from '@/utils/asDate'
-import { Friend, NewClient } from '@/types/user'
+import { ParkUser } from '@/types/user'
+import SpanDiscount from './SpanDiscount'
 
-const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
+const UsersList = ({ users = [] }: { users?: Partial<ParkUser>[] }) => {
   const alreadyPaid = users.some(
     //@ts-ignore
     (u) => u?.payment?.created?.at || u?.paymentDate
@@ -53,40 +54,82 @@ const UsersList = ({ users = [] }: { users?: (NewClient | Friend)[] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users?.sort(sortByPaymentDate).map((user: any, i) => (
-              <TableRow key={user.id}>
-                {alreadyPaid && (
-                  <TableCell>{user?.userNumber || '-'}</TableCell>
-                )}
-                {alreadyPaid && (
-                  <TableCell className="whitespace-nowrap">
-                    {dateFormat(
-                      asDate(user?.payment?.created?.at || user?.paymentDate),
-                      'dd/MMM HH:mm'
-                    )}
-                  </TableCell>
-                )}
-                <TableCell>{0}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>
-                  {user.rol === 'CLIENT' ? 'Cliente' : 'Acompañante'}
-                </TableCell>
-                {alreadyPaid && (
-                  <TableCell>
-                    <CurrencySpan quantity={user?.payment?.amount} />
-                  </TableCell>
-                )}
-                <TableCell align="center">
-                  <AgeSpan birthday={user.birthday} />
-                </TableCell>
-                <TableCell>{user?.medicalInfo}</TableCell>
-                <TableCell>{user?.activity?.name}</TableCell>
-              </TableRow>
-            ))}
+            {users
+              ?.sort(sortByPaymentDate)
+              .map(
+                ({
+                  id = '',
+                  activities,
+                  paymentDate,
+                  payment,
+                  name = '',
+                  birthday,
+                  rol,
+                  medicalInfo,
+                  activity,
+                  userNumber
+                }) => (
+                  <UserRow
+                    user={{
+                      id,
+                      activities,
+                      payment,
+                      paymentDate,
+                      name,
+                      birthday,
+                      rol,
+                      medicalInfo,
+                      activity,
+                      userNumber
+                    }}
+                    key={id}
+                    alreadyPaid={alreadyPaid}
+                  />
+                )
+              )}
           </TableBody>
         </Table>
       </TableContainer>
     </div>
+  )
+}
+
+type UsersRowProps = {
+  user: Partial<ParkUser>
+  alreadyPaid: boolean
+}
+
+const UserRow = ({ user, alreadyPaid }: UsersRowProps) => {
+  console.log(user.payment?.discount)
+  const paymentDiscount = user.payment?.discount
+  return (
+    <TableRow key={user.id}>
+      {alreadyPaid && <TableCell>{user?.userNumber || '-'}</TableCell>}
+      {alreadyPaid && (
+        <TableCell>
+          <p className="whitespace-nowrap">
+            {dateFormat(asDate(user?.paymentDate), 'dd/MMM HH:mm')}
+          </p>
+        </TableCell>
+      )}
+      <TableCell>{0}</TableCell>
+      <TableCell>{user.name}</TableCell>
+      <TableCell>{user.rol === 'CLIENT' ? 'Cliente' : 'Acompañante'}</TableCell>
+      {alreadyPaid && (
+        <TableCell align="center">
+          <CurrencySpan quantity={user?.payment?.amount} />
+          <SpanDiscount discount={paymentDiscount} />
+        </TableCell>
+      )}
+      <TableCell align="center">
+        <AgeSpan birthday={user.birthday || ''} />
+      </TableCell>
+      <TableCell>{user?.medicalInfo}</TableCell>
+      <TableCell>
+        {user?.activity?.name ||
+          user.activities?.map((a) => <div key={a.name}>{a.name}</div>)}
+      </TableCell>
+    </TableRow>
   )
 }
 

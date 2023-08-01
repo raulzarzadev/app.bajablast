@@ -58,3 +58,7 @@ export interface Client extends NewClient {
   paymentDate?: number | Date | Timestamp | null | undefined
   id: string
 }
+
+export interface ParkUser extends Client {
+  payment?: Payment
+}

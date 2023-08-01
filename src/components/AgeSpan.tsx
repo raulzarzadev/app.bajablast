@@ -20,7 +20,9 @@ const AgeSpan = ({
   return (
     <div className="flex flex-col justify-center items-center">
       <span>{age}</span>
-      <span>{dateFormat(birthdayDate, 'dd-MMM')}</span>
+      <span className="whitespace-nowrap">
+        {dateFormat(birthdayDate, 'dd-MMM')}
+      </span>
     </div>
   )
 }

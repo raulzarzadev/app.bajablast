@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { isThisMonth, isThisWeek, isToday } from 'date-fns'
 import asDate from '@/utils/asDate'
-import { Client, Friend } from '@/types/user'
+import { Client, Friend, ParkUser } from '@/types/user'
 import useModal from '@/hooks/useModal'
 import Modal from './Modal'
 import AgeSpan from './AgeSpan'
@@ -28,7 +28,6 @@ const ClientsNumbers = () => {
   const { clients } = useClients()
 
   const groupedClients = groupUsersByActivity(clients || [])
-
   return (
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
@@ -75,7 +74,7 @@ const ClientsNumbers = () => {
 
 const allUsersFromClientsAndPaymentDate = (
   clients: Client[] = []
-): (Client | Friend)[] => {
+): Partial<ParkUser>[] => {
   return (
     clients?.flatMap((client) => {
       return [
