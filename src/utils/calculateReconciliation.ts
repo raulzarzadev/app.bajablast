@@ -33,19 +33,16 @@ const calculateReconciliation = (
 
   const totalCash = clients.reduce((acc, client) => {
     return (
-      //TODO: should add discount?
       acc + (client?.payment?.method === 'cash' ? client.payment?.amount : 0)
     )
   }, 0)
   const totalDollars = clients.reduce((acc, client) => {
     return (
-      //TODO: should add discount?
       acc + (client?.payment?.method === 'usd' ? client.payment?.amount : 0)
     )
   }, 0)
   const totalCard = clients.reduce((acc, client) => {
     return (
-      //TODO: should add discount?
       acc + (client?.payment?.method === 'card' ? client.payment?.amount : 0)
     )
   }, 0)

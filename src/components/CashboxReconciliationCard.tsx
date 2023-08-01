@@ -61,10 +61,12 @@ const CashboxReconciliationCard = ({
           {dateFormat(asDate(reconciliation.dates?.to), ' dd/MMM/yy HH:mm ')}
         </Typography>
       </Box>
-      {showDetails && <PaymentsDetails payments={reconciliation.payments} />}
-      <Typography className="text-center">
-        Cajero: {cashier ? cashier.name : 'Todos'}
+      <Typography className="text-center mb-4">
+        Cajero:{' '}
+        <span className="font-bold"> {cashier ? cashier.name : 'Todos'}</span>
       </Typography>
+      {showDetails && <PaymentsDetails payments={reconciliation.payments} />}
+
       <Box className="w-1/2 text-end my-4">
         <Typography className="font-bold">Actividades</Typography>
         {Object.entries(activities || {}).map(([name, activities]) => (
