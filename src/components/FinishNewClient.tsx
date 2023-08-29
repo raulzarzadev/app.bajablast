@@ -55,7 +55,7 @@ const FinishNewClient = ({
                   <CurrencySpan quantity={friend?.activity?.price} />
                 ) : (
                   <CurrencySpan
-                    quantity={friend.activities?.reduce(
+                    quantity={friend?.activities?.reduce(
                       reducerClientActivities,
                       0
                     )}
