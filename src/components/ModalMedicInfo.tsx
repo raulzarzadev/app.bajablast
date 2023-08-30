@@ -81,8 +81,8 @@ const ModalMedicInfo = ({ name = '', justIcon = false }) => {
             {medicalConditions.map((condition) => (
               <Chip
                 disabled={conditionsAdded
-                  .toLowerCase()
-                  .includes(condition.toLowerCase())}
+                  ?.toLowerCase()
+                  ?.includes(condition.toLowerCase())}
                 key={condition}
                 label={condition}
                 onClick={() => handleAddCondition(condition)}

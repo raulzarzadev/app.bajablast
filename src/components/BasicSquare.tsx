@@ -6,9 +6,9 @@ const BasicSquare = ({
   content,
   helperText
 }: {
-  title: string
-  content: ReactNode
-  helperText: string
+  title?: string
+  content?: ReactNode
+  helperText?: string
 }) => {
   return (
     <Box
@@ -25,7 +25,7 @@ const BasicSquare = ({
     >
       <Box
         component={'article'}
-        className="flex flex-col gap-2 items-center justify-between  px-1 text-center  text-white w-full h-full py-1  "
+        className="flex flex-col gap-2 items-center justify-around  px-1 text-center  text-white w-full h-full py-1  "
       >
         {title && (
           <Typography component={'header'} variant="body1">
