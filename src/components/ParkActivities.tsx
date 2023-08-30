@@ -9,6 +9,7 @@ import AppIcon from './AppIcon'
 import useUser from '@/hooks/useUser'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
 import { USER_ROL } from '@/CONST/user'
+import BasicSquare from './BasicSquare'
 
 const ParkActivities = ({
   onClickActivity
@@ -36,53 +37,18 @@ const ParkActivities = ({
             }}
             href={`/bb/${activity.id}`}
             key={activity.name}
-            className={`p-0 mx-auto 
-            ${
-              activity.status === 'HIDDEN' &&
-              !(user?.isAdmin || user?.rol === USER_ROL.COORDINATOR) &&
-              'hidden'
-            }
-            ${activity.status === 'CLOSED' && 'opacity-40'}
-            bg-pink-400 
-            rounded-md 
-            shadow-md
-            w-full 
-            sm:w-[190px]
-            sm:aspect-video
-            h-full
-             `}
           >
-            <Box
-              component={'article'}
-              className="flex flex-col gap-2 items-center justify-between py-4 px-1 text-center  text-white w-full  "
-            >
-              <Typography component={'p'} variant="h5">
-                {activity.name}
-              </Typography>
-              {activity.status === 'OPEN' ? (
-                <>
-                  <Typography component={'p'} variant="h5">
-                    <CurrencySpan quantity={activity.price} />
-                  </Typography>
-                  {user?.isAdmin && (
-                    <Typography>
-                      {ACTIVITY_STATUS[activity.status || 'UPCOMING']?.label}
-                    </Typography>
-                  )}
-                </>
-              ) : (
-                <>
-                  {user?.isAdmin && (
-                    <Typography component={'p'} variant="h5">
-                      <CurrencySpan quantity={activity.price} />
-                    </Typography>
-                  )}
-                  <Typography>
-                    {ACTIVITY_STATUS[activity.status || 'UPCOMING']?.label}
-                  </Typography>
-                </>
-              )}
-            </Box>
+            <BasicSquare
+              title={activity.name}
+              content={
+                activity.status === 'OPEN' ? (
+                  <CurrencySpan quantity={activity.price} className="text-xl" />
+                ) : (
+                  <span className="text-red-500">Cerrado</span>
+                )
+              }
+              helperText={ACTIVITY_STATUS[activity.status || 'UPCOMING']?.label}
+            />
           </Link>
         ))}
         {canCreteNewActivity && (
