@@ -80,7 +80,6 @@ const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
           <ClientForm
             client={collaborator}
             handleSubmit={(data) => {
-              console.log(data)
               setEditing(false)
             }}
             editRol={user?.isAdmin}

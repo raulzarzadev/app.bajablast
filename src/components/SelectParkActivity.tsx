@@ -76,7 +76,7 @@ const SelectParkActivity = ({
 
               const clientModified = handleAddActivityToClient(
                 activity,
-                client.id
+                client?.id
               )
               if (!clientModified) return console.log('no client modified')
               // // clean clients

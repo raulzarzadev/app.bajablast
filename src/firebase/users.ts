@@ -31,7 +31,14 @@ export const listenUser = async (
 
 export const listenCollaborators = async (cb: CallableFunction) =>
   await usersCRUD.listenItems(
-    [where('rol', 'in', [USER_ROL.COLLABORATOR, USER_ROL.COORDINATOR])],
+    [
+      where('rol', 'in', [
+        USER_ROL.COLLABORATOR,
+        USER_ROL.COORDINATOR,
+        USER_ROL.ADMIN,
+        USER_ROL.CLIENT
+      ])
+    ],
     cb
   )
 

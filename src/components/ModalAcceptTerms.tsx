@@ -22,15 +22,7 @@ const ModalAcceptTerms = ({
   const [termsAccepted, setTermsAccepted] = useState(!!signature)
   const [_signature, _setSignature] = useState<string | null>(signature || null)
   const termsAndCondsModal = useModal()
-  const signatureRef = useRef<any>()
-  const handleClearSignature = () => {
-    signatureRef?.current?.clear?.()
-  }
-  const handleSetSignature = (signature: string | null) => {
-    setTermsAccepted(!!signature)
-    _setSignature(signature)
-    setSignature?.(signature)
-  }
+
   const { parkConfig } = useParkConfig()
   const termAndConds = parkConfig?.termsAndConds || ''
 
@@ -74,36 +66,7 @@ const ModalAcceptTerms = ({
           >
             {termAndConds}
           </Typography>
-          <Box className="flex w-full justify-between -mb-4">
-            <Typography className="">Firma:</Typography>
-            <Button
-              size="small"
-              onClick={(e) => {
-                e.preventDefault()
-                handleClearSignature()
-                handleSetSignature(null)
-              }}
-              color="success"
-            >
-              Limpiar
-            </Button>
-          </Box>
-          <Box className="border shadow-inner p-1">
-            <SignatureCanvas
-              onEnd={(e) => {
-                const image = signatureRef.current
-                  .getTrimmedCanvas()
-                  .toDataURL('image/png')
-
-                handleSetSignature(image)
-              }}
-              penColor="green"
-              ref={(ref) => (signatureRef.current = ref)}
-              canvasProps={{
-                className: 'sigCanvas w-full aspect-video'
-              }}
-            />
-          </Box>
+          <ModalSignature setSignature={_setSignature} />
           <Box className="flex justify-center w-full">
             {_signature && (
               <Image
@@ -139,6 +102,63 @@ const ModalAcceptTerms = ({
         </Box>
       </Modal>
     </div>
+  )
+}
+
+const ModalSignature = ({
+  setSignature
+}: {
+  setSignature?: (signature: string | null) => void
+}) => {
+  const modal = useModal('Firmar')
+  const signatureRef = useRef<any>()
+  const handleClearSignature = () => {
+    signatureRef?.current?.clear?.()
+  }
+  const handleSetSignature = (signature: string | null) => {
+    // setTermsAccepted(!!signature)
+    // _setSignature(signature)
+    setSignature?.(signature)
+  }
+  return (
+    <>
+      <Button onClick={(e) => modal.handleOpen()}>Firmar</Button>
+      <Modal {...modal}>
+        <Box className="border shadow-inner p-1">
+          <SignatureCanvas
+            onEnd={(e) => {
+              const image = signatureRef.current
+                .getTrimmedCanvas()
+                .toDataURL('image/png')
+
+              handleSetSignature(image)
+            }}
+            penColor="green"
+            ref={(ref) => (signatureRef.current = ref)}
+            canvasProps={{
+              className: 'sigCanvas w-full aspect-video'
+            }}
+          />
+        </Box>
+        <Box className="flex w-full justify-around mb-2">
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={(e) => {
+              e.preventDefault()
+              handleClearSignature()
+              handleSetSignature(null)
+            }}
+            color="success"
+          >
+            Limpiar
+          </Button>
+          <Button variant="outlined" onClick={() => modal.onClose()}>
+            Listo
+          </Button>
+        </Box>
+      </Modal>
+    </>
   )
 }
 
