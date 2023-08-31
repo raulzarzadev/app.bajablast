@@ -472,8 +472,8 @@ const ModalCancelPayment = ({ clientId }: { clientId: string }) => {
         Cancelar Pago
       </Button>
       <ModalConfirm
-        title="Cancelar pago"
         {...modal}
+        title="Cancelar pago"
         buttonConfirmProps={{
           onClick: () => handleCanclePayment(clientId),
           color: 'success',

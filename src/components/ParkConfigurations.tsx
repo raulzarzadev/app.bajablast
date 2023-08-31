@@ -149,8 +149,8 @@ const ModalSelect = ({
         {selected ? 'Seleccionado' : 'Seleccionar'}
       </Button>
       <ModalConfirm
-        title="Cambiar configuración"
         {...modal}
+        title="Cambiar configuración"
         buttonConfirmProps={{
           label: 'Cambiar configuración',
           onClick: () => onSelect()
