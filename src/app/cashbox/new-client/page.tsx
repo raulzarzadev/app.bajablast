@@ -1,6 +1,7 @@
 'use client'
 
-import StepperNewClientContext from '@/components/StepperNewClientShort'
+import withAuth from '@/HOCs/withAuth'
+import StepperNewClientContext from '@/components/StepperNewClient'
 
 const page = () => {
   return (
@@ -10,4 +11,4 @@ const page = () => {
   )
 }
 
-export default page
+export default withAuth(page, ['COLLABORATOR'])

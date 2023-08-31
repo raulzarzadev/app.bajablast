@@ -86,7 +86,7 @@ function StepperNewClient() {
                   newClientContext.setFriends?.(friends)
                   setStep((prev) => prev + 1)
                 }}
-                users={newClientContext.friends}
+                //users={newClientContext.friends}
               />
             )
           },

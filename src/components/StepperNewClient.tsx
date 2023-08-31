@@ -117,7 +117,7 @@ function StepperNewClient() {
                 ]}
                 handleFinish={async () => {
                   await onSubmit()
-                  router.push('/bb/admin/cashbox')
+                  router.push('/cashbox')
                   return
                 }}
               />

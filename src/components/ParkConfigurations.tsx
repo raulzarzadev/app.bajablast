@@ -72,12 +72,12 @@ const ParkConfigurationsList = () => {
     </Box>
   )
 }
-const ConfigurationCard = ({
+export const ConfigurationCard = ({
   config,
   handleSelectConfig
 }: {
   config: ParkConfiguration
-  handleSelectConfig: (configId: string) => void
+  handleSelectConfig?: (configId: string) => void
 }) => {
   return (
     <>
@@ -96,10 +96,10 @@ const ConfigurationCard = ({
 
           <Box className="flex w-full justify-around sm:justify-end sm:gap-4">
             <ModalEdit parkConfig={config} />
-            <ModalSelect
+            {/* <ModalSelect
               selected={config.selected}
               onSelect={() => handleSelectConfig(config.id)}
-            />
+            /> */}
           </Box>
         </Box>
         <WeekSchedule schedule={config.schedule} />

@@ -88,17 +88,17 @@ const ActivityForm = ({
               </RadioGroup>
             </FormControl>
 
+            {/* <FormControlLabel
+              checked={requiresInsurance}
+              {...methods.register('requiresInsurance')}
+              label="Requiere seguro?"
+              control={<Checkbox />}
+            /> */}
             {/* ********* Activity schedule */}
             <FormControlLabel
               checked={scheduleAsPark}
               {...methods.register('scheduleAsPark')}
               label="Igual al del parque?"
-              control={<Checkbox />}
-            />
-            <FormControlLabel
-              checked={requiresInsurance}
-              {...methods.register('requiresInsurance')}
-              label="Requiere seguro?"
               control={<Checkbox />}
             />
             <ScheduleForm

@@ -23,19 +23,50 @@ import LinkApp from './LinkApp'
 import ClientList from './ClientList'
 import UsersList from './UsersList'
 import ExportDocument from './ExportDocument'
+import BasicTabs from './BasicTabs'
 
 const ClientsNumbers = () => {
   const { clients } = useClients()
 
   const groupedClients = groupUsersByActivity(clients || [])
+
   return (
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
-      <Typography variant="h4">Usuarios por actividad</Typography>
+
       <ExportDocument
-        document={clients || []}
-        fileName="Usuarios por actividad"
+        document={formatClientsToExport(clients)}
+        fileName="clients-data"
       />
+      <BasicTabs
+        tabs={[
+          {
+            label: 'Clientes por actividad',
+            content: (
+              <UsersByActivity clients={groupedClients}></UsersByActivity>
+            )
+          },
+          {
+            label: 'Por clientes',
+            content: <ClientList />
+          },
+          {
+            label: 'Por usuarios',
+            content: (
+              <UsersList users={allUsersFromClientsAndPaymentDate(clients)} />
+            )
+          }
+        ]}
+      />
+    </div>
+  )
+}
+
+const UsersByActivity = ({ clients }: { clients: GroupedData }) => {
+  return (
+    <>
+      {' '}
+      <Typography variant="h4">Usuarios por actividad</Typography>
       <TableContainer component={Paper}>
         <Table size="small" className="mx-auto">
           <TableHead>
@@ -48,28 +79,56 @@ const ClientsNumbers = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(groupedClients).map(([activityName, users]) => (
+            {Object.entries(clients).map(([activityName, users]) => (
               <UsersRow
                 key={activityName}
-                activity={{ name: activityName, id: users?.activity?.id }}
+                activity={{
+                  name: activityName,
+                  id: users?.activity?.id
+                }}
                 users={users}
               ></UsersRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography variant="h4">Lista de clientes</Typography>
-
-      <ClientList />
-      <Typography variant="h4">Lista de usuarios</Typography>
-      <ExportDocument
-        document={allUsersFromClientsAndPaymentDate(clients)}
-        fileName="Lista de usuarios"
-      />
-      <UsersList users={allUsersFromClientsAndPaymentDate(clients)} />
-      {/* <ClientsChart /> */}
-    </div>
+    </>
   )
+}
+
+const formatClientsToExport = (clients: Client[] = []) => {
+  return clients.map((client) => {
+    return {
+      //...client,
+      name: client?.name || '',
+      birthday: asDate(client?.birthday),
+      weight: client.weight,
+      email: client?.email || '',
+      phone: client?.phone || '',
+      emergencyPhone: client?.emergencyPhone || '',
+      bloodType: client?.bloodType || '',
+      medicalInfo: client?.medicalInfo || '',
+      // image: client?.image || '',
+
+      activities: `${
+        client.activity
+          ? client.activity.name
+          : client.activities?.map((a) => a.name)
+      }\n`,
+      friends: client.friends?.length,
+      friendsActivities: `${client.friends?.map(
+        (f) =>
+          `${f.name}-${
+            f.activity ? f.activity.name : f.activities?.map((a) => a.name)
+          }\n`
+      )}`,
+      paymentDate: asDate(client?.payment?.created?.at),
+      paymentAmount: client?.payment?.amount || 0,
+      paymentMethod: client?.payment?.method,
+      paymentDiscount: client.payment?.discount,
+      paymentIsCanceled: !!client?.payment?.isCancelled
+    }
+  })
 }
 
 const allUsersFromClientsAndPaymentDate = (

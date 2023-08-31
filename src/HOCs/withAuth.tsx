@@ -2,6 +2,7 @@
 import { UserRol } from '@/CONST/user'
 import { UserContext } from '@/context/user'
 import { UserType } from '@/types/user'
+import { Button, Typography } from '@mui/material'
 import { NextComponentType } from 'next'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
@@ -30,8 +31,27 @@ export function withAuth<P>(
       const isValid = validateUser(user.rol, extraUserValidation)
       if (!isValid) {
         //
-        router.replace('/')
-        return <>Not enough permissions </>
+        // router.replace('/')
+        return (
+          <div className="flex w-full min-h-screen justify-center items-center  flex-col border">
+            <Typography
+              component={'p'}
+              className="whitespace-pre-line text-center"
+            >
+              {`No tienes permisos suficientes. 
+            Consultalo con el administrador.`}
+            </Typography>
+            <div>
+              <Button
+                onClick={(e) => {
+                  router.back()
+                }}
+              >
+                Atras
+              </Button>
+            </div>
+          </div>
+        )
       }
     }
 

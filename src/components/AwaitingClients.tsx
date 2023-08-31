@@ -26,7 +26,7 @@ const AwaitingClients = () => {
   return (
     <Box
       component={'section'}
-      className="flex flex-col justify-center items-center pt-12 max-w-2xl mx-auto p-1"
+      className="flex flex-col justify-center items-center pt-2 max-w-2xl mx-auto p-1"
     >
       <Typography component={'h6'} variant="h6" className="w-full text-left">
         Clientes en espera
