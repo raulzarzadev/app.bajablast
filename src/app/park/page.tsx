@@ -1,4 +1,5 @@
 'use client'
+import withAuth from '@/HOCs/withAuth'
 import BasicTabs from '@/components/BasicTabs'
 import ClientsNumbers from '@/components/ClientsNumbers'
 import ParkActivities from '@/components/ParkActivities'
@@ -36,4 +37,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default withAuth(Page, ['COORDINATOR', 'ADMIN', 'COLLABORATOR'])

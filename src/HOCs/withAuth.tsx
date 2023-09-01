@@ -1,5 +1,6 @@
 'use client'
 import { UserRol } from '@/CONST/user'
+import InsufficientPermissionsCard from '@/components/InsufficientPermissionsCard'
 import { UserContext } from '@/context/user'
 import { UserType } from '@/types/user'
 import { Button, Typography } from '@mui/material'
@@ -32,26 +33,7 @@ export function withAuth<P>(
       if (!isValid) {
         //
         // router.replace('/')
-        return (
-          <div className="flex w-full min-h-screen justify-center items-center  flex-col border">
-            <Typography
-              component={'p'}
-              className="whitespace-pre-line text-center"
-            >
-              {`No tienes permisos suficientes. 
-            Consultalo con el administrador.`}
-            </Typography>
-            <div>
-              <Button
-                onClick={(e) => {
-                  router.back()
-                }}
-              >
-                Atras
-              </Button>
-            </div>
-          </div>
-        )
+        return <InsufficientPermissionsCard />
       }
     }
 

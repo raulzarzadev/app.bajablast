@@ -14,6 +14,7 @@ import Modal from './Modal'
 import ParkConfigurationForm from './ParkConfigurationForm'
 import { ParkConfiguration } from '@/types/parkConfiguration'
 import ModalConfirm from './ModalConfirm'
+import usePermissions from '@/hooks/usePermissions'
 
 const ParkConfigurations = () => {
   return (
@@ -168,6 +169,8 @@ const ModalSelect = ({
 
 const ModalEdit = ({ parkConfig }: { parkConfig?: ParkConfiguration }) => {
   const modal = useModal()
+  const canVisit = usePermissions(['COORDINATOR', 'ADMIN'])
+  if (!canVisit) return <></>
   return (
     <>
       <IconButton

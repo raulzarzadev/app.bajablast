@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { isThisMonth, isThisWeek, isToday } from 'date-fns'
 import asDate from '@/utils/asDate'
-import { Client, Friend, ParkUser } from '@/types/user'
+import { Client, Friend, ParkUser, UserType } from '@/types/user'
 import useModal from '@/hooks/useModal'
 import Modal from './Modal'
 import AgeSpan from './AgeSpan'
@@ -24,12 +24,17 @@ import ClientList from './ClientList'
 import UsersList from './UsersList'
 import ExportDocument from './ExportDocument'
 import BasicTabs from './BasicTabs'
+import useUser from '@/hooks/useUser'
+import InsufficientPermissionsCard from './InsufficientPermissionsCard'
+import usePermissions from '@/hooks/usePermissions'
 
 const ClientsNumbers = () => {
   const { clients } = useClients()
 
   const groupedClients = groupUsersByActivity(clients || [])
 
+  const canVisit = usePermissions(['COORDINATOR', 'ADMIN'])
+  if (!canVisit) return <InsufficientPermissionsCard />
   return (
     <div>
       <h4 className="text-2xl text-center my-4 ">Estadisticas del parque</h4>
