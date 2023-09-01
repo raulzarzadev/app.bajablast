@@ -36,11 +36,11 @@ const ParkActivities = ({
         component={'div'}
         className="grid  sm:grid-cols-3 gap-2 sm:place-content-center "
       >
-        {activities.map((activity) => (
+        {activities?.map((activity) => (
           <Link
             passHref
             onClick={() => {
-              onClickActivity?.(activity?.id || activity.shortName)
+              onClickActivity?.(activity?.id || activity.shortName || '')
             }}
             href={`/bb/${activity.id}`}
             key={activity.name}
