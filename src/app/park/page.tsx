@@ -17,25 +17,22 @@ const Page = () => {
   }, [])
 
   return (
-    <Container>
-      <h1></h1>
-      <BasicTabs
-        tabs={[
-          {
-            label: 'Configuración',
-            content: config ? <ConfigurationCard config={config} /> : 'Cargando'
-          },
-          {
-            label: 'Actividades',
-            content: <ParkActivities />
-          },
-          {
-            label: 'Estadisticas',
-            content: <ClientsNumbers />
-          }
-        ]}
-      />
-    </Container>
+    <BasicTabs
+      tabs={[
+        {
+          label: 'Configuración',
+          content: config ? <ConfigurationCard config={config} /> : 'Cargando'
+        },
+        {
+          label: 'Actividades',
+          content: <ParkActivities />
+        },
+        {
+          label: 'Estadisticas',
+          content: <ClientsNumbers />
+        }
+      ]}
+    />
   )
 }
 

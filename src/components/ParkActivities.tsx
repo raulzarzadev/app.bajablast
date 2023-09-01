@@ -8,18 +8,25 @@ import CurrencySpan from './CurrencySpan'
 import AppIcon from './AppIcon'
 import useUser from '@/hooks/useUser'
 import { ACTIVITY_STATUS } from '@/CONST/activityStatus'
-import { USER_ROL } from '@/CONST/user'
 import BasicSquare from './BasicSquare'
+export type ParkActivitiesPage = Partial<ParkActivity>[] | undefined
 
 const ParkActivities = ({
+  activities: defaultActivities,
   onClickActivity
 }: {
+  activities?: ParkActivitiesPage
   onClickActivity?: (activityName: string) => void
 }) => {
   const { user } = useUser()
-  const [activities, setActivities] = useState<ParkActivity[]>([])
+  const [activities, setActivities] = useState<ParkActivitiesPage>([])
   useEffect(() => {
-    listenActivities((res: ParkActivity[]) => setActivities(res))
+    if (defaultActivities) {
+      setActivities(defaultActivities)
+    } else {
+      listenActivities((res: ParkActivity[]) => setActivities(res))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const canCreteNewActivity = user?.isAdmin
   return (

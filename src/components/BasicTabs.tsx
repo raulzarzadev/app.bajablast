@@ -22,8 +22,8 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+        <Box sx={{ p: 1 }}>
+          <Typography component={'article'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -55,13 +55,13 @@ function BasicTabs({
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
         >
           {tabs.map((tab, i) => (
             <Tab key={i} label={tab.label} {...a11yProps(i)} />
           ))}
-          {/* <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
       {tabs.map((tab, i) => (
@@ -69,12 +69,6 @@ function BasicTabs({
           {tab.content}
         </CustomTabPanel>
       ))}
-      {/* <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel> */}
     </Box>
   )
 }

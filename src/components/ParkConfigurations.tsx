@@ -111,7 +111,7 @@ export const ConfigurationCard = ({
             {config.termsAndConds || ''}{' '}
           </Typography>
           <Typography className="mt-4 font-bold">
-            Check de condiciones medicas:
+            Condiciones medicas a considerar:
           </Typography>
           <Typography component={'div'}>
             <ul className="list-disc pl-4">

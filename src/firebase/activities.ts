@@ -42,3 +42,5 @@ export const listenActivity = async (
 
 export const listenActivities = async (cb: CallableFunction) =>
   await itemCRUD.listenItems([], cb)
+
+export const getActivities = async () => await itemCRUD.getItems([])
