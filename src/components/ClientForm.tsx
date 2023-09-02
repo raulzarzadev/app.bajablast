@@ -9,14 +9,14 @@ import {
   Stack
 } from '@mui/material'
 import { useForm, FormProvider } from 'react-hook-form'
-import useModal from '@/hooks/useModal'
-import { useRef } from 'react'
+
 import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
 import ModalMedicInfo from './ModalMedicInfo'
 import { NewClient, UserType } from '@/types/user'
 import { USER_ROLES } from '@/CONST/user'
+import { useState } from 'react'
 
 const ClientForm = ({
   client,
@@ -24,9 +24,10 @@ const ClientForm = ({
   editRol
 }: {
   client?: NewClient
-  handleSubmit?: (data: NewClient) => void
+  handleSubmit?: (data: NewClient) => void | Promise<any>
   editRol?: boolean
 }) => {
+  const [loading, setLoading] = useState(false)
   const defaultClient: NewClient = {
     bloodType: 'N/A',
     birthday: null,
@@ -45,18 +46,22 @@ const ClientForm = ({
     defaultValues: { ...defaultClient, ...client } || defaultClient
   })
   const formValues = methods.watch()
-  const signatureRef = useRef<any>()
-  const handleClearSignature = () => {
-    signatureRef?.current?.clear?.()
-  }
+
   //const [imageSignature, setImageSignature] = useState<string | null>(null)
 
-  const onSubmit = (data: NewClient) => {
-    const clientData = {
-      ...data
-      //signature: imageSignature
+  const onSubmit = async (data: NewClient) => {
+    try {
+      setLoading(true)
+      const clientData = {
+        ...data
+        //signature: imageSignature
+      }
+      await handleSubmit?.(clientData)
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
     }
-    handleSubmit?.(clientData)
   }
   const handleAddEmailDomain = (domain: string) => {
     methods.setValue('email', `${formValues.email}${domain}`)
@@ -67,6 +72,7 @@ const ClientForm = ({
     '@outlook.com',
     '@live.com'
   ]
+
   return (
     <FormProvider {...methods}>
       <form
@@ -101,7 +107,6 @@ const ClientForm = ({
           </FormControl>
         )}
         <ControllerText name="name" label="Nombre" />
-
         <ControllerText name="email" label="Correo" />
         <Stack
           className="-mt-2"
@@ -138,7 +143,7 @@ const ClientForm = ({
             Limpiar
           </Button>
           <Button
-            disabled={!formValues.medicalInfoUpdated}
+            disabled={!formValues.medicalInfoUpdated || loading}
             // LinkComponent={Link}
             type="submit"
           >

@@ -14,6 +14,7 @@ import UserCard from './UserCard'
 import Modal from './Modal'
 import ClientForm from './ClientForm'
 import useUser from '@/hooks/useUser'
+import { updateUser } from '@/firebase/users'
 
 export default function CollaboratorsTable({
   collaborators = []
@@ -48,6 +49,9 @@ const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
   const modal = useModal()
   const [editing, setEditing] = React.useState(false)
   const { user } = useUser()
+  const handleUpdateUser = async (data) => {
+    return await updateUser(data.id, { ...data })
+  }
   return (
     <>
       <TableRow
@@ -79,8 +83,10 @@ const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
         {user?.isAdmin && editing ? (
           <ClientForm
             client={collaborator}
-            handleSubmit={(data) => {
+            handleSubmit={async (data) => {
+              await handleUpdateUser(data)
               setEditing(false)
+              return 
             }}
             editRol={user?.isAdmin}
           />
