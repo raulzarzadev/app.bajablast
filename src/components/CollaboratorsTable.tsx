@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { UserType } from '@/types/user'
+import { Client, UserType } from '@/types/user'
 import { dateFormat } from '@/utils/utils-date'
 import { Avatar } from '@mui/material'
 import useModal from '@/hooks/useModal'
@@ -49,7 +49,7 @@ const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
   const modal = useModal()
   const [editing, setEditing] = React.useState(false)
   const { user } = useUser()
-  const handleUpdateUser = async (data) => {
+  const handleUpdateUser = async (data: Client) => {
     return await updateUser(data.id, { ...data })
   }
   return (
@@ -83,10 +83,10 @@ const CollaboratorRow = ({ collaborator }: { collaborator: UserType }) => {
         {user?.isAdmin && editing ? (
           <ClientForm
             client={collaborator}
-            handleSubmit={async (data) => {
+            handleSubmit={async (data: any) => {
               await handleUpdateUser(data)
               setEditing(false)
-              return 
+              return
             }}
             editRol={user?.isAdmin}
           />

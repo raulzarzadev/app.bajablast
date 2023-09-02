@@ -14,7 +14,7 @@ import ControllerDate from './ControllerDate'
 import ControllerPhone from './ControllerPhone'
 import ControllerText from './ControllerText'
 import ModalMedicInfo from './ModalMedicInfo'
-import { NewClient, UserType } from '@/types/user'
+import { Client, NewClient, UserType } from '@/types/user'
 import { USER_ROLES } from '@/CONST/user'
 import { useState } from 'react'
 
@@ -24,7 +24,7 @@ const ClientForm = ({
   editRol
 }: {
   client?: NewClient
-  handleSubmit?: (data: NewClient) => void | Promise<any>
+  handleSubmit?: (data: NewClient | Client) => void | Promise<any>
   editRol?: boolean
 }) => {
   const [loading, setLoading] = useState(false)
